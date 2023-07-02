@@ -14,3 +14,12 @@ dependencyResolutionManagement {
 }
 rootProject.name = "DDD-9-Android2-Sikdorok"
 include ':app'
+include ':core-design'
+include ':shared'
+include ':domain'
+include ':core-api'
+include ':feature'
+include ':feature:home'
+include ':feature:detail'
+include ':extensions'
+include ':data'
