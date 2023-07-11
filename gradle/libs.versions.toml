@@ -1,0 +1,45 @@
+[versions]
+application = "8.0.2"
+kotlin-android = "1.8.20"
+androidCoreX = "1.8.0"
+androidCompat = "1.4.1"
+androidViewModelX = "2.6.1"
+material = "1.5.0"
+androidConstraint = "2.1.3"
+retrofit = "2.9.0"
+gson = "2.10.1"
+gson-converter = "2.9.0"
+hilt = "2.46.1"
+inject = "1"
+coroutine = "1.3.9"
+kakao = "2.14.0"
+logging-interceptor = "4.11.0"
+
+[libraries]
+androidCoreX = { group = "androidx.core", name="core-ktx", version.ref="androidCoreX" }
+androidCompat = { group = "androidx.appcompat", name="appcompat", version.ref="androidCompat" }
+androidConstraint = { group = "androidx.constraintlayout", name="constraintlayout", version.ref="androidConstraint" }
+material = { group = "com.google.android.material", name="material", version.ref="material" }
+retrofit = { group = "com.squareup.retrofit2", name="retrofit", version.ref="retrofit" }
+http-logging = { group = "com.squareup.okhttp3", name="logging-interceptor", version.ref="logging-interceptor" }
+gson-converter = { group = "com.squareup.retrofit2", name="converter-gson", version.ref="gson-converter" }
+gson = { group = "com.google.code.gson", name="gson", version.ref="gson" }
+hilt-android = { group = "com.google.dagger", name="hilt-android", version.ref="hilt" }
+hilt-compiler = { group = "com.google.dagger", name="hilt-compiler", version.ref="hilt" }
+inject = { group = "javax.inject", name="javax.inject", version.ref="inject" }
+coroutine = { group = "org.jetbrains.kotlinx", name="kotlinx-coroutines-android", version.ref="coroutine" }
+kakao-login = { group ="com.kakao.sdk", name="v2-user", version.ref="kakao" }
+
+[plugins]
+application = { id="com.android.application", version.ref="application" }
+kotlin-android = { id="org.jetbrains.kotlin.android", version.ref="kotlin-android" }
+jvm = { id="org.jetbrains.kotlin.jvm", version.ref="kotlin-android" }
+hilt-plugin = { id="com.google.dagger.hilt.android", version.ref="hilt" }
+library = { id="com.android.library", version.ref="application" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin-android" }
+
+
+
+[bundles]
+android = [ "androidCoreX", "androidCompat", "androidConstraint" ]
+network = [ "retrofit", "http-logging", "gson-converter" ]
