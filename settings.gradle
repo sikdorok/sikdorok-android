@@ -10,6 +10,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
     }
 }
 rootProject.name = "DDD-9-Android2-Sikdorok"
@@ -23,3 +24,4 @@ include ':feature:home'
 include ':feature:detail'
 include ':extensions'
 include ':data'
+include ':feature:login'
