@@ -1,12 +1,10 @@
 plugins {
-    alias(libs.plugins.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.hilt.plugin)
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    namespace 'com.ddd.sikdorok.login'
+    namespace 'com.ddd.sikdorok.navigator.signin'
     compileSdk 33
 
     defaultConfig {
@@ -30,26 +28,10 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    buildFeatures {
-        dataBinding true
-    }
 }
 
 dependencies {
 
-    implementation(project(":core-design"))
     implementation(project(":navigator:core"))
-    implementation(project(":navigator:signin"))
-
-    implementation libs.kakao.login
-
-    implementation libs.bundles.android
-    implementation libs.material
-
-    implementation libs.hilt.android
-    kapt libs.hilt.compiler
-
-    testImplementation libs.junit
-    androidTestImplementation libs.junit.ext
-    androidTestImplementation libs.espresso
+    implementation libs.androidCoreX
 }

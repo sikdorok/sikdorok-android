@@ -1,22 +1,18 @@
 plugins {
-    alias(libs.plugins.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
-    alias(libs.plugins.hilt.plugin)
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
-    namespace 'com.ddd.sikdorok'
+    namespace 'com.ddd.sikdorok.signin'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.ddd.sikdorok"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -32,25 +28,19 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    buildFeatures {
-        dataBinding true
-    }
 }
 
 dependencies {
-
-    implementation(project(":feature:login"))
-    implementation(project(":feature:signin"))
-
-    implementation(project(":navigator:core"))
-    implementation(project(":navigator:signin"))
     implementation(project(":core-design"))
 
-
-    implementation libs.androidCoreX
     implementation libs.androidCompat
-    implementation libs.hilt.android
+    implementation libs.androidCoreX
+    implementation libs.material
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    kapt libs.hilt.compiler
 
+    testImplementation libs.junit
+    androidTestImplementation libs.junit.ext
+    androidTestImplementation libs.espresso
 }
