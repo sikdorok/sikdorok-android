@@ -20,8 +20,18 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
+            applicationIdSuffix ".debug"
             minifyEnabled false
+            debuggable true
+
+            resValue "string", "kakao_native_key", "kakao37987d37deae711f16a7ded700cd6a81"
+            resValue "string", "native_key", "37987d37deae711f16a7ded700cd6a81"
+        }
+
+        release {
+            debuggable false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -50,7 +60,8 @@ dependencies {
     implementation libs.androidCoreX
     implementation libs.androidCompat
     implementation libs.hilt.android
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    implementation libs.kakao.login
     kapt libs.hilt.compiler
 
 }

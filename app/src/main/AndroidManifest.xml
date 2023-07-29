@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -23,16 +25,22 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".login.LoginActivity"
-            android:exported="true" >
+        <activity android:name=".login.LoginActivity"/>
+
+
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
-                <data android:host="oauth"
-                    android:scheme="kakao37987d37deae711f16a7ded700cd6a81" />
+                <data
+                    android:host="oauth"
+                    android:scheme="@string/kakao_native_key" />
             </intent-filter>
         </activity>
 
