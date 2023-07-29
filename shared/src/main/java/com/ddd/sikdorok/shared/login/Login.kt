@@ -15,7 +15,8 @@ sealed class Request {
 }
 
 data class Response(
-    val login: Login
+    val isRegistered: Boolean,
+    @SerializedName("usersInfo") val login: Login
 ): Response {
     data class Login(
         @SerializedName("usersId") val userId: String,
