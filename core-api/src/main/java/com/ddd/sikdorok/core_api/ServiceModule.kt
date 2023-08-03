@@ -14,18 +14,20 @@ import javax.inject.Singleton
 internal object ServiceModule {
     @Provides
     @Singleton
-    fun providesKakaoLogin(retrofit: Retrofit) = retrofit.create<UserService.KakaoLogin>()
+    fun providesSikdorokLogin(
+       retrofit: Retrofit
+    ) = retrofit.create<UserService.SikdorokLogin>()
 
     @Provides
     @Singleton
-    fun providesSDRLogin(retrofit: Retrofit) = retrofit.create<UserService.SDRLogin>()
-
-    @Provides
-    @Singleton
-    fun providesSDRSignUp(retrofit: Retrofit) = retrofit.create<UserService.SignUp>()
+    fun providesSDRSignUp(
+        retrofit: Retrofit
+    ) = retrofit.create<UserService.SignUp>()
 
 
     @Provides
     @Singleton
-    fun providesSDREmailValidate(retrofit: Retrofit) = retrofit.create<UserService.EmailCheck>()
+    fun providesSDREmailValidate(
+        retrofit: Retrofit
+    ) = retrofit.create<UserService.EmailCheck>()
 }

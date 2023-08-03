@@ -2,4 +2,10 @@
 <resources>
     <color name="gray30">#DDDDDD</color>
     <color name="gray80">#444444</color>
+
+
+    <color name="input_correct">#00CC8F</color>
+    <color name="input_error">#FF5F5F</color>
+
+    <color name="white">#FFFFFF</color>
 </resources>

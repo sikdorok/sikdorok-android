@@ -33,6 +33,9 @@ android {
 
 dependencies {
 
+    implementation(project(":shared"))
+    implementation(project(":domain"))
+
     implementation libs.bundles.android
     implementation libs.material
     implementation libs.bundles.network

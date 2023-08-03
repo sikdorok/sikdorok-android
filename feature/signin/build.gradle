@@ -1,6 +1,8 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt.plugin)
 }
 
 android {
@@ -28,17 +30,25 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 dependencies {
     implementation(project(":core-design"))
+    implementation(project(":navigator:signup"))
+    implementation(project(":navigator:find-password"))
+    implementation(project(":navigator:core"))
+    implementation(project(":core-ui"))
 
-    implementation libs.androidCompat
-    implementation libs.androidCoreX
+    implementation libs.bundles.android
     implementation libs.material
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation libs.fragment.ktx
+    implementation libs.viewmodel.ktx
+
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
 
     testImplementation libs.junit
     androidTestImplementation libs.junit.ext

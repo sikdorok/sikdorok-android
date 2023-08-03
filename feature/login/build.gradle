@@ -38,13 +38,23 @@ android {
 dependencies {
 
     implementation(project(":core-design"))
+
     implementation(project(":navigator:core"))
     implementation(project(":navigator:signin"))
+    implementation(project(":navigator:signup"))
+    implementation(project(":navigator:home"))
+    
+    implementation(project(":core-ui"))
+    implementation(project(":domain"))
+    implementation(project(":shared"))
 
+    implementation libs.androidCoreX
+    implementation libs.fragment.ktx
     implementation libs.kakao.login
 
     implementation libs.bundles.android
     implementation libs.material
+    implementation libs.viewmodel.ktx
 
     implementation libs.hilt.android
     kapt libs.hilt.compiler

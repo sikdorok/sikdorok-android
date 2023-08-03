@@ -1,10 +1,10 @@
 package com.ddd.sikdorok.shared.sign
 
-sealed class SignIn {
+sealed class SignUp {
     data class Request(
         val nickname: String,
         val email: String,
         val password: String,
         val passwordCheck: String
-    ) : SignIn()
+    ) : SignUp()
 }

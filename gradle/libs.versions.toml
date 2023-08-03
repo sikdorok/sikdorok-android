@@ -2,6 +2,7 @@
 application = "8.0.2"
 kotlin-android = "1.8.20"
 androidCoreX = "1.8.0"
+androidFragmentX = "1.5.7"
 androidCompat = "1.4.1"
 androidViewModelX = "2.6.1"
 material = "1.5.0"
@@ -12,6 +13,7 @@ gson-converter = "2.9.0"
 hilt = "2.46.1"
 inject = "1"
 coroutine = "1.3.9"
+coroutine-core = "1.7.3"
 kakao = "2.15.0"
 logging-interceptor = "4.11.0"
 timber = "5.0.1"
@@ -23,6 +25,8 @@ espresso = "3.5.1"
 androidCoreX = { group = "androidx.core", name="core-ktx", version.ref="androidCoreX" }
 androidCompat = { group = "androidx.appcompat", name="appcompat", version.ref="androidCompat" }
 androidConstraint = { group = "androidx.constraintlayout", name="constraintlayout", version.ref="androidConstraint" }
+viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidViewModelX" }
+fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidFragmentX" }
 material = { group = "com.google.android.material", name="material", version.ref="material" }
 retrofit = { group = "com.squareup.retrofit2", name="retrofit", version.ref="retrofit" }
 http-logging = { group = "com.squareup.okhttp3", name="logging-interceptor", version.ref="logging-interceptor" }
@@ -32,6 +36,7 @@ hilt-android = { group = "com.google.dagger", name="hilt-android", version.ref="
 hilt-compiler = { group = "com.google.dagger", name="hilt-compiler", version.ref="hilt" }
 inject = { group = "javax.inject", name="javax.inject", version.ref="inject" }
 coroutine = { group = "org.jetbrains.kotlinx", name="kotlinx-coroutines-android", version.ref="coroutine" }
+coroutine-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine-core" }
 kakao-login = { group ="com.kakao.sdk", name="v2-user", version.ref="kakao" }
 timber = { group="com.jakewharton.timber", name="timber", version.ref="timber"}
 junit = { group = "junit", name="junit", version.ref="junit" }

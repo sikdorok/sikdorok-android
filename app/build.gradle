@@ -50,11 +50,23 @@ android {
 dependencies {
 
     implementation(project(":feature:login"))
+    implementation(project(":feature:signup"))
     implementation(project(":feature:signin"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:find-password"))
 
     implementation(project(":navigator:core"))
     implementation(project(":navigator:signin"))
+    implementation(project(":navigator:signup"))
+    implementation(project(":navigator:home"))
+    implementation(project(":navigator:find-password"))
+
     implementation(project(":core-design"))
+    implementation(project(":core-api"))
+
+    implementation(project(":data"))
+    implementation(project(":shared"))
+    implementation(project(":domain"))
 
 
     implementation libs.androidCoreX
@@ -63,5 +75,7 @@ dependencies {
 
     implementation libs.kakao.login
     kapt libs.hilt.compiler
+
+    implementation libs.timber
 
 }

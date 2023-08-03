@@ -1,2 +1,13 @@
 <resources>
+    <string name="sign_in_title">이메일로 로그인</string>
+    
+    <string name="email">이메일</string>
+    <string name="password">비밀번호</string>
+    
+    <string name="email_hint">sikdorok@naver.com</string>
+    <string name="password_hint">●●●●●●</string>
+
+    <string name="login">로그인</string>
+    <string name="sign_up"><u>회원가입</u></string>
+    <string name="find_password"><u>비밀번호 찾기</u></string>
 </resources>
