@@ -54,12 +54,14 @@ dependencies {
     implementation(project(":feature:signin"))
     implementation(project(":feature:home"))
     implementation(project(":feature:find-password"))
+    implementation(project(":feature:send-password"))
 
     implementation(project(":navigator:core"))
     implementation(project(":navigator:signin"))
     implementation(project(":navigator:signup"))
     implementation(project(":navigator:home"))
     implementation(project(":navigator:find-password"))
+    implementation(project(":navigator:send-password"))
 
     implementation(project(":core-design"))
     implementation(project(":core-api"))

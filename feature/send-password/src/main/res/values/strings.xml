@@ -1,0 +1,6 @@
+<resources>
+    <string name="send_password_title">비밀번호 찾기</string>
+
+    <string name="send_password_description">%1$s으로 비밀번호 재설정 링크를\n발송했습니다. 메일을 확인해주세요.</string>
+    <string name="send_password_information">인증메일이 오지 않을 경우 스팸 메일로 분류되어 있을 수 있습니다. 스팸 메일함을 확인해 주세요. </string>
+</resources>

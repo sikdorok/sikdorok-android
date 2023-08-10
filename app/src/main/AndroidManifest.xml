@@ -55,6 +55,7 @@
         </activity>
 
         <activity android:name=".signin.SignInActivity"/>
+        <activity android:name=".send_password.SendPasswordActivity" />
     </application>
 
 </manifest>
