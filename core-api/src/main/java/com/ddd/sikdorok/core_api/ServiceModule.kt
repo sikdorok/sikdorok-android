@@ -30,4 +30,10 @@ internal object ServiceModule {
     fun providesSDREmailValidate(
         retrofit: Retrofit
     ) = retrofit.create<UserService.EmailCheck>()
+
+    @Provides
+    @Singleton
+    fun providesSDRFindPassword(
+        retrofit: Retrofit
+    ) = retrofit.create<UserService.FindPassword>()
 }

@@ -1,1 +1,10 @@
-<resources></resources>
+<resources>
+    <string name="find_password_title">비밀번호 찾기</string>
+    <string name="find_password_description">가입시 사용하신 이메일을 입력해주세요. 해당 이메일로 새 비밀번호를 생성할 수 있는 링크를 보내드립니다.</string>
+
+    <string name="find_password_email_title">이메일</string>
+    <string name="find_password_email_hint">sikdorok@naver.com</string>
+    <string name="find_password_email_error">올바른 이메일 주소를 입력해주세요</string>
+
+    <string name="find_password_submit">비밀번호 재설정 링크 받기</string>
+</resources>

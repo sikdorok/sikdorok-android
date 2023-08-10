@@ -3,6 +3,8 @@ package com.ddd.sikdorok.core_api.service
 import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.login.Request
 import com.ddd.sikdorok.shared.login.Response
+import com.ddd.sikdorok.shared.password.Password
+import com.ddd.sikdorok.shared.sign.SignUp
 import com.ddd.sikdorok.shared.sign.SignUp as SikdorokSignUp
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -24,7 +26,12 @@ interface UserService {
     }
 
     interface EmailCheck {
-        @GET("GET /users/email-check/")
+        @GET("/users/email-check")
         suspend fun validateEmail(@Query("email") email: String): SikdorokResponse<Boolean>
+    }
+
+    interface FindPassword {
+        @POST("/users/password-find")
+        suspend fun findPassword(@Body body: Password.Request): SikdorokResponse<Boolean>
     }
 }
