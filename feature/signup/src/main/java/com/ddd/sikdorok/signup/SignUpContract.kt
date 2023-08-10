@@ -36,6 +36,9 @@ class SignUpContract {
     }
 
     sealed class SideEffect {
+        object InValidateEmail : SideEffect()
+        object ValidateEmail : SideEffect()
+
         object InValidateName : SideEffect()
         object ValidateName : SideEffect()
 

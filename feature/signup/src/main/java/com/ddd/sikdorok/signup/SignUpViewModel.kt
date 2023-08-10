@@ -38,11 +38,20 @@ class SignUpViewModel @Inject constructor(
     override val state: StateFlow<SignUpContract.State>
         get() = _state.asStateFlow()
 
+    private val emailRegex = Regex("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b")
+    private val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*()\\\\-_=+|{}\\\\[\\\\]:;<>,./?]).{8,}\$")
+
     override fun event(event: SignUpContract.Event) {
         viewModelScope.launch {
             when(event) {
                 is SignUpContract.Event.EmailCheck -> {
-                    _state.update { _state.value.copy(email = event.email) }
+                    if(event.email.matches(emailRegex)) {
+                        _effect.emit(SignUpContract.SideEffect.ValidateEmail)
+                        _state.update { _state.value.copy(email = event.email) }
+                    } else {
+                        _effect.emit(SignUpContract.SideEffect.InValidateEmail)
+                        _state.update { _state.value.copy(email = "") }
+                    }
                 }
                 is SignUpContract.Event.InputName -> {
                     if(event.name.length in 2..10) {
@@ -61,7 +70,7 @@ class SignUpViewModel @Inject constructor(
                     }
                 }
                 is SignUpContract.Event.InputPassword -> {
-                    if(event.password.length in 8.. 20) {
+                    if(event.password.length in 8.. 20 && event.password.matches(passwordRegex)) {
                         _effect.emit(SignUpContract.SideEffect.ValidatePassword)
                         _state.update { _state.value.copy(password = event.password) }
                     } else {

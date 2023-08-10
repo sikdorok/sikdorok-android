@@ -75,6 +75,12 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding
             .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
             .onEach { sideEffect ->
                 when(sideEffect) {
+                    is SignUpContract.SideEffect.ValidateEmail -> {
+                        binding.inputEmail.error = null
+                    }
+                    is SignUpContract.SideEffect.InValidateEmail -> {
+                        binding.inputEmail.error = getString(R.string.email_error)
+                    }
                     is SignUpContract.SideEffect.ValidateName -> {
                         binding.inputName.error = null
                     }
@@ -82,7 +88,7 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding
                         binding.inputName.error = getString(R.string.name_error)
                     }
                     is SignUpContract.SideEffect.InValidatePassword -> {
-                        binding.inputPassword.error = "8자 이상, 20자 이하로 입력해주세요"
+                        binding.inputPassword.error = getString(R.string.password_error)
                     }
                     is SignUpContract.SideEffect.ValidatePassword -> {
                         binding.inputPassword.error = null
@@ -91,7 +97,7 @@ class SignUpActivity : BaseActivity<ActivitySignUpBinding>(ActivitySignUpBinding
                         binding.inputPasswordCheck.error = null
                     }
                     is SignUpContract.SideEffect.InValidatePasswordCheck -> {
-                        binding.inputPasswordCheck.error = "입력하신 비밀번호가 일치하지 않습니다"
+                        binding.inputPasswordCheck.error = getString(R.string.password_check_error)
                     }
                     is SignUpContract.SideEffect.NaviToHome -> {
                         setResult(Activity.RESULT_OK)
