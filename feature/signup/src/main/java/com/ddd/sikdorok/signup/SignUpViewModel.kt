@@ -3,6 +3,7 @@ package com.ddd.sikdorok.signup
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.ddd.sikdorok.domain.email.PostOnCheckEmailUseCase
 import com.ddd.sikdorok.domain.signup.PostSignUpUseCase
 import com.ddd.sikdorok.shared.sign.SignUp
 import com.example.core_ui.base.BaseContract
@@ -22,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val onPostSignUpUseCase: PostSignUpUseCase
+    private val onPostSignUpUseCase: PostSignUpUseCase,
+    private val onPostEmailCheckUseCase: PostOnCheckEmailUseCase
 ): BaseViewModel(), BaseContract<SignUpContract.State, SignUpContract.Event, SignUpContract.SideEffect> {
 
     private val email: String
@@ -46,7 +48,13 @@ class SignUpViewModel @Inject constructor(
             when(event) {
                 is SignUpContract.Event.EmailCheck -> {
                     if(event.email.matches(emailRegex)) {
-                        _effect.emit(SignUpContract.SideEffect.ValidateEmail)
+                        val isAlreadyUser = onPostEmailCheckUseCase.invoke(event.email).data
+
+                        if(isAlreadyUser) {
+                            _effect.emit(SignUpContract.SideEffect.ValidateEmail)
+                        } else {
+                            _effect.emit(SignUpContract.SideEffect.InValidateEmail)
+                        }
                         _state.update { _state.value.copy(email = event.email) }
                     } else {
                         _effect.emit(SignUpContract.SideEffect.InValidateEmail)

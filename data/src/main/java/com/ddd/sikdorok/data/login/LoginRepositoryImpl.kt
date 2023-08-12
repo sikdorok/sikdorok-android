@@ -14,6 +14,11 @@ import javax.inject.Inject
 internal class LoginRepositoryImpl @Inject constructor(
     private val loginRemoteDataSource: LoginRemoteDataSource
 ): LoginRepository {
+
+    override suspend fun onCheckSikdorokEmail(email: String): SikdorokResponse<Boolean> {
+        return loginRemoteDataSource.onCheckSikdorokEmail(email)
+    }
+
     override suspend fun onCheckSikdorokUser(code: String): SikdorokResponse<Response> {
         return loginRemoteDataSource.onCheckSikdorokUser(code)
     }
