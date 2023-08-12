@@ -12,7 +12,7 @@ import com.ddd.sikdorok.home.HomeNavigator
 import com.ddd.sikdorok.login.databinding.ActivityLoginBinding
 import com.ddd.sikdorok.navigator.signin.SignInNavigator
 import com.ddd.sikdorok.signup.SignUpNavigator
-import com.example.core_ui.base.BaseActivity
+import com.ddd.sikdorok.core_ui.base.BaseActivity
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.AndroidEntryPoint

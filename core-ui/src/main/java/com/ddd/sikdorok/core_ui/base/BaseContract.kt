@@ -1,4 +1,4 @@
-package com.example.core_ui.base
+package com.ddd.sikdorok.core_ui.base
 
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow

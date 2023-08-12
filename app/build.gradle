@@ -69,6 +69,7 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":shared"))
     implementation(project(":domain"))
+    implementation(project(":preference"))
 
 
     implementation libs.androidCoreX

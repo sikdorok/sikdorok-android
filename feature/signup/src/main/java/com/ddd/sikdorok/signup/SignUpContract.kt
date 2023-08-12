@@ -50,5 +50,7 @@ class SignUpContract {
 
         object NaviToHome : SideEffect()
         object NaviToBack : SideEffect()
+
+        data class SnowSnackBar(val message: String) : SideEffect()
     }
 }

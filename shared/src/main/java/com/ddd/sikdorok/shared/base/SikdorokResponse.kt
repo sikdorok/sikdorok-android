@@ -4,7 +4,7 @@ package com.ddd.sikdorok.shared.base
 data class SikdorokResponse<out T>(
     val code: Int,
     val message: String,
-    val data: T
+    val data: T?
 )
 
 interface Response

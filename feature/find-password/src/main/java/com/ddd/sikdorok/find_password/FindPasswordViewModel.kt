@@ -3,8 +3,8 @@ package com.ddd.sikdorok.find_password
 import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.domain.password.PostFindPasswordUseCase
 import com.ddd.sikdorok.extensions.NotFound
-import com.example.core_ui.base.BaseContract
-import com.example.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.core_ui.base.BaseContract
+import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class FindPasswordViewModel @Inject constructor(
     private val postFindPasswordUseCase: PostFindPasswordUseCase
-): BaseViewModel(), BaseContract<FindPasswordContract.State, FindPasswordContract.Event, FindPasswordContract.SideEffect> {
+): BaseViewModel(),
+    BaseContract<FindPasswordContract.State, FindPasswordContract.Event, FindPasswordContract.SideEffect> {
 
     private val _effect = MutableSharedFlow<FindPasswordContract.SideEffect>()
     override val effect: SharedFlow<FindPasswordContract.SideEffect>

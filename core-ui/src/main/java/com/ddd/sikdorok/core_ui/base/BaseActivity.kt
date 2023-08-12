@@ -1,12 +1,11 @@
-package com.example.core_ui.base
+package com.ddd.sikdorok.core_ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
 
-abstract class BaseActivity<T : ViewDataBinding>(private val inflater: (LayoutInflater) -> T) :
-    AppCompatActivity() {
+abstract class BaseActivity<T : ViewDataBinding>(private val inflater: (LayoutInflater) -> T) : AppCompatActivity() {
 
     lateinit var binding: T
 

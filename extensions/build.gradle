@@ -33,6 +33,8 @@ android {
 dependencies {
 
     implementation libs.coroutine.core
+    implementation libs.annotation.jvm
+    implementation libs.material
 
     testImplementation libs.junit
     androidTestImplementation libs.junit.ext

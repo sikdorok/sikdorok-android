@@ -1,8 +1,8 @@
 package com.ddd.sikdorok.signin
 
 import androidx.lifecycle.viewModelScope
-import com.example.core_ui.base.BaseContract
-import com.example.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.core_ui.base.BaseContract
+import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
 
-): BaseViewModel(), BaseContract<SignInContract.State, SignInContract.Event, SignInContract.SideEffect> {
+): BaseViewModel(),
+    BaseContract<SignInContract.State, SignInContract.Event, SignInContract.SideEffect> {
     private val _effect = MutableSharedFlow<SignInContract.SideEffect>()
     override val effect: SharedFlow<SignInContract.SideEffect>
         get() = _effect.asSharedFlow()

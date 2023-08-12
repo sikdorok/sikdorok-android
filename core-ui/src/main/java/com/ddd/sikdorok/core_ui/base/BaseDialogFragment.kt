@@ -1,14 +1,13 @@
-package com.example.core_ui.base
+package com.ddd.sikdorok.core_ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.DialogFragment
 
-abstract class BaseFragment<T : ViewDataBinding>(private val inflater: (LayoutInflater) -> T) :
-    Fragment() {
+abstract class BaseDialogFragment<T : ViewDataBinding>(private val inflater: (LayoutInflater) -> T) : DialogFragment() {
 
     lateinit var binding: T
 
@@ -23,7 +22,10 @@ abstract class BaseFragment<T : ViewDataBinding>(private val inflater: (LayoutIn
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         initLayout()

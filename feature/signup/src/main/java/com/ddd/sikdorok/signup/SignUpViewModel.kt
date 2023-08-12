@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.domain.email.PostOnCheckEmailUseCase
 import com.ddd.sikdorok.domain.signup.PostSignUpUseCase
 import com.ddd.sikdorok.shared.sign.SignUp
-import com.example.core_ui.base.BaseContract
-import com.example.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.core_ui.base.BaseContract
+import com.ddd.sikdorok.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.domain.login.PostSaveTokenUseCase
+import com.ddd.sikdorok.shared.login.TokenType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -24,7 +26,8 @@ import javax.inject.Inject
 class SignUpViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val onPostSignUpUseCase: PostSignUpUseCase,
-    private val onPostEmailCheckUseCase: PostOnCheckEmailUseCase
+    private val onPostEmailCheckUseCase: PostOnCheckEmailUseCase,
+    private val onPostSaveTokenUseCase: PostSaveTokenUseCase
 ): BaseViewModel(), BaseContract<SignUpContract.State, SignUpContract.Event, SignUpContract.SideEffect> {
 
     private val email: String
@@ -50,7 +53,7 @@ class SignUpViewModel @Inject constructor(
                     if(event.email.matches(emailRegex)) {
                         val isAlreadyUser = onPostEmailCheckUseCase.invoke(event.email).data
 
-                        if(isAlreadyUser) {
+                        if(isAlreadyUser == false) {
                             _effect.emit(SignUpContract.SideEffect.ValidateEmail)
                         } else {
                             _effect.emit(SignUpContract.SideEffect.InValidateEmail)
@@ -104,8 +107,23 @@ class SignUpViewModel @Inject constructor(
                             event.passwordCheck
                         ))
 
-                        if(result.data.login.accessToken.isNullOrEmpty().not()) {
-                            _effect.emit(SignUpContract.SideEffect.NaviToHome)
+                        val accessToken = result.data?.login?.accessToken
+                        val refreshToken = result.data?.login?.refreshToken
+
+                        if(accessToken.isNullOrEmpty().not()) {
+                            onPostSaveTokenUseCase.invoke(TokenType.REFRESH_TOKEN, refreshToken.orEmpty())
+                                .mapCatching {
+                                    onPostSaveTokenUseCase.invoke(TokenType.ACCESS_TOKEN, accessToken.orEmpty())
+                                }.fold(
+                                    onSuccess = {
+                                        _effect.emit(SignUpContract.SideEffect.NaviToHome)
+                                    },
+                                    onFailure = {
+                                        it.printStackTrace()
+                                    }
+                                )
+                        } else {
+                            _effect.emit(SignUpContract.SideEffect.SnowSnackBar(result.message))
                         }
                     }
                 }

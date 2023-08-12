@@ -21,6 +21,7 @@ data class Response(
     data class Login(
         @SerializedName("usersId") val userId: String,
         val accessToken: String?,
+        val refreshToken: String?,
         val lastLoginAt: String,
         val email: String?,
         val nickname: String?

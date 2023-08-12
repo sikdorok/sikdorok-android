@@ -1,4 +1,4 @@
-package com.example.core_ui.base
+package com.ddd.sikdorok.core_ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-abstract class BaseBottomSheetFragment<T : ViewDataBinding>(private val inflater: (LayoutInflater) -> T) :
-    BottomSheetDialogFragment() {
+abstract class BaseBottomSheetFragment<T : ViewDataBinding>(private val inflater: (LayoutInflater) -> T) : BottomSheetDialogFragment() {
 
     lateinit var binding: T
 
