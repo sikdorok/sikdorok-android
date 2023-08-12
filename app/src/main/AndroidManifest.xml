@@ -59,8 +59,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".signin.SignInActivity"/>
-        <activity android:name=".send_password.SendPasswordActivity" />
+        <activity android:name=".signin.SignInActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".send_password.SendPasswordActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

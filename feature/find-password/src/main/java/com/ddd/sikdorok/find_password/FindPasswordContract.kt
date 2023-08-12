@@ -15,7 +15,7 @@ class FindPasswordContract {
 
     sealed class SideEffect {
         object NaviToBack : SideEffect()
-        object NaviToSuccess : SideEffect()
+        data class NaviToSuccess(val email: String) : SideEffect()
 
         object InValidateEmail : SideEffect()
         object ValidateEmail : SideEffect()

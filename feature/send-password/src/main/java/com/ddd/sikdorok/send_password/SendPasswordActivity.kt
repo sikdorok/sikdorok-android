@@ -13,9 +13,6 @@ class SendPasswordActivity : BaseActivity<ActivitySendPasswordBinding>(ActivityS
         val email = intent.getStringExtra(EMAIL)
 
         binding.tvDescription.text = getString(R.string.send_password_description, email.orEmpty())
-        binding.frameBack.setOnClickListener {
-
-        }
     }
 
     override fun setupCollect() {}

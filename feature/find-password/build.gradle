@@ -42,6 +42,9 @@ dependencies {
     implementation(project(":shared"))
     implementation(project(":extensions"))
 
+    implementation(project(":navigator:core"))
+    implementation(project(":navigator:send-password"))
+
 
     implementation libs.bundles.android
     implementation libs.material

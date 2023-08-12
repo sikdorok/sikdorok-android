@@ -54,7 +54,7 @@ class FindPasswordViewModel @Inject constructor(
                             if(result.code.NotFound) {
                                 _effect.emit(FindPasswordContract.SideEffect.ShowSnackBar(result.message))
                             } else {
-                                _effect.emit(FindPasswordContract.SideEffect.NaviToSuccess)
+                                _effect.emit(FindPasswordContract.SideEffect.NaviToSuccess(event.email))
                             }
                         },
                         onFailure = { error ->
