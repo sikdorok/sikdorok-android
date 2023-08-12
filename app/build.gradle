@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.gms.plugin)
 }
 
 android {
@@ -21,7 +22,6 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
             minifyEnabled false
             debuggable true
 
@@ -79,5 +79,8 @@ dependencies {
     kapt libs.hilt.compiler
 
     implementation libs.timber
+
+    implementation(platform(libs.firebase.bom))
+    implementation libs.firebase.analysis
 
 }
