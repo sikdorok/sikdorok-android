@@ -39,7 +39,7 @@ class SignUpViewModel @Inject constructor(
         get() = _state.asStateFlow()
 
     private val emailRegex = Regex("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b")
-    private val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%^&*()\\\\-_=+|{}\\\\[\\\\]:;<>,./?]).{8,}\$")
+    private val passwordRegex = """^(?=.*[a-zA-Z0-9!@#\$%^&*()\\-_=+|{}\\[\\]:;<>,./?]).{8,}$""".toRegex()
 
     override fun event(event: SignUpContract.Event) {
         viewModelScope.launch {
