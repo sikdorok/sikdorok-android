@@ -9,5 +9,9 @@
 
     <color name="beige">#FBF8F3</color>
 
+    <color name="modify">#F8F5ED</color>
+
     <color name="white">#FFFFFF</color>
+
+    <color name="modify_fab_color">#66000000</color>
 </resources>

@@ -1,0 +1,61 @@
+package com.ddd.sikdorok.modify
+
+import android.net.Uri
+
+class ModifyContract {
+    data class State(
+        val id: String = "",
+        val image: Uri = Uri.EMPTY,
+        val date: String = "",
+        val time: String = "",
+        val icon: String = "",
+        val isMainPost: Boolean = false,
+        val memo: String = ""
+    )
+
+    sealed class Event {
+        object OnClickBackIcon : Event()
+
+        object OnClickSaveButton : Event()
+
+        object OnClickCameraFAB : Event()
+
+        data class OnClickPostItem(val type: Type, val isGrant: Boolean) : Event() {
+            enum class Type {
+                CAMERA, ALBUM
+            }
+        }
+
+        data class OnClickIcon(val code: String) : Event()
+
+        data class OnClickMainPost(val isChecked: Boolean) : Event()
+
+        data class InputMemo(val memo: String) : Event()
+
+        data class OnUpdateImage(val uri: Uri) : Event()
+
+        data class OnClickDate(val date: String) : Event()
+
+        data class OnClickTime(val time: String) : Event()
+    }
+
+    sealed class SideEffect {
+        object OnFinishModify : SideEffect()
+
+        object RequestPermission : SideEffect()
+
+        object ShowPostDialog : SideEffect()
+
+        object RequestCamera : SideEffect()
+
+        object RequestAlbum : SideEffect()
+
+        object NaviToCamera : SideEffect()
+
+        object NaviToAlbum : SideEffect()
+
+        data class ShowDatePicker(val date: String) : SideEffect()
+
+        data class ShowTimePicker(val time: String) : SideEffect()
+    }
+}

@@ -32,8 +32,8 @@ android {
 
 dependencies {
 
+    implementation libs.androidCoreX
     implementation libs.coroutine.core
-    implementation libs.annotation.jvm
     implementation libs.material
 
     testImplementation libs.junit

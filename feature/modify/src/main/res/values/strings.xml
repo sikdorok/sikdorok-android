@@ -1,0 +1,9 @@
+<resources>
+    <string name="modify_save">저장</string>
+    <string name="modify_main_post">대표 게시물 설정하기</string>
+    <string name="modify_hint">메모를 남겨보세요 (선택)</string>
+
+    <string name="modify_post_dialog_camera">카메라로 촬영하기</string>
+    <string name="modify_post_dialog_album">사진 올리기</string>
+    <string name="modify_post_dialog_default">기본 이미지로 변경</string>
+</resources>
