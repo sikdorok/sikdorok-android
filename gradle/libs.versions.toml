@@ -28,6 +28,7 @@ jodatime = "2.12.5"
 [libraries]
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-analysis = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-dynamic-links = { group = "com.google.firebase", name = "firebase-dynamic-links-ktx" }
 androidCoreX = { group = "androidx.core", name = "core-ktx", version.ref = "androidCoreX" }
 androidCompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidCompat" }
 androidConstraint = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidConstraint" }

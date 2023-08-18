@@ -7,9 +7,11 @@ import com.ddd.sikdorok.navigator.HomeNavigatorImpl
 import com.ddd.sikdorok.navigator.SendPasswordNavigatorImpl
 import com.ddd.sikdorok.navigator.SignInNavigatorImpl
 import com.ddd.sikdorok.navigator.SignUpNavigatorImpl
+import com.ddd.sikdorok.navigator.SplashNavigatorImpl
 import com.ddd.sikdorok.navigator.signin.SignInNavigator
 import com.ddd.sikdorok.send_password.SendPasswordNavigator
 import com.ddd.sikdorok.signup.SignUpNavigator
+import com.ddd.sikdorok.splash.SplashNavigator
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -22,7 +24,6 @@ internal abstract class CoordinatorModule {
     @ActivityScoped
     @Binds
     abstract fun bindsSignInNavigator(navigator: SignInNavigatorImpl): SignInNavigator
-
 
     @ActivityScoped
     @Binds
@@ -39,4 +40,8 @@ internal abstract class CoordinatorModule {
     @ActivityScoped
     @Binds
     abstract fun bindsSendPasswordNavigator(navigator: SendPasswordNavigatorImpl): SendPasswordNavigator
+
+    @ActivityScoped
+    @Binds
+    abstract fun bindsSplashNavigator(navigator: SplashNavigatorImpl): SplashNavigator
 }

@@ -49,6 +49,7 @@ android {
 
 dependencies {
 
+    implementation(project(":feature:splash"))
     implementation(project(":feature:login"))
     implementation(project(":feature:signup"))
     implementation(project(":feature:signin"))
@@ -58,6 +59,7 @@ dependencies {
     implementation(project(":feature:modify"))
 
     implementation(project(":navigator:core"))
+    implementation(project(":navigator:splash"))
     implementation(project(":navigator:signin"))
     implementation(project(":navigator:signup"))
     implementation(project(":navigator:home"))
