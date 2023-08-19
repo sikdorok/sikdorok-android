@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":feature:find-password"))
     implementation(project(":feature:send-password"))
     implementation(project(":feature:modify"))
+    implementation(project(":feature:settings"))
 
     implementation(project(":navigator:core"))
     implementation(project(":navigator:splash"))
