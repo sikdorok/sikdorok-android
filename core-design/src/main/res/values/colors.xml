@@ -14,4 +14,7 @@
     <color name="white">#FFFFFF</color>
 
     <color name="modify_fab_color">#66000000</color>
+
+    <color name="yellow">#FEE500</color>
+    <color name="email_login_background">#3C3025</color>
 </resources>
