@@ -58,6 +58,7 @@ dependencies {
     implementation(project(":feature:send-password"))
     implementation(project(":feature:modify"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:delete-account"))
 
     implementation(project(":navigator:core"))
     implementation(project(":navigator:splash"))
@@ -66,6 +67,8 @@ dependencies {
     implementation(project(":navigator:home"))
     implementation(project(":navigator:find-password"))
     implementation(project(":navigator:send-password"))
+    implementation(project(":navigator:management"))
+    implementation(project(":navigator:delete-account"))
 
     implementation(project(":core-design"))
     implementation(project(":core-api"))
