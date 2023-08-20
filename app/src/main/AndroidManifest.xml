@@ -95,6 +95,10 @@
             android:name=".settings.SettingActivity"
             android:screenOrientation="portrait"/>
 
+        <activity
+            android:name=".delete_account.DeleteAccountActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>
