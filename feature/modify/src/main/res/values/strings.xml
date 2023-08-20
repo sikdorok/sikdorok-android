@@ -6,4 +6,9 @@
     <string name="modify_post_dialog_camera">카메라로 촬영하기</string>
     <string name="modify_post_dialog_album">사진 올리기</string>
     <string name="modify_post_dialog_default">기본 이미지로 변경</string>
+
+    <string name="modify_morning">아침</string>
+    <string name="modify_lunch">점심</string>
+    <string name="modify_evening">저녁</string>
+    <string name="modify_snack">간식</string>
 </resources>

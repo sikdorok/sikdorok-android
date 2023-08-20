@@ -8,9 +8,11 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.widget.FrameLayout
+import android.widget.RadioButton
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -98,6 +100,8 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                         .centerCrop()
                         .into(binding.ivMain)
                 }
+
+                binding.ivDefaultAdd.isVisible = state.image == Uri.EMPTY
             }
             .launchIn(lifecycleScope)
 
