@@ -1,5 +1,6 @@
 package com.ddd.sikdorok.core_api
 
+import com.ddd.sikdorok.core_api.service.ModifyService
 import com.ddd.sikdorok.core_api.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -43,4 +44,23 @@ internal object ServiceModule {
     fun providesSDRFindPassword(
         retrofit: Retrofit
     ) = retrofit.create<UserService.FindPassword>()
+
+    @Provides
+    @Singleton
+    fun providesSDRCreateFeed(
+        retrofit: Retrofit
+    ) = retrofit.create<ModifyService.Create>()
+
+
+    @Provides
+    @Singleton
+    fun providesSDRUpdateFeed(
+        retrofit: Retrofit
+    ) = retrofit.create<ModifyService.Update>()
+
+    @Provides
+    @Singleton
+    fun providesSDRDeleteFeed(
+        retrofit: Retrofit
+    ) = retrofit.create<ModifyService.Delete>()
 }
