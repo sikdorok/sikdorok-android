@@ -12,6 +12,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object ServiceModule {
+
+    @Provides
+    @Singleton
+    fun providesSikdorokWithDraw(
+        retrofit: Retrofit
+    ) = retrofit.create<UserService.WithDraw>()
+
     @Provides
     @Singleton
     fun providesSikdorokLogin(

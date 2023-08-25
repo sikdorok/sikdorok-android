@@ -7,6 +7,7 @@ import com.ddd.sikdorok.shared.password.Password
 import com.ddd.sikdorok.shared.sign.SignUp
 import com.ddd.sikdorok.shared.sign.SignUp as SikdorokSignUp
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -33,5 +34,10 @@ interface UserService {
     interface FindPassword {
         @POST("/users/password-find")
         suspend fun findPassword(@Body body: Password.Request): SikdorokResponse<Boolean>
+    }
+
+    interface WithDraw {
+        @DELETE("/users")
+        suspend fun withdrawUser(): SikdorokResponse<Unit>
     }
 }
