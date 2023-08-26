@@ -69,6 +69,7 @@ dependencies {
     implementation(project(":navigator:send-password"))
     implementation(project(":navigator:management"))
     implementation(project(":navigator:delete-account"))
+    implementation(project(":navigator:login"))
 
     implementation(project(":core-design"))
     implementation(project(":core-api"))

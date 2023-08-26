@@ -18,7 +18,7 @@ interface UserService {
         suspend fun requestkakaoLogin(@Body body: Request.Kakao): SikdorokResponse<Response>
 
         @POST("/users/login")
-        suspend fun requestLogin(body: Request.Sikdorok): SikdorokResponse<Response>
+        suspend fun requestLogin(@Body body: Request.Sikdorok): SikdorokResponse<Response>
     }
 
     interface SignUp {

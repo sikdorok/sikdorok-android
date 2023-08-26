@@ -78,7 +78,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/email_hint"
                 android:inputType="textEmailAddress"
-                android:maxLength="13"
                 android:maxLines="1"
                 android:singleLine="true" />
 

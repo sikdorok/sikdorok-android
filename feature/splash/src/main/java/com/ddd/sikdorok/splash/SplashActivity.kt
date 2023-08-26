@@ -7,6 +7,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ddd.sikdorok.core_ui.base.BaseActivity
 import com.ddd.sikdorok.home.HomeNavigator
+import com.ddd.sikdorok.navigator.login.LoginNavigator
 import com.ddd.sikdorok.splash.databinding.ActivitySplashBinding
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
@@ -26,6 +27,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
     @Inject
     lateinit var homeNavigator: HomeNavigator
+    @Inject
+    lateinit var signInNavigator: LoginNavigator
 
     override val viewModel: SplashViewModel by viewModels()
 
@@ -43,7 +46,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
         lifecycleScope.launch {
             delay(3000) // 우선 임시로 작업, 추후 변경
-            viewModel.event(SplashContract.Event.DueTime)
+            viewModel.event(SplashContract.Event.LoginCheck)
         }
     }
 
@@ -54,6 +57,10 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
                 when (effect) {
                     is SplashContract.Effect.GoToMain -> {
                         startActivity(homeNavigator.start(this, effect.deeplink))
+                        finish()
+                    }
+                    is SplashContract.Effect.NaviToSignIn -> {
+                        startActivity(signInNavigator.start(this))
                         finish()
                     }
                 }

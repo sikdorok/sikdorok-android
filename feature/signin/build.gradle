@@ -40,7 +40,14 @@ dependencies {
     implementation(project(":navigator:signup"))
     implementation(project(":navigator:find-password"))
     implementation(project(":navigator:core"))
+    implementation(project(":navigator:home"))
+
     implementation(project(":core-ui"))
+
+    implementation(project(":domain"))
+    implementation(project(":shared"))
+
+    implementation(project(":extensions"))
 
     implementation libs.bundles.android
     implementation libs.material

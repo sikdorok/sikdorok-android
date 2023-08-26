@@ -27,6 +27,10 @@ internal class LoginRemoteDataSourceImpl @Inject constructor(
         return sikdorokLoginService.requestkakaoLogin(Request.Kakao(code))
     }
 
+    override suspend fun onRequestSikdorokLocalUser(body: Request.Sikdorok): SikdorokResponse<Response> {
+        return sikdorokLoginService.requestLogin(body)
+    }
+
     override suspend fun onSignUpUser(body: SignUp.Request): SikdorokResponse<Response> {
         return sikdorokSignUpService.requestRegisterUser(body)
     }

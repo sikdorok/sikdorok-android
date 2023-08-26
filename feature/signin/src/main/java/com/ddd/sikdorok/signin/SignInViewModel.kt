@@ -3,6 +3,10 @@ package com.ddd.sikdorok.signin
 import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.core_ui.base.BaseContract
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.domain.login.PostSaveTokenUseCase
+import com.ddd.sikdorok.domain.login.PostSikdorokLocalLoginUseCase
+import com.ddd.sikdorok.shared.login.Request
+import com.ddd.sikdorok.shared.login.TokenType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,9 +17,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("SpellCheckingInspection")
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-
+    private val postSikdorokLocalLoginUseCase: PostSikdorokLocalLoginUseCase,
+    private val postSaveTokenUseCase: PostSaveTokenUseCase
 ): BaseViewModel(),
     BaseContract<SignInContract.State, SignInContract.Event, SignInContract.SideEffect> {
     private val _effect = MutableSharedFlow<SignInContract.SideEffect>()
@@ -37,6 +43,32 @@ class SignInViewModel @Inject constructor(
                 }
                 is SignInContract.Event.NaviToFindPassword -> {
                     _effect.emit(SignInContract.SideEffect.NaviToFindPassword)
+                }
+                is SignInContract.Event.OnClickSubmit -> {
+                    postSikdorokLocalLoginUseCase.invoke(
+                        Request.Sikdorok(event.email, event.password)
+                    ).fold(
+                        onSuccess = { result ->
+                            if(result.data != null) {
+                                postSaveTokenUseCase.invoke(
+                                    TokenType.ACCESS_TOKEN,
+                                    result.data?.login?.accessToken.orEmpty()
+                                )
+                                postSaveTokenUseCase.invoke(
+                                    TokenType.REFRESH_TOKEN,
+                                    result.data?.login?.refreshToken.orEmpty()
+                                )
+
+                                _effect.emit(SignInContract.SideEffect.NaviToHome)
+
+                            } else {
+                                _effect.emit(SignInContract.SideEffect.ShowSnackBar(result.message))
+                            }
+                        },
+                        onFailure = {
+                            _effect.emit(SignInContract.SideEffect.ShowSnackBar(it.message.orEmpty()))
+                        }
+                    )
                 }
             }
         }
