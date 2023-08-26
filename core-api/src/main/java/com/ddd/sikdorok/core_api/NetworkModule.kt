@@ -1,9 +1,13 @@
 package com.ddd.sikdorok.core_api
 
+import com.ddd.sikdorok.core_api.annotation.HeaderInterceptor
+import com.ddd.sikdorok.core_api.annotation.LoggingInterceptor
+import com.ddd.sikdorok.core_api.annotation.RefreshInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Authenticator
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -28,13 +32,18 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun providesOkHttpClient(
-        interceptor: Interceptor
+        @LoggingInterceptor interceptor: Interceptor,
+        @HeaderInterceptor accessTokenInterceptor: Interceptor,
+        @RefreshInterceptor refreshTokenInterceptor: Authenticator
     ) = OkHttpClient.Builder()
         .addInterceptor(interceptor)
+        .addInterceptor(accessTokenInterceptor)
+        .authenticator(refreshTokenInterceptor)
         .build()
 
     @Provides
     @Singleton
+    @LoggingInterceptor
     fun providesHttpLoggingInterceptor(): Interceptor {
         val interceptor = HttpLoggingInterceptor {
             Timber.i(it)

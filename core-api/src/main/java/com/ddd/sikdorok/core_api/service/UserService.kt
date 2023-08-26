@@ -21,6 +21,11 @@ interface UserService {
         suspend fun requestLogin(@Body body: Request.Sikdorok): SikdorokResponse<Response>
     }
 
+    interface Token {
+        @POST("/users/access-token")
+        suspend fun postRefreshToken(@Body body: Request.RefreshToken): SikdorokResponse<String>
+    }
+
     interface SignUp {
         @POST("/users/register")
         suspend fun requestRegisterUser(@Body body: SikdorokSignUp.Request): SikdorokResponse<Response>

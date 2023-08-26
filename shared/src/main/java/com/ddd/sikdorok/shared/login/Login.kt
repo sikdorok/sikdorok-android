@@ -12,6 +12,8 @@ sealed class Request {
         val email: String,
         val password: String
     ) : Request()
+
+    data class RefreshToken(val token: String): Request()
 }
 
 data class Response(

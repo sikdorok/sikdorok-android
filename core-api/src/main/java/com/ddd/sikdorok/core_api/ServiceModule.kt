@@ -28,6 +28,12 @@ internal object ServiceModule {
 
     @Provides
     @Singleton
+    fun providesSikdorokRefreshToken(
+        retrofit: Retrofit
+    ) = retrofit.create<UserService.Token>()
+
+    @Provides
+    @Singleton
     fun providesSDRSignUp(
         retrofit: Retrofit
     ) = retrofit.create<UserService.SignUp>()
