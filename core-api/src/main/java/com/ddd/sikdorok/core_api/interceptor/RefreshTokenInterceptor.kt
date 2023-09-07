@@ -21,19 +21,12 @@ private const val AUTHENTICATION_FAILED = 401
 @Suppress("SpellCheckingInspection")
 internal class RefreshTokenInterceptor constructor(
     private val sikdorokPreference: SikdorokPreference,
-    private val refreshService: UserService.Token
 ): Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         return if(response.code == AUTHENTICATION_FAILED) {
-            val refreshToken = sikdorokPreference.getString(Keys.REFRESH_TOKEN)
-
-            val accessToken = runBlocking {
-                refreshService.postRefreshToken(SharedRequest.RefreshToken(refreshToken))
-            }.data
-
             val builder = response.newBuilder()
                 .removeHeader("Authorization")
-                .addHeader("Authorization", "Bearer $accessToken")
+//                .addHeader("Authorization", "Bearer $accessToken")
                 .build()
 
             builder.request
@@ -49,12 +42,10 @@ internal object RefreshTokenInterceptorModule {
     @Provides
     @RefreshInterceptor
     fun providesRefreshTokenInterceptor(
-        preference: SikdorokPreference,
-        service: UserService.Token
+        preference: SikdorokPreference
     ): Authenticator {
         return RefreshTokenInterceptor(
-            preference,
-            service
+            preference
         )
     }
 }
