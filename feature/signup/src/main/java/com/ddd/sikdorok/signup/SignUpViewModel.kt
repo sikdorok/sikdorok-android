@@ -3,13 +3,13 @@ package com.ddd.sikdorok.signup
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.ddd.sikdorok.domain.email.PostOnCheckEmailUseCase
-import com.ddd.sikdorok.domain.signup.PostSignUpUseCase
-import com.ddd.sikdorok.shared.sign.SignUp
 import com.ddd.sikdorok.core_ui.base.BaseContract
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.domain.email.PostOnCheckEmailUseCase
 import com.ddd.sikdorok.domain.login.PostSaveTokenUseCase
+import com.ddd.sikdorok.domain.signup.PostSignUpUseCase
 import com.ddd.sikdorok.shared.login.TokenType
+import com.ddd.sikdorok.shared.sign.SignUp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -51,9 +51,9 @@ class SignUpViewModel @Inject constructor(
             when(event) {
                 is SignUpContract.Event.EmailCheck -> {
                     if(event.email.matches(emailRegex)) {
-                        val isAlreadyUser = onPostEmailCheckUseCase.invoke(event.email).data
+                        val isAlreadyUser = onPostEmailCheckUseCase(event.email).data
 
-                        if(isAlreadyUser == false) {
+                        if(isAlreadyUser == false || isAlreadyUser == null) {
                             _effect.emit(SignUpContract.SideEffect.ValidateEmail)
                         } else {
                             _effect.emit(SignUpContract.SideEffect.InValidateEmail)

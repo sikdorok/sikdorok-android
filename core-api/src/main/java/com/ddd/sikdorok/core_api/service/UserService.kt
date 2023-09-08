@@ -10,6 +10,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UserService {
@@ -32,8 +33,8 @@ interface UserService {
     }
 
     interface EmailCheck {
-        @GET("/users/email-check")
-        suspend fun validateEmail(@Query("email") email: String): SikdorokResponse<Boolean>
+        @GET("/users/email-check/{email}")
+        suspend fun validateEmail(@Path("email") email: String): SikdorokResponse<Boolean>
     }
 
     interface FindPassword {

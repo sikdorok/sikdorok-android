@@ -1,5 +1,7 @@
 package com.ddd.sikdorok.core_api
 
+import com.ddd.sikdorok.core_api.annotation.NoAuthRetrofit
+import com.ddd.sikdorok.core_api.annotation.NormalRetrofit
 import com.ddd.sikdorok.core_api.service.ModifyService
 import com.ddd.sikdorok.core_api.service.UserService
 import dagger.Module
@@ -17,56 +19,56 @@ internal object ServiceModule {
     @Provides
     @Singleton
     fun providesSikdorokWithDraw(
-        retrofit: Retrofit
+        @NormalRetrofit retrofit: Retrofit
     ) = retrofit.create<UserService.WithDraw>()
 
     @Provides
     @Singleton
     fun providesSikdorokLogin(
-       retrofit: Retrofit
+        @NoAuthRetrofit retrofit: Retrofit
     ) = retrofit.create<UserService.SikdorokLogin>()
 
     @Provides
     @Singleton
     fun providesSikdorokRefreshToken(
-        retrofit: Retrofit
+        @NormalRetrofit retrofit: Retrofit
     ) = retrofit.create<UserService.Token>()
 
     @Provides
     @Singleton
     fun providesSDRSignUp(
-        retrofit: Retrofit
+        @NoAuthRetrofit retrofit: Retrofit
     ) = retrofit.create<UserService.SignUp>()
 
 
     @Provides
     @Singleton
     fun providesSDREmailValidate(
-        retrofit: Retrofit
+        @NoAuthRetrofit retrofit: Retrofit
     ) = retrofit.create<UserService.EmailCheck>()
 
     @Provides
     @Singleton
     fun providesSDRFindPassword(
-        retrofit: Retrofit
+        @NoAuthRetrofit retrofit: Retrofit
     ) = retrofit.create<UserService.FindPassword>()
 
     @Provides
     @Singleton
     fun providesSDRCreateFeed(
-        retrofit: Retrofit
+        @NormalRetrofit retrofit: Retrofit
     ) = retrofit.create<ModifyService.Create>()
 
 
     @Provides
     @Singleton
     fun providesSDRUpdateFeed(
-        retrofit: Retrofit
+        @NormalRetrofit retrofit: Retrofit
     ) = retrofit.create<ModifyService.Update>()
 
     @Provides
     @Singleton
     fun providesSDRDeleteFeed(
-        retrofit: Retrofit
+        @NormalRetrofit retrofit: Retrofit
     ) = retrofit.create<ModifyService.Delete>()
 }

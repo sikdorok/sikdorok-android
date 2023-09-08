@@ -2,6 +2,10 @@ package com.ddd.sikdorok.core_api
 
 import com.ddd.sikdorok.core_api.annotation.HeaderInterceptor
 import com.ddd.sikdorok.core_api.annotation.LoggingInterceptor
+import com.ddd.sikdorok.core_api.annotation.NoAuthOkHttpClient
+import com.ddd.sikdorok.core_api.annotation.NoAuthRetrofit
+import com.ddd.sikdorok.core_api.annotation.NormalOkHttpClient
+import com.ddd.sikdorok.core_api.annotation.NormalRetrofit
 import com.ddd.sikdorok.core_api.annotation.RefreshInterceptor
 import dagger.Module
 import dagger.Provides
@@ -19,19 +23,35 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object NetworkModule {
+
+    const val BASE_URL = "https://sikdorok.jeffrey-oh.click"
+
     @Provides
     @Singleton
-    fun providesRetrofit(
-        client: OkHttpClient
+    @NormalRetrofit
+    fun providesNormalRetrofit(
+        @NormalOkHttpClient client: OkHttpClient
     ) = Retrofit.Builder()
-        .baseUrl("https://sikdorok.jeffrey-oh.click")
+        .baseUrl(BASE_URL)
         .client(client)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     @Provides
     @Singleton
-    fun providesOkHttpClient(
+    @NoAuthRetrofit
+    fun providesNoAuthRetrofit(
+        @NoAuthOkHttpClient client: OkHttpClient
+    ) = Retrofit.Builder()
+        .baseUrl(BASE_URL)
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    @Provides
+    @Singleton
+    @NormalOkHttpClient
+    fun providesNormalOkHttpClient(
         @LoggingInterceptor interceptor: Interceptor,
         @HeaderInterceptor accessTokenInterceptor: Interceptor,
         @RefreshInterceptor refreshTokenInterceptor: Authenticator
@@ -39,6 +59,15 @@ internal object NetworkModule {
         .addInterceptor(interceptor)
         .addInterceptor(accessTokenInterceptor)
         .authenticator(refreshTokenInterceptor)
+        .build()
+
+    @Provides
+    @Singleton
+    @NoAuthOkHttpClient
+    fun providesNoAuthOkHttpClient(
+        @LoggingInterceptor interceptor: Interceptor,
+    ) = OkHttpClient.Builder()
+        .addInterceptor(interceptor)
         .build()
 
     @Provides
