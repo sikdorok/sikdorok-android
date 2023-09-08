@@ -76,6 +76,7 @@
                 android:singleLine="true"
                 android:maxLength="13"
                 android:maxLines="1"
+                android:fontFamily="@font/leeseoyun"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/name_hint" />
@@ -113,6 +114,7 @@
                 android:layout_width="match_parent"
                 android:singleLine="true"
                 android:maxLines="1"
+                android:fontFamily="@font/leeseoyun"
                 android:layout_height="wrap_content"
                 android:hint="@string/email_hint" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -149,6 +151,7 @@
                 android:maxLines="1"
                 android:inputType="textPassword"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/leeseoyun"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_hint" />
 
@@ -187,6 +190,7 @@
                 android:maxLines="1"
                 android:inputType="textPassword"
                 android:layout_width="match_parent"
+                android:fontFamily="@font/leeseoyun"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_hint" />
 
@@ -203,6 +207,7 @@
             android:gravity="center"
             android:paddingVertical="14dp"
             android:enabled="false"
+            android:textAppearance="@style/Typography.H4.Bold"
             android:background="@drawable/enable_button_bg"
             android:textColor="@color/enable_button_text_color"
             app:layout_constraintStart_toStartOf="parent"

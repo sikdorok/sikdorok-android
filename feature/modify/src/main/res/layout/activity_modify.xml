@@ -71,6 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:textAppearance="@style/Typography.H4.Regular"
                     tools:text="@tools:sample/lorem" />
 
                 <ImageView
@@ -97,6 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:textAppearance="@style/Typography.H4.Regular"
                     tools:text="@tools:sample/lorem" />
 
                 <ImageView

@@ -9,7 +9,6 @@
 
     <style name="Theme.DDD9Android2Sikdorok" parent="Base.Theme.DDD9Android2Sikdorok" />
 
-
     <style name="SikdorokTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/input_correct</item>
         <item name="boxStrokeErrorColor">@color/input_error</item>

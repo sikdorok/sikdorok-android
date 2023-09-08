@@ -1,105 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="Typography">
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/gray80</item>
         <item name="android:letterSpacing">-0.05</item>
         <item name="android:includeFontPadding">false</item>
+        <item name="android:fontFamily">@font/leeseoyun</item>
     </style>
-
 
     <!-- H1 -->
     <style name="Typography.H1">
         <item name="android:textSize" tools:ignore="SpUsage">24dp</item>
     </style>
-    <style name="Typography.H1.Regular">
-        <item name="fontFamily"></item>
-    </style>
-    <style name="Typography.H1.Medium">
-        <item name="fontFamily"></item>
-    </style>
+
+    <style name="Typography.H1.Regular" />
+
+    <style name="Typography.H1.Medium" />
+
     <style name="Typography.H1.Bold">
-        <item name="fontFamily"></item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- H2 -->
     <style name="Typography.H2">
         <item name="android:textSize" tools:ignore="SpUsage">20dp</item>
     </style>
+
     <style name="Typography.H2.Bold">
-        <item name="fontFamily"></item>
+        <item name="android:textStyle">bold</item>
     </style>
-    <style name="Typography.H2.Regular">
-        <item name="fontFamily"></item>
-    </style>
-    <style name="Typography.H2.Medium">
-        <item name="fontFamily"></item>
-    </style>
+
+    <style name="Typography.H2.Regular" />
+
+    <style name="Typography.H2.Medium" />
 
     <!-- H3 -->
     <style name="Typography.H3">
         <item name="android:textSize" tools:ignore="SpUsage">18dp</item>
     </style>
+
     <style name="Typography.H3.Bold">
-        <item name="fontFamily"></item>
+        <item name="android:textStyle">bold</item>
     </style>
-    <style name="Typography.H3.Regular">
-        <item name="fontFamily"></item>
-    </style>
-    <style name="Typography.H3.Medium">
-        <item name="fontFamily"></item>
-    </style>
+
+    <style name="Typography.H3.Regular" />
+
+    <style name="Typography.H3.Medium" />
 
     <!-- H4 -->
     <style name="Typography.H4">
         <item name="android:textSize" tools:ignore="SpUsage">16dp</item>
     </style>
+
     <style name="Typography.H4.Bold">
-        <item name="fontFamily"></item>
+        <item name="android:textStyle">bold</item>
     </style>
-    <style name="Typography.H4.Regular">
-        <item name="fontFamily"></item>
-    </style>
-    <style name="Typography.H4.Medium">
-        <item name="fontFamily"></item>
-    </style>
+
+    <style name="Typography.H4.Regular" />
+
+    <style name="Typography.H4.Medium" />
 
     <!-- Body1 -->
     <style name="Typography.Body1">
         <item name="android:textSize" tools:ignore="SpUsage">14dp</item>
     </style>
-    <style name="Typography.Body1.Regular">
-        <item name="fontFamily"></item>
-    </style>
+
+    <style name="Typography.Body1.Regular" />
+
     <style name="Typography.Body1.Bold">
-        <item name="fontFamily"></item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Body2 -->
     <style name="Typography.Body2">
         <item name="android:textSize" tools:ignore="SpUsage">14dp</item>
     </style>
-    <style name="Typography.Body2.Regular">
-        <item name="fontFamily"></item>
-    </style>
-    <style name="Typography.Body2.Medium">
-        <item name="fontFamily"></item>
-    </style>
+
+    <style name="Typography.Body2.Regular" />
+
+    <style name="Typography.Body2.Medium" />
+
     <style name="Typography.Body2.Bold">
-        <item name="fontFamily"></item>
+        <item name="android:fontFamily">@font/leeseoyun</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- Caption -->
     <style name="Typography.Caption">
         <item name="android:textSize" tools:ignore="SpUsage">12dp</item>
     </style>
-    <style name="Typography.Caption.Regular">
-        <item name="fontFamily"></item>
-    </style>
-    <style name="Typography.Caption.Medium">
-        <item name="fontFamily"></item>
-    </style>
+
+    <style name="Typography.Caption.Regular" />
+
+    <style name="Typography.Caption.Medium" />
+
     <style name="Typography.Caption.Bold">
-        <item name="fontFamily"></item>
+        <item name="android:fontFamily">@font/leeseoyun</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>
