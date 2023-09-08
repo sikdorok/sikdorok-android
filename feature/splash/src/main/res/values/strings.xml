@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="title" translatable="false">...</string>
+    <string name="description" translatable="false">당신의 도시락 기록 서비스 :)</string>
 
 </resources>
