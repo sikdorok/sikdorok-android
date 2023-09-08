@@ -9,14 +9,13 @@ class ModifyContract {
         val date: String = "",
         val time: String = "",
         val icon: String = "",
+        val tag: String = "",
         val isMainPost: Boolean = false,
         val memo: String = ""
     )
 
     sealed class Event {
         object OnClickBackIcon : Event()
-
-        object OnClickSaveButton : Event()
 
         object OnClickCameraFAB : Event()
 
@@ -25,6 +24,8 @@ class ModifyContract {
                 CAMERA, ALBUM
             }
         }
+
+        data class OnClickDay(val code: String) : Event()
 
         data class OnClickIcon(val code: String) : Event()
 
@@ -37,6 +38,15 @@ class ModifyContract {
         data class OnClickDate(val date: String) : Event()
 
         data class OnClickTime(val time: String) : Event()
+
+        data class OnSavedFeed(
+            val fileName: String,
+            val tag: String,
+            val time: String,
+            val memo: String,
+            val icon: String,
+            val isMainFeed: Boolean
+        ) : Event()
     }
 
     sealed class SideEffect {

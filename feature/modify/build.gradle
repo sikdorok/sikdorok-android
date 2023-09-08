@@ -39,6 +39,7 @@ dependencies {
     implementation(project(":core-design"))
     implementation(project(":extensions"))
     implementation(project(":shared"))
+    implementation(project(":domain"))
 
     implementation libs.bundles.android
     implementation libs.material

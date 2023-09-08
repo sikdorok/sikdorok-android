@@ -12,6 +12,7 @@ import android.widget.RadioButton
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -74,6 +75,24 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         }
         binding.rlTime.setOnClickListener {
             viewModel.event(ModifyContract.Event.OnClickTime(binding.tvTime.text.toString()))
+        }
+        binding.tvSave.setOnClickListener {
+            viewModel.event(ModifyContract.Event.OnSavedFeed(
+                fileName = viewModel.state.value.image.toString(),
+                tag = viewModel.state.value.tag,
+                time = viewModel.state.value.date,
+                memo = viewModel.state.value.memo,
+                icon = viewModel.state.value.icon,
+                isMainFeed = viewModel.state.value.isMainPost
+            ))
+        }
+
+        binding.radioTag.setOnCheckedChangeListener { radioGroup, i ->
+            viewModel.event(ModifyContract.Event.OnClickDay(radioGroup[i].tag as String))
+        }
+
+        binding.radioMealType.setOnCheckedChangeListener { radioGroup, i ->
+            viewModel.event(ModifyContract.Event.OnClickIcon(radioGroup[i].tag as String))
         }
     }
 

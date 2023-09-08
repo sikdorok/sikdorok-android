@@ -3,6 +3,12 @@ package com.ddd.sikdorok.modify
 import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.core_ui.base.BaseContract
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.domain.modify.CreateFeedUseCase
+import com.ddd.sikdorok.domain.modify.DeleteFeedUseCase
+import com.ddd.sikdorok.domain.modify.UpdateFeedUseCase
+import com.ddd.sikdorok.shared.code.Icon
+import com.ddd.sikdorok.shared.code.Tag
+import com.ddd.sikdorok.shared.modify.FeedRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +21,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ModifyViewModel @Inject constructor() : BaseViewModel(), BaseContract<ModifyContract.State, ModifyContract.Event, ModifyContract.SideEffect> {
+class ModifyViewModel @Inject constructor(
+    private val createFeedUseCase: CreateFeedUseCase,
+    private val modifyFeedUseCase: UpdateFeedUseCase,
+    private val deleteFeedUseCase: DeleteFeedUseCase
+) : BaseViewModel(), BaseContract<ModifyContract.State, ModifyContract.Event, ModifyContract.SideEffect> {
 
     private val _effect = MutableSharedFlow<ModifyContract.SideEffect>()
     override val effect: SharedFlow<ModifyContract.SideEffect>
@@ -61,6 +71,27 @@ class ModifyViewModel @Inject constructor() : BaseViewModel(), BaseContract<Modi
                 }
                 is ModifyContract.Event.OnClickDate -> {
                     _effect.emit(ModifyContract.SideEffect.ShowDatePicker(event.date))
+                }
+                is ModifyContract.Event.OnClickIcon -> {
+                    _state.update { it.copy(icon = event.code) }
+                }
+                is ModifyContract.Event.OnClickDay -> {
+                    _state.update { it.copy(tag = event.code) }
+                }
+                is ModifyContract.Event.OnSavedFeed -> {
+                    viewModelScope.launch {
+                        createFeedUseCase.invoke(
+                            event.fileName,
+                            FeedRequest(
+                                Tag.valueOf(event.tag),
+                                event.time,
+                                event.memo,
+                                Icon.valueOf(event.icon),
+                                event.isMainFeed,
+                                emptyList()
+                            )
+                        )
+                    }
                 }
                 else -> Unit
             }
