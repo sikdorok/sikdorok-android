@@ -1,13 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.DDD9Android2Sikdorok" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Base.Theme.Sikdorok" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:statusBarColor">@color/background</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:enforceStatusBarContrast" tools:targetApi="q">false</item>
     </style>
 
-    <style name="Theme.DDD9Android2Sikdorok" parent="Base.Theme.DDD9Android2Sikdorok" />
+    <style name="Theme.Sikdorok" parent="Base.Theme.Sikdorok" />
 
     <style name="SikdorokTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/input_correct</item>

@@ -13,7 +13,8 @@ dependencyResolutionManagement {
         maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
     }
 }
-rootProject.name = "DDD-9-Android2-Sikdorok"
+rootProject.name = "sikdorok-android"
+
 include ':app'
 include ':core-design'
 include ':shared'
