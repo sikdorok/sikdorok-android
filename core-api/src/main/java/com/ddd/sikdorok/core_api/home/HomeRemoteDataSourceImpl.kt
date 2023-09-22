@@ -25,7 +25,7 @@ internal class HomeRemoteDataSourceImpl @Inject constructor(
         page: Int,
         size: Int,
         date: String,
-        tag: String
+        tag: String?
     ): SikdorokResponse<HomeFeed> {
         return sikdorokHomeService.getHomeDailyFeeds(page, size, date, tag)
     }

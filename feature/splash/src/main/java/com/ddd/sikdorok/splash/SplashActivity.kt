@@ -27,6 +27,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
     @Inject
     lateinit var homeNavigator: HomeNavigator
+
     @Inject
     lateinit var signInNavigator: LoginNavigator
 
@@ -35,6 +36,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
     override fun initLayout() {
         bind {
             vm = viewModel
+            lifecycleOwner = this@SplashActivity
         }
 
         initDynamicLinksListener()
@@ -56,7 +58,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             .onEach { effect ->
                 when (effect) {
                     is SplashContract.Effect.GoToMain -> {
-                         startActivity(homeNavigator.start(this, effect.deeplink))
+                        startActivity(homeNavigator.start(this, effect.deeplink))
                         finish()
                     }
                     is SplashContract.Effect.NaviToSignIn -> {

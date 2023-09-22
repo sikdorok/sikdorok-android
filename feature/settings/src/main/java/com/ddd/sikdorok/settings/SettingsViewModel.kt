@@ -51,7 +51,7 @@ class SettingsViewModel @Inject constructor(
                     it.copy(
                         email =  response.email,
                         nickname = response.nickname ?: "",
-                        isNeedUpdate = response.isLatest,
+                        isNeedUpdate = !response.isLatest,
                         isKakaoUser = response.oauthType == KAKAO_USER_TYPE
                     )
                 }

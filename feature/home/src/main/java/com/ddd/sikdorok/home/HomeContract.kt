@@ -14,11 +14,12 @@ interface HomeContract :
     data class State(
         val isLoading: Boolean = false,
         val nowTime: DateTime = DateTime.now(),
-        val nowTag: String = Tag.MORNING.code,
+        val nowTag: String = "",
         val weekCount: Int = DateUtil.getMonthWithWeekCount(DateTime.now()),
         val weeklyList: List<WeeklyFeeds> = WeeklyFeeds.emptyWeeklyList,
         val feedList: List<HomeDailyFeed> = HomeDailyFeed.emptyListItem,
         val pageInfo: HomeListPaging? = HomeListPaging(),
+        val nowTagList: List<String> = emptyList(),
         val tagCanGoPrevious: Boolean = false,
         val tagCanGoNext: Boolean = false,
     )

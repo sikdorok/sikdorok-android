@@ -12,11 +12,14 @@ import javax.inject.Inject
 internal class HomeNavigatorImpl @Inject constructor() : HomeNavigator {
 
     override fun start(context: Context): Intent {
-        return Intent(context, HomeActivity::class.java)
+        return Intent(context, HomeActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        }
     }
 
     override fun start(context: Context, deeplink: String?): Intent {
         return Intent(context, HomeActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             putExtras(bundleOf(KEY_DEEPLINK to deeplink))
         }
     }

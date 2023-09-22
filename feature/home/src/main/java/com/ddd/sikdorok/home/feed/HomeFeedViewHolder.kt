@@ -4,6 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.ddd.sikdorok.core_ui.util.bindImageRes
+import com.ddd.sikdorok.core_ui.util.bindMealIcon
+import com.ddd.sikdorok.core_ui.util.bindVisibleOrGone
 import com.ddd.sikdorok.home.R
 import com.ddd.sikdorok.home.databinding.ItemMealboxBinding
 import com.ddd.sikdorok.shared.home.HomeDailyFeed
@@ -24,6 +27,12 @@ class HomeFeedViewHolder(
                     }
                 }
             }
+
+            iconTodayMenu.bindMealIcon(item.icon)
+            time.text = item.time
+            imgMealbox.bindImageRes(item.photosInfoList?.firstOrNull()?.uploadFullPath)
+            containerMealbox.bindVisibleOrGone(!item.photosInfoList.isNullOrEmpty())
+            iconIsMain.bindVisibleOrGone(item.isMain)
 
             if (item.memo.isNullOrEmpty()) {
                 memo.setTextColor(ContextCompat.getColor(root.context, R.color.memo_disable))

@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/bind"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.ddd.sikdorok.modify.ModifyViewModel" />
+    </data>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -117,8 +125,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/iv_main"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rl_date">
@@ -194,20 +202,19 @@
                 android:layout_height="320dp"
                 android:layout_marginHorizontal="20dp"
                 android:adjustViewBounds="true"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/modify_image_bg"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toTopOf="@+id/radio_meal_type"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radio_tag"
                 app:layout_constraintVertical_chainStyle="packed" />
-
 
             <ImageView
                 android:id="@+id/iv_default_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:alpha="0.3"
+                bind:visibility="@{vm.state.imageUrl.empty &amp;&amp; vm.state.image == null}"
                 android:src="@drawable/ic_default_add"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_main"
                 app:layout_constraintEnd_toEndOf="@+id/iv_main"
@@ -227,15 +234,13 @@
                 app:layout_constraintEnd_toEndOf="@+id/iv_main"
                 app:tint="@color/white" />
 
-
             <RadioGroup
                 android:id="@+id/radio_meal_type"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/check_main_post"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_main">
@@ -313,6 +318,8 @@
                     android:tag="C000400009" />
 
                 <RadioButton
+                    android:id="@+id/type_button_nothing"
+                    android:background="@drawable/ic_nothing"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="12dp"
@@ -332,7 +339,6 @@
                 android:text="@string/modify_main_post"
                 android:textAppearance="@style/Typography.Body2.Regular"
                 android:textColor="@color/gray80"
-                app:layout_constraintBottom_toTopOf="@+id/edit_input"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radio_meal_type" />
 
@@ -347,20 +353,32 @@
                 app:layout_constraintStart_toEndOf="@+id/check_main_post"
                 app:layout_constraintTop_toTopOf="@+id/check_main_post" />
 
-
-            <EditText
-                android:id="@+id/edit_input"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/container_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
                 android:layout_marginHorizontal="20dp"
+                app:cardBackgroundColor="#FBF8F3"
                 android:layout_marginTop="20dp"
-                android:hint="@string/modify_hint"
-                android:textAppearance="@style/Typography.Body2.Regular"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/check_main_post"
-                app:layout_constraintVertical_bias="0" />
+                app:layout_constraintTop_toBottomOf="@+id/check_main_post">
+
+                <EditText
+                    android:id="@+id/edit_input"
+                    android:layout_width="wrap_content"
+                    android:background="@null"
+                    android:paddingVertical="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:hint="@string/modify_hint"
+                    android:textAppearance="@style/Typography.Body2.Regular" />
+
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

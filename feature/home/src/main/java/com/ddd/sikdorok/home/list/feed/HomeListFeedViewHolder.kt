@@ -14,10 +14,6 @@ class HomeListFeedViewHolder(
     fun bind(item: DailyFeed, listener: ((String) -> Unit)) {
         with(binding) {
 
-            val adapter = HomeListFeedItemAdapter {
-                listener.invoke(it)
-            }
-
             titleDate.text = item.date
 
             groupMorning.bindVisibleOrGone(item.feeds.morning.isNotEmpty())
@@ -25,10 +21,22 @@ class HomeListFeedViewHolder(
             groupDinner.bindVisibleOrGone(item.feeds.evening.isNotEmpty())
             groupSnack.bindVisibleOrGone(item.feeds.snack.isNotEmpty())
 
-            listMorning.adapter = adapter
-            listLunch.adapter = adapter
-            listDinner.adapter = adapter
-            listSnack.adapter = adapter
+            listMorning.adapter = HomeListFeedItemAdapter {
+                listener.invoke(it)
+            }.apply { submitList(item.feeds.morning) }
+
+            listLunch.adapter = HomeListFeedItemAdapter {
+                listener.invoke(it)
+            }.apply { submitList(item.feeds.afternoon) }
+
+            listDinner.adapter = HomeListFeedItemAdapter {
+                listener.invoke(it)
+            }.apply { submitList(item.feeds.evening) }
+
+            listSnack.adapter = HomeListFeedItemAdapter {
+                listener.invoke(it)
+            }.apply { submitList(item.feeds.snack) }
+
         }
     }
 

@@ -61,6 +61,11 @@ internal object ServiceModule {
         @NormalRetrofit retrofit: Retrofit
     ) = retrofit.create<ModifyService.Create>()
 
+    @Provides
+    @Singleton
+    fun providesSDRReadFeed(
+        @NormalRetrofit retrofit: Retrofit
+    ) = retrofit.create<ModifyService.Read>()
 
     @Provides
     @Singleton

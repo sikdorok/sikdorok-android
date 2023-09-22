@@ -1,6 +1,6 @@
 [versions]
 versionCode = "1"
-versionName = "1.0.0"
+versionName = "0.0.0"
 
 application = "8.0.2"
 kotlin-android = "1.8.20"

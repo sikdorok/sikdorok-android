@@ -7,6 +7,7 @@ import com.ddd.sikdorok.core_ui.util.DateUtil
 import com.ddd.sikdorok.domain.home.GetHomeDailyFeedsUseCase
 import com.ddd.sikdorok.domain.home.GetHomeMonthlyFeedsUseCase
 import com.ddd.sikdorok.shared.code.Tag
+import com.ddd.sikdorok.shared.home.HomeDailyFeed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -81,7 +82,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getWeeklyMealboxInfo(date: DateTime = state.value.nowTime) {
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch() {
             getHomeMonthlyFeedsUseCase(
                 date.toString("yyyy-MM-dd")
             ).data?.let { response ->
@@ -103,21 +104,20 @@ class HomeViewModel @Inject constructor(
                         weekCount = response.weeklyCovers.first {
                             it.weeklyFeeds.map { it.time }.contains(selectedDate)
                         }.week,
-                        nowTag = Tag.MORNING.code
                     )
                 }
 
                 // TODO : Paging 적용
                 getHomeDailyFeedsUseCase(
-                    0,
+                    1,
                     20,
-                    selectedDate,
-                    state.value.nowTag
+                    selectedDate
                 ).data?.let { response ->
                     _state.update {
                         it.copy(
-                            nowTag = Tag.MORNING.code,
-                            feedList = response.dailyFeeds,
+                            nowTag = response.initTag ?: Tag.MORNING.code,
+                            feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
+                            nowTagList = response.tags
                         )
                     }
                 }
@@ -128,16 +128,17 @@ class HomeViewModel @Inject constructor(
 
     fun changeMealTime(isNext: Boolean) {
         val nowTime = state.value.nowTime.toString("yyyy-MM-dd")
-        viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch() {
             changeTag(isNext)?.let { nextTag ->
                 // TODO : Paging 적용
                 getHomeDailyFeedsUseCase(
-                    0, 20, nowTime, nextTag
+                    1, 20, nowTime, nextTag
                 ).data?.let { response ->
                     _state.update {
                         it.copy(
                             nowTag = nextTag,
-                            feedList = response.dailyFeeds,
+                            feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
+                            nowTagList = response.tags
                         )
                     }
                 }
@@ -146,9 +147,20 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun changeTag(isNext: Boolean): String? {
-        val tagList = Tag.values().map { it.code }
+        val tagList = state.value.nowTagList
         val nextTag: String?
         val nowTag = state.value.nowTag
+
+        if(tagList.size <= 1) {
+            viewModelScope.launch {
+                _state.update {
+                    it.copy(
+                        tagCanGoPrevious = false,
+                        tagCanGoNext = false
+                    )
+                }
+            }
+        }
 
         nextTag = when (tagList.indexOf(nowTag)) {
             0 -> {
@@ -175,7 +187,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun checkTagCanChange() {
-        val tagList = Tag.values().map { it.code }
+        val tagList = state.value.nowTagList
         val nowTag = state.value.nowTag
 
         val result: Pair<Boolean, Boolean> = when (tagList.indexOf(nowTag)) {

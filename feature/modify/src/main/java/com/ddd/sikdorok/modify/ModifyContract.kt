@@ -5,13 +5,15 @@ import android.net.Uri
 class ModifyContract {
     data class State(
         val id: String = "",
-        val image: Uri = Uri.EMPTY,
+        val image: Uri? = null,
         val date: String = "",
         val time: String = "",
         val icon: String = "",
         val tag: String = "",
         val isMainPost: Boolean = false,
-        val memo: String = ""
+        val memo: String = "",
+        val imageUrl : String? = null,
+
     )
 
     sealed class Event {
@@ -50,7 +52,11 @@ class ModifyContract {
     }
 
     sealed class SideEffect {
+        object OnFinishCreate : SideEffect()
+
         object OnFinishModify : SideEffect()
+
+        object OnFinishDelete : SideEffect()
 
         object RequestPermission : SideEffect()
 

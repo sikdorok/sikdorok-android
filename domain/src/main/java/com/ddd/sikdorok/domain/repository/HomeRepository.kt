@@ -13,7 +13,7 @@ interface HomeRepository {
         page: Int,
         size: Int,
         date: String,
-        tag: String
+        tag: String? = null
     ): SikdorokResponse<HomeFeed>
 
     suspend fun getHomeListFeeds(

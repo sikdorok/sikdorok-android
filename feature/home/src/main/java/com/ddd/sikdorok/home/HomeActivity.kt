@@ -1,18 +1,21 @@
 package com.ddd.sikdorok.home
 
-import android.app.Activity
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.os.bundleOf
+import com.ddd.sikdorok.core_design.R
 import com.ddd.sikdorok.core_ui.base.BaseActivity
 import com.ddd.sikdorok.core_ui.util.repeatCallDefaultOnStarted
 import com.ddd.sikdorok.core_ui.util.show
+import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.home.databinding.ActivityHomeBinding
 import com.ddd.sikdorok.home.date.HomeDateAdapter
 import com.ddd.sikdorok.home.dialog.HomeMonthlyDialog
 import com.ddd.sikdorok.home.feed.HomeFeedAdapter
 import com.ddd.sikdorok.navigator.modify.ModifyNavigator
 import com.ddd.sikdorok.navigator.settings.SettingsNavigator
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.joda.time.DateTime
 import javax.inject.Inject
@@ -31,8 +34,20 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
 
     private val modifyLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                viewModel.getWeeklyMealboxInfo()
+            when (it.resultCode) {
+                // TODO : 깔쌈하게...
+                RESULT_CODE_CREATE -> {
+                    showSnackBar("도시락 기록이 저장되었어요")
+                    viewModel.getWeeklyMealboxInfo()
+                }
+                RESULT_CODE_MODIFY -> {
+                    showSnackBar("도시락 기록이 수정되었어요")
+                    viewModel.getWeeklyMealboxInfo()
+                }
+                RESULT_CODE_DELETE -> {
+                    showSnackBar("도시락 기록이 삭제되었어요")
+                    viewModel.getWeeklyMealboxInfo()
+                }
             }
         }
 
@@ -54,6 +69,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
 
         initDeepLink()
         viewModel.getWeeklyMealboxInfo()
+
+        onBackPressedDispatcher.addCallback {
+            finish()
+        }
     }
 
     override fun setupCollect() {
@@ -104,8 +123,22 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
             .show(supportFragmentManager)
     }
 
+    private fun showSnackBar(text: String) {
+        showSnackBar(
+            view = binding.root,
+            message = text,
+            backgroundColor = R.color.input_complete,
+            textColor = R.color.white,
+            duration = Snackbar.LENGTH_LONG
+        )
+    }
+
     companion object {
         const val KEY_DEEPLINK = "deeplink"
         const val KEY_NOW_DATE = "now_date"
+
+        const val RESULT_CODE_CREATE = 10
+        const val RESULT_CODE_MODIFY = 11
+        const val RESULT_CODE_DELETE = 12
     }
 }

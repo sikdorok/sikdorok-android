@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 enum class Tag(val code : String) {
     @SerializedName("C000300001") MORNING("C000300001"),
     @SerializedName("C000300002") LUNCH("C000300002"),
-    @SerializedName("C000300003") DINER("C000300003"),
+    @SerializedName("C000300003") DINNER("C000300003"),
     @SerializedName("C000300004") SNACK("C000300004")
 }
 

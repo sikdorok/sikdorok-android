@@ -19,7 +19,7 @@ interface HomeService {
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("date") date: String,
-        @Query("tag") tag: String
+        @Query("tag") tag: String?
     ): SikdorokResponse<HomeFeed>
 
     @GET("/home/list-view")

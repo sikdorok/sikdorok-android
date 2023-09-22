@@ -18,6 +18,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/bg_mealbox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/img_mealbox_background"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -38,20 +49,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/img_mealbox_add" />
+                    />
 
             </androidx.cardview.widget.CardView>
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/bg_mealbox"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:src="@drawable/img_mealbox_background"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -86,6 +87,17 @@
             app:layout_constraintStart_toEndOf="@id/title_today_menu"
             app:layout_constraintTop_toTopOf="@id/title_today_menu"
             tools:src="@drawable/ic_mealbox" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon_is_main"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_is_main"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/icon_today_menu"
+            app:layout_constraintStart_toEndOf="@id/icon_today_menu"
+            app:layout_constraintTop_toTopOf="@id/icon_today_menu" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"

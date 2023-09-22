@@ -11,6 +11,7 @@
     <color name="weekdays_common">#9D9792</color>
 
     <color name="input_correct">#00CC8F</color>
+    <color name="input_complete">@color/modify_fab_color</color>
     <color name="input_error">#FF5F5F</color>
 
     <color name="beige">#FBF8F3</color>

@@ -1,10 +1,12 @@
 package com.ddd.sikdorok.modify
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.core_ui.base.BaseContract
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import com.ddd.sikdorok.domain.modify.CreateFeedUseCase
 import com.ddd.sikdorok.domain.modify.DeleteFeedUseCase
+import com.ddd.sikdorok.domain.modify.ReadFeedUseCase
 import com.ddd.sikdorok.domain.modify.UpdateFeedUseCase
 import com.ddd.sikdorok.shared.code.Icon
 import com.ddd.sikdorok.shared.code.Tag
@@ -23,8 +25,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ModifyViewModel @Inject constructor(
     private val createFeedUseCase: CreateFeedUseCase,
+    private val readFeedUseCase: ReadFeedUseCase,
     private val modifyFeedUseCase: UpdateFeedUseCase,
-    private val deleteFeedUseCase: DeleteFeedUseCase
+    private val deleteFeedUseCase: DeleteFeedUseCase,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel(),
     BaseContract<ModifyContract.State, ModifyContract.Event, ModifyContract.SideEffect> {
 
@@ -35,6 +39,10 @@ class ModifyViewModel @Inject constructor(
     private val _state = MutableStateFlow(ModifyContract.State())
     override val state: StateFlow<ModifyContract.State>
         get() = _state.asStateFlow()
+
+    val postId: String by lazy {
+        savedStateHandle.get<String>(KEY_POST_ID) ?: ""
+    }
 
     override fun event(event: ModifyContract.Event) {
         viewModelScope.launch {
@@ -81,19 +89,41 @@ class ModifyViewModel @Inject constructor(
                 }
                 is ModifyContract.Event.OnSavedFeed -> {
                     viewModelScope.launch {
-                        createFeedUseCase.invoke(
-                            event.fileName,
-                            FeedRequest(
-                                Tag.MORNING,
-                                event.time,
-                                event.memo,
-                                Icon.CAKE,
-                                event.isMainFeed,
-                                emptyList()
-                            )
-                        ).apply {
-                            if (code == 200) {
-                                _effect.emit(ModifyContract.SideEffect.OnFinishModify)
+
+                        // TODO : VM으로 이전 예정
+
+                        if(postId.isEmpty()) {
+                            createFeedUseCase.invoke(
+                                event.fileName,
+                                FeedRequest(
+                                    tag = Tag.MORNING,
+                                    time = event.time,
+                                    memo = event.memo,
+                                    icon = Icon.CAKE,
+                                    isMain = event.isMainFeed,
+                                    deletePhotoTokens = emptyList()
+                                )
+                            ).apply {
+                                if (code == 200) {
+                                    _effect.emit(ModifyContract.SideEffect.OnFinishModify)
+                                }
+                            }
+                        } else {
+                            modifyFeedUseCase.invoke(
+                                event.fileName,
+                                FeedRequest(
+                                    feedId = postId,
+                                    tag = Tag.MORNING,
+                                    time = event.time,
+                                    memo = event.memo,
+                                    icon = Icon.CAKE,
+                                    isMain = event.isMainFeed,
+                                    deletePhotoTokens = emptyList()
+                                )
+                            ).apply {
+                                if (code == 200) {
+                                    _effect.emit(ModifyContract.SideEffect.OnFinishModify)
+                                }
                             }
                         }
                     }
@@ -101,5 +131,29 @@ class ModifyViewModel @Inject constructor(
                 else -> Unit
             }
         }
+    }
+
+    fun getFeedInfo() {
+        if (postId.isNotEmpty()) {
+            viewModelScope.launch {
+                readFeedUseCase(postId).data?.let { response ->
+                    _state.update {
+                        it.copy(
+                            imageUrl = response.feedInfo.photosInfoList?.firstOrNull()?.uploadFullPath,
+                            icon = response.feedInfo.icon,
+                            tag = response.feedInfo.tag,
+                            memo = response.feedInfo.memo ?: "",
+                            isMainPost = response.feedInfo.isMain,
+                            time = response.feedInfo.time,
+                            id = response.feedInfo.feedId
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val KEY_POST_ID = "post_id"
     }
 }

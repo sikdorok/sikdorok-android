@@ -5,6 +5,7 @@ import com.ddd.sikdorok.data.modify.data.ModifyRemoteDataSource
 import com.ddd.sikdorok.domain.repository.ModifyRepository
 import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.modify.FeedRequest
+import com.ddd.sikdorok.shared.modify.FeedResponse
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,6 +18,10 @@ internal class ModifyRepositoryImpl @Inject constructor(
 ) : ModifyRepository {
     override suspend fun createFeed(file: String, body: FeedRequest): SikdorokResponse<String> {
         return modifyRemoteDataSource.createFeed(file.toUri(), body)
+    }
+
+    override suspend fun getFeed(feedId: String): SikdorokResponse<FeedResponse> {
+        return modifyRemoteDataSource.getFeed(feedId)
     }
 
     override suspend fun updateFeed(file: String, body: FeedRequest): SikdorokResponse<String> {

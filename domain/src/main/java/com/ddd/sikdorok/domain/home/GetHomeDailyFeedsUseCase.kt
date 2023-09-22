@@ -12,7 +12,7 @@ class GetHomeDailyFeedsUseCase @Inject constructor(
         page: Int,
         size: Int,
         date: String,
-        tag: String
+        tag: String? = null
     ): SikdorokResponse<HomeFeed> {
         return homeRepository.getHomeDailyFeeds(page, size, date, tag)
     }

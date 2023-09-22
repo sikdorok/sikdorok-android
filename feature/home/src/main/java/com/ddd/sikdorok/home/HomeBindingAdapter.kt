@@ -7,14 +7,13 @@ import androidx.databinding.BindingAdapter
 import com.ddd.sikdorok.shared.code.Icon
 import com.ddd.sikdorok.shared.code.Tag
 
-
 @BindingAdapter("bind:home_main_tag_icon")
 fun AppCompatImageView.bindHomeMainTag(nowTag : String) {
     when(Tag.values().map { it.code }.indexOf(nowTag)) {
         0 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_sun))
         1 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_sun_cloud_selected))
         2 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_moon))
-        3 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_cake))
+        3 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_shortcake))
     }
 }
 
@@ -33,13 +32,13 @@ fun AppCompatTextView.bindHomeMainTag(nowTag : String) {
 fun AppCompatImageView.bindHomeMainMealIcon(nowTag : String) {
     when(Icon.values().map { it.code }.indexOf(nowTag)) {
         0 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_nothing))
-        1 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_rice))
-        2 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_noodle))
-        3 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_salad))
-        4 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_meat))
-        5 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_bread))
-        6 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_hamburger))
-        7 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_sushi))
-        8 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_cake))
+        1 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_selected_cooked_rice))
+        2 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_selected_steaming_bowl_noodle))
+        3 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_selected_green_salad))
+        4 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_selected_on_bone_meat))
+        5 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_selected_bread))
+        6 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_selected_hamburger))
+        7 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_selected_sushi))
+        8 -> setImageDrawable(ContextCompat.getDrawable(context, com.ddd.sikdorok.core_design.R.drawable.ic_shortcake))
     }
 }
