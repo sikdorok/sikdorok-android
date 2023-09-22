@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/container_mealbox_image"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:cardCornerRadius="6dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/img_list_empty" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title_today_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/title_today_mealbox_menu"
+            android:textAppearance="@style/Typography.Body2.Regular"
+            android:textColor="@color/text_color"
+            app:layout_constraintStart_toEndOf="@id/container_mealbox_image"
+            app:layout_constraintTop_toTopOf="@id/container_mealbox_image" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon_meal_type"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@id/title_today_menu"
+            app:layout_constraintStart_toEndOf="@id/title_today_menu"
+            app:layout_constraintTop_toTopOf="@id/title_today_menu"
+            tools:src="@color/red" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon_is_main"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_is_main"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/icon_meal_type"
+            app:layout_constraintStart_toEndOf="@id/icon_meal_type"
+            app:layout_constraintTop_toTopOf="@id/icon_meal_type" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textAppearance="@style/Typography.Body2.Regular"
+            android:textColor="@color/text_color"
+            app:layout_constraintStart_toEndOf="@id/container_mealbox_image"
+            app:layout_constraintTop_toBottomOf="@id/time"
+            tools:text="ddd\ndd" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Typography.Body2.Regular"
+            android:textColor="@color/weekdays_common"
+            app:layout_constraintBottom_toTopOf="@id/content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title_today_menu"
+            tools:text="오후 3:04" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -9,7 +9,9 @@ abstract class BackFrameActivity<T: ViewDataBinding>(inflater: (LayoutInflater) 
 
     abstract val backFrame: FrameLayout
 
-    abstract fun onClickBackFrameIcon()
+    open fun onClickBackFrameIcon() {
+        finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -37,8 +37,14 @@ android {
 
 dependencies {
 
+    implementation(project(":shared"))
+    implementation(project(":core-design"))
+
     implementation libs.androidCoreX
     implementation libs.androidCompat
     implementation libs.material
 
+    implementation libs.glide
+    implementation libs.jodatime
+    implementation libs.viewmodel.ktx
 }

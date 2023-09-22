@@ -18,7 +18,7 @@ interface ModifyService {
         @POST("/feed")
         suspend fun createFeed(
             @Part("content") file: RequestBody,
-            @Body feedBody: FeedRequest
+            @Part feedBody: FeedRequest
         ): SikdorokResponse<String>
     }
 

@@ -3,7 +3,9 @@ package com.ddd.sikdorok.settings
 class SettingsContract {
     data class State(
         val email: String = "",
-        val nickname: String = ""
+        val nickname: String = "",
+        val isNeedUpdate : Boolean = false,
+        val isKakaoUser : Boolean = false
     )
 
     sealed class Event {

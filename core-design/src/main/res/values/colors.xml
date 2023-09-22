@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="gray3">#9D9792</color>
     <color name="gray30">#DDDDDD</color>
     <color name="gray80">#444444</color>
-    <color name="background">#F8F5ED</color>
 
     <color name="red">#FF6363</color>
+    <color name="background">#F8F5ED</color>
 
     <color name="text_color">#3C3025</color>
+    <color name="weekdays_common">#9D9792</color>
 
     <color name="input_correct">#00CC8F</color>
     <color name="input_error">#FF5F5F</color>
@@ -21,4 +23,6 @@
 
     <color name="yellow">#FEE500</color>
     <color name="email_login_background">#3C3025</color>
+
+    <color name="green">#02B57F</color>
 </resources>

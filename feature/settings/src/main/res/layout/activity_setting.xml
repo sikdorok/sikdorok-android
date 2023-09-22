@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/bind"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <variable
+            name="vm"
+            type="com.ddd.sikdorok.settings.SettingsViewModel" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/background"
         tools:context=".SettingActivity">
 
         <View
@@ -60,6 +66,7 @@
             android:layout_marginTop="16dp"
             android:background="@color/white"
             app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
             app:layout_constraintBottom_toTopOf="@+id/tv_app_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,12 +76,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_profile"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginVertical="20dp"
                     android:layout_marginStart="16dp"
+                    bind:user_image="@{@drawable/ic_settings_image}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -85,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginBottom="4dp"
+                    android:text="@{vm.state.nickname}"
                     android:textAppearance="@style/Typography.Body2.Regular"
                     app:layout_constraintBottom_toTopOf="@+id/tv_email"
                     app:layout_constraintEnd_toStartOf="@+id/tv_logout"
@@ -98,6 +107,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:text="@{vm.state.email}"
                     android:textAppearance="@style/Typography.Body2.Regular"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/tv_logout"
@@ -142,7 +152,9 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="8dp"
             android:background="@color/white"
+            android:foreground="?android:attr/selectableItemBackground"
             app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
             app:layout_constraintBottom_toTopOf="@+id/card_policy"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -187,6 +199,8 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="8dp"
             android:background="@color/white"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:visibility="gone"
             app:cardCornerRadius="8dp"
             app:layout_constraintBottom_toTopOf="@+id/card_profile_delete"
             app:layout_constraintEnd_toEndOf="parent"
@@ -230,7 +244,9 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="8dp"
             android:background="@color/white"
+            android:foreground="?android:attr/selectableItemBackground"
             app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
             app:layout_constraintBottom_toTopOf="@+id/card_version"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -273,7 +289,9 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="8dp"
             android:background="@color/white"
+            android:foreground="?android:attr/selectableItemBackground"
             app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -292,9 +310,20 @@
                     android:layout_marginStart="16dp"
                     android:textAppearance="@style/Typography.Body2.Bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    tools:text="@string/settings_app_versions" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:textAppearance="@style/Typography.Body2.Bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    bind:is_need_update="@{vm.state.needUpdate}"
                     tools:text="@string/settings_app_versions" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

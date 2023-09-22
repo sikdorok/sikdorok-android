@@ -55,6 +55,10 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".home.list.HomeListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".signup.SignUpActivity"
             android:screenOrientation="portrait" />
 

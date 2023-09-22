@@ -36,6 +36,9 @@ android {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":shared"))
+
     implementation(project(":core-design"))
     implementation(project(":core-ui"))
     implementation(project(":extensions"))
@@ -45,6 +48,7 @@ dependencies {
 
     implementation libs.bundles.android
     implementation libs.material
+    implementation libs.glide
 
     implementation libs.hilt.android
     kapt libs.hilt.compiler

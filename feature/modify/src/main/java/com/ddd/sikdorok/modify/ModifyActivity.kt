@@ -1,6 +1,7 @@
 package com.ddd.sikdorok.modify
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -67,6 +68,9 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
     override val viewModel: ModifyViewModel by viewModels()
 
     override fun initLayout() {
+        window.statusBarColor = getColor(com.ddd.sikdorok.core_design.R.color.white)
+
+
         binding.fabCamera.setOnClickListener {
             viewModel.event(ModifyContract.Event.OnClickCameraFAB)
         }
@@ -129,6 +133,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             .onEach { sideEffect ->
                 when (sideEffect) {
                     ModifyContract.SideEffect.OnFinishModify -> {
+                        setResult(Activity.RESULT_OK)
                         finish()
                     }
 

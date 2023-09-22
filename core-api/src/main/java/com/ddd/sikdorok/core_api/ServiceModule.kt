@@ -2,7 +2,9 @@ package com.ddd.sikdorok.core_api
 
 import com.ddd.sikdorok.core_api.annotation.NoAuthRetrofit
 import com.ddd.sikdorok.core_api.annotation.NormalRetrofit
+import com.ddd.sikdorok.core_api.service.HomeService
 import com.ddd.sikdorok.core_api.service.ModifyService
+import com.ddd.sikdorok.core_api.service.SettingsService
 import com.ddd.sikdorok.core_api.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -71,4 +73,17 @@ internal object ServiceModule {
     fun providesSDRDeleteFeed(
         @NormalRetrofit retrofit: Retrofit
     ) = retrofit.create<ModifyService.Delete>()
+
+    @Provides
+    @Singleton
+    fun providesSDRHomeService(
+        @NormalRetrofit retrofit: Retrofit
+    ) = retrofit.create<HomeService>()
+
+    @Provides
+    @Singleton
+    fun providesSDRSettingsService(
+        @NormalRetrofit retrofit: Retrofit
+    ) = retrofit.create<SettingsService>()
+
 }

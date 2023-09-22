@@ -56,7 +56,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             .onEach { effect ->
                 when (effect) {
                     is SplashContract.Effect.GoToMain -> {
-                        startActivity(homeNavigator.start(this, effect.deeplink))
+                         startActivity(homeNavigator.start(this, effect.deeplink))
                         finish()
                     }
                     is SplashContract.Effect.NaviToSignIn -> {

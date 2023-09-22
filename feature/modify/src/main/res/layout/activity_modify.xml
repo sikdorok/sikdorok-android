@@ -6,6 +6,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -177,7 +178,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
-                    android:drawableStart="@drawable/ic_selected_cake"
+                    android:drawableStart="@drawable/ic_cake"
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:tag="C000300004"
@@ -307,7 +308,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="12dp"
-                    android:background="@drawable/ic_selected_cake"
+                    android:background="@drawable/ic_cake"
                     android:button="@null"
                     android:tag="C000400009" />
 

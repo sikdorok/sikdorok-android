@@ -3,7 +3,7 @@
 
     <style name="Typography">
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/gray80</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:letterSpacing">-0.05</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:fontFamily">@font/leeseoyun</item>

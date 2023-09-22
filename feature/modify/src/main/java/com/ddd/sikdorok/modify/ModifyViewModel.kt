@@ -25,7 +25,8 @@ class ModifyViewModel @Inject constructor(
     private val createFeedUseCase: CreateFeedUseCase,
     private val modifyFeedUseCase: UpdateFeedUseCase,
     private val deleteFeedUseCase: DeleteFeedUseCase
-) : BaseViewModel(), BaseContract<ModifyContract.State, ModifyContract.Event, ModifyContract.SideEffect> {
+) : BaseViewModel(),
+    BaseContract<ModifyContract.State, ModifyContract.Event, ModifyContract.SideEffect> {
 
     private val _effect = MutableSharedFlow<ModifyContract.SideEffect>()
     override val effect: SharedFlow<ModifyContract.SideEffect>
@@ -37,7 +38,7 @@ class ModifyViewModel @Inject constructor(
 
     override fun event(event: ModifyContract.Event) {
         viewModelScope.launch {
-            when(event) {
+            when (event) {
                 ModifyContract.Event.OnClickBackIcon -> {
                     _effect.emit(ModifyContract.SideEffect.OnFinishModify)
                 }
@@ -45,23 +46,23 @@ class ModifyViewModel @Inject constructor(
                     _effect.emit(ModifyContract.SideEffect.ShowPostDialog)
                 }
                 is ModifyContract.Event.OnClickPostItem -> {
-                   val type = event.type
-                   when(type) {
-                       ModifyContract.Event.OnClickPostItem.Type.CAMERA -> {
-                           if(event.isGrant) {
-                               _effect.emit(ModifyContract.SideEffect.NaviToCamera)
-                           } else {
-                               _effect.emit(ModifyContract.SideEffect.RequestCamera)
-                           }
-                       }
-                       ModifyContract.Event.OnClickPostItem.Type.ALBUM -> {
-                           if(event.isGrant) {
-                               _effect.emit(ModifyContract.SideEffect.NaviToAlbum)
-                           } else {
-                               _effect.emit(ModifyContract.SideEffect.RequestAlbum)
-                           }
-                       }
-                   }
+                    val type = event.type
+                    when (type) {
+                        ModifyContract.Event.OnClickPostItem.Type.CAMERA -> {
+                            if (event.isGrant) {
+                                _effect.emit(ModifyContract.SideEffect.NaviToCamera)
+                            } else {
+                                _effect.emit(ModifyContract.SideEffect.RequestCamera)
+                            }
+                        }
+                        ModifyContract.Event.OnClickPostItem.Type.ALBUM -> {
+                            if (event.isGrant) {
+                                _effect.emit(ModifyContract.SideEffect.NaviToAlbum)
+                            } else {
+                                _effect.emit(ModifyContract.SideEffect.RequestAlbum)
+                            }
+                        }
+                    }
                 }
                 is ModifyContract.Event.OnUpdateImage -> {
                     _state.update { it.copy(image = event.uri) }
@@ -83,14 +84,18 @@ class ModifyViewModel @Inject constructor(
                         createFeedUseCase.invoke(
                             event.fileName,
                             FeedRequest(
-                                Tag.valueOf(event.tag),
+                                Tag.MORNING,
                                 event.time,
                                 event.memo,
-                                Icon.valueOf(event.icon),
+                                Icon.CAKE,
                                 event.isMainFeed,
                                 emptyList()
                             )
-                        )
+                        ).apply {
+                            if (code == 200) {
+                                _effect.emit(ModifyContract.SideEffect.OnFinishModify)
+                            }
+                        }
                     }
                 }
                 else -> Unit

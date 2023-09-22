@@ -41,7 +41,7 @@ class ModifyContract {
 
         data class OnSavedFeed(
             val fileName: String,
-            val tag: String,
+            val tag: String?,
             val time: String,
             val memo: String,
             val icon: String,

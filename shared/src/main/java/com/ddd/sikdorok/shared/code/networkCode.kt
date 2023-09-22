@@ -2,21 +2,21 @@ package com.ddd.sikdorok.shared.code
 
 import com.google.gson.annotations.SerializedName
 
-enum class Tag {
-    @SerializedName("C000300001") MORNING,
-    @SerializedName("C000300002") LUNCH,
-    @SerializedName("C000300003") DINER,
-    @SerializedName("C000300004") SNACK
+enum class Tag(val code : String) {
+    @SerializedName("C000300001") MORNING("C000300001"),
+    @SerializedName("C000300002") LUNCH("C000300002"),
+    @SerializedName("C000300003") DINER("C000300003"),
+    @SerializedName("C000300004") SNACK("C000300004")
 }
 
-enum class Icon {
-    @SerializedName("C000400001") NOTHING,
-    @SerializedName("C000400002") RICE,
-    @SerializedName("C000400003") NOODLE,
-    @SerializedName("C000400004") SALAD,
-    @SerializedName("C000400005") MEAT,
-    @SerializedName("C000400006") BREAD,
-    @SerializedName("C000400007") FAST_FOOD,
-    @SerializedName("C000400008") SUSHI,
-    @SerializedName("C000400009") CAKE
+enum class Icon(val code : String) {
+    @SerializedName("C000400001") NOTHING("C000400001"),
+    @SerializedName("C000400002") RICE("C000400002"),
+    @SerializedName("C000400003") NOODLE("C000400003"),
+    @SerializedName("C000400004") SALAD("C000400004"),
+    @SerializedName("C000400005") MEAT("C000400005"),
+    @SerializedName("C000400006") BREAD("C000400006"),
+    @SerializedName("C000400007") FAST_FOOD("C000400007"),
+    @SerializedName("C000400008") SUSHI("C000400008"),
+    @SerializedName("C000400009") CAKE("C000400009")
 }

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/bind"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.ddd.sikdorok.home.list.HomeListViewModel" />
+
+        <import type="com.ddd.sikdorok.home.list.dialog.HomeListMonthlyContract" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <FrameLayout
+            android:id="@+id/frame_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_arrow_left" />
+
+        </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:onClick="@{() -> vm.onClickSelectDate()}"
+            android:text="@{String.format(@string/title_monthly_mealbox, vm.state.nowTime.monthOfYear)}"
+            android:textAppearance="@style/Typography.H3.Regular"
+            android:textColor="@color/text_color"
+            android:textSize="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/frame_back"
+            app:layout_constraintBottom_toBottomOf="@id/frame_back"
+            bind:underline="@{true}"
+            tools:text="9월의 도시락" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/month_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            bind:selected="@{vm.state.canGoPrevious}"
+            android:onClick="@{() -> vm.onClickChangePreviousMonth()}"
+            android:src="@drawable/selector_home_arrow_left"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintEnd_toStartOf="@id/title"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/month_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            bind:selected="@{vm.state.canGoNext}"
+            android:onClick="@{() -> vm.onClickChangeNextMonth()}"
+            android:src="@drawable/selector_home_arrow_right"
+            app:layout_constraintBottom_toBottomOf="@id/title"
+            app:layout_constraintStart_toEndOf="@id/title"
+            app:layout_constraintTop_toTopOf="@id/title" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            bind:visibility="@{!vm.state.feedList.empty}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/frame_back"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_home_list" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/img_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:src="@drawable/img_list_empty"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            bind:visibility="@{vm.state.feedList.empty}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="등록된 도시락이 없습니다"
+            bind:visibility="@{vm.state.feedList.empty}"
+            android:textAppearance="@style/Typography.H3.Regular"
+            android:textColor="@color/gray3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_empty" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

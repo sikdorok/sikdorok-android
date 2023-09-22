@@ -7,3 +7,7 @@ import com.ddd.sikdorok.navigator.core.Navigator
 interface HomeNavigator : Navigator {
     fun start(context: Context, deeplink: String? = null): Intent
 }
+
+interface HomeListNavigator : Navigator {
+    fun start(context: Context, selectedDate: String): Intent
+}

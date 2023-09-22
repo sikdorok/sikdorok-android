@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/bind"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.ddd.sikdorok.home.dialog.HomeMonthlyViewModel" />
+
+        <import type="com.ddd.sikdorok.home.dialog.HomeMonthlyContract"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/bg_home_dialog"
+        android:minHeight="400dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="날짜 이동하기"
+            android:textAppearance="@style/Typography.H3.Regular"
+            android:textColor="@color/text_color"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="20dp"
+            android:onClick="@{() -> vm.onClickClose()}"
+            android:src="@drawable/ic_home_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:onClick="@{() -> vm.onClickPreviousMonth()}"
+            android:src="@drawable/selector_home_dialog_arrow_left"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/selector_home_dialog_arrow_right"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="@{() -> vm.onClickNextMonth()}"
+            app:layout_constraintTop_toBottomOf="@id/title" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/container_month"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:onClick="@{() -> vm.onClickChangeViewType()}"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="@id/next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/next"
+            app:layout_constraintStart_toEndOf="@id/back"
+            app:layout_constraintTop_toBottomOf="@id/title">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:textSize="16dp"
+                bind:underline="@{true}"
+                android:textAppearance="@style/Typography.H4.Regular"
+                android:text="@{vm.state.selectedMonthText}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="2023년 6월" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="6dp"
+                android:src="@drawable/selector_home_dialog_arrow_vertical"
+                app:layout_constraintBottom_toBottomOf="@id/month"
+                app:layout_constraintStart_toEndOf="@id/month"
+                app:layout_constraintTop_toTopOf="@id/month" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- weekly preview -->
+
+        <include
+            android:id="@+id/view_week_days"
+            layout="@layout/view_week_days"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="14dp"
+            bind:visibility="@{vm.state.viewType == HomeMonthlyContract.TYPE_WEEKLY}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/container_month" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_weekly"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="8dp"
+            android:overScrollMode="never"
+            bind:list_item="@{vm.state.weeklyList}"
+            bind:visibility="@{vm.state.viewType == HomeMonthlyContract.TYPE_WEEKLY}"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/container_month"
+            app:spanCount="7"
+            tools:itemCount="35"
+            android:paddingVertical="20dp"
+            tools:listitem="@layout/item_weekday" />
+
+        <!-- month list -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_month"
+            android:layout_width="0dp"
+            android:layout_height="400dp"
+            bind:visibility="@{vm.state.viewType == HomeMonthlyContract.TYPE_MONTHLY}"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="20dp"
+            android:overScrollMode="never"
+            bind:list_item="@{vm.state.monthlyList}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/container_month"
+            android:orientation="vertical"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_month" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
