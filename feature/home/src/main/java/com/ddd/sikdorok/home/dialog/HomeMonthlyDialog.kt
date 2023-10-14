@@ -37,7 +37,6 @@ class HomeMonthlyDialog :
             listMonth.adapter = HomeMonthAdapter {
                 viewModel.onClickMonth(it)
             }
-
         }
 
         setupDialogView()

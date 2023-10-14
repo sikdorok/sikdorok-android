@@ -45,12 +45,29 @@ class HomeMonthlyViewModel @Inject constructor(
         DateUtil.parseDate(dateString)
     }
 
+    private var selectedMonth = state.value.selectedDate
+
     init {
         initMonthList()
-        getWeekFeeds()
+        getWeekFeeds(selectedDate)
     }
 
     override fun event(event: HomeMonthlyContract.Event) {
+        fun month(event: HomeMonthlyContract.Event.Month) {
+            viewModelScope.launch {
+                when (event) {
+                    HomeMonthlyContract.Event.Month.Cancel -> {
+                        _effect.emit(HomeMonthlyContract.Effect.Close)
+                    }
+                    HomeMonthlyContract.Event.Month.Confirm -> {
+                        changeMonth()
+                    }
+                }
+            }
+
+        }
+
+
         viewModelScope.launch {
             when (event) {
                 HomeMonthlyContract.Event.ClickPreviousMonth -> {
@@ -72,6 +89,9 @@ class HomeMonthlyViewModel @Inject constructor(
                 }
                 HomeMonthlyContract.Event.ClickClose -> {
                     _effect.emit(HomeMonthlyContract.Effect.Close)
+                }
+                is HomeMonthlyContract.Event.Month -> {
+                    month(event)
                 }
             }
         }
@@ -121,7 +141,7 @@ class HomeMonthlyViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     monthlyList = monthsList.map {
-                        Pair(it, state.value.selectedDate)
+                        Pair(it, selectedMonth)
                     }
                 )
             }
@@ -159,20 +179,33 @@ class HomeMonthlyViewModel @Inject constructor(
     }
 
     fun onClickMonth(dateString: String) {
-        viewModelScope.launch {
-            _state.update {
-                it.copy(
-                    selectedDate = dateString
-                )
-            }
-        }
+        selectedMonth = dateString
 
         initMonthList()
-        getWeekFeeds(DateUtil.parseDate(dateString))
     }
 
     fun onClickClose() {
         event(HomeMonthlyContract.Event.ClickClose)
+    }
+
+    fun onClickMonthCancel() {
+        event(HomeMonthlyContract.Event.Month.Cancel)
+    }
+
+    fun onClickMonthConfirm() {
+        event(HomeMonthlyContract.Event.Month.Confirm)
+    }
+
+    fun changeMonth() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    selectedDate = selectedMonth
+                )
+            }
+            initMonthList()
+            getWeekFeeds(DateUtil.parseDate(selectedMonth))
+        }
     }
 
     companion object {
