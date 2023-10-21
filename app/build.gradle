@@ -27,14 +27,27 @@ android {
 
             resValue "string", "kakao_native_key", "kakao37987d37deae711f16a7ded700cd6a81"
             resValue "string", "native_key", "37987d37deae711f16a7ded700cd6a81"
+
         }
 
         release {
             debuggable false
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            resValue "string", "kakao_native_key", "kakao37987d37deae711f16a7ded700cd6a81"
+            resValue "string", "native_key", "37987d37deae711f16a7ded700cd6a81"
         }
     }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            def buildType = variant.buildType.name
+            def versionName = variant.versionName
+            outputFileName = "sikdorok-${buildType}-${versionName}.apk"
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
