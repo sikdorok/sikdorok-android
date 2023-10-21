@@ -23,6 +23,11 @@ interface HomeMonthlyContract :
         object ClickPreviousMonth : Event
         object ClickNextMonth : Event
         object ClickClose : Event
+
+        sealed interface Month : Event{
+            object Cancel : Month
+            object Confirm : Month
+        }
     }
 
     sealed interface Effect {

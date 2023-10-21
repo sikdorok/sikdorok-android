@@ -20,8 +20,8 @@ interface HomeContract :
         val feedList: List<HomeDailyFeed> = HomeDailyFeed.emptyListItem,
         val pageInfo: HomeListPaging? = HomeListPaging(),
         val nowTagList: List<String> = emptyList(),
-        val tagCanGoPrevious: Boolean = false,
-        val tagCanGoNext: Boolean = false,
+        val tagCanGoPrevious: Boolean? = null,
+        val tagCanGoNext: Boolean? = null,
     )
 
     sealed interface Event {

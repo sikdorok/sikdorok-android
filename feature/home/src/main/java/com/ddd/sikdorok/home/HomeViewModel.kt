@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -117,17 +118,27 @@ class HomeViewModel @Inject constructor(
                         it.copy(
                             nowTag = response.initTag ?: Tag.MORNING.code,
                             feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
-                            nowTagList = response.tags
+                            nowTagList = response.tags.distinct()
                         )
                     }
+                    checkTagCanChange(response.tags.distinct(), response.initTag ?: Tag.MORNING.code)
                 }
-
             }
         }
     }
 
     fun changeMealTime(isNext: Boolean) {
+        when(isNext) {
+            true -> {
+                if(state.value.tagCanGoNext == null) return
+            }
+            false -> {
+                if(state.value.tagCanGoPrevious == null) return
+            }
+        }
+
         val nowTime = state.value.nowTime.toString("yyyy-MM-dd")
+
         viewModelScope.launch() {
             changeTag(isNext)?.let { nextTag ->
                 // TODO : Paging 적용
@@ -138,9 +149,11 @@ class HomeViewModel @Inject constructor(
                         it.copy(
                             nowTag = nextTag,
                             feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
-                            nowTagList = response.tags
+                            nowTagList = response.tags.distinct()
                         )
                     }
+
+                    checkTagCanChange(response.tags.distinct(), nextTag)
                 }
             }
         }
@@ -148,61 +161,60 @@ class HomeViewModel @Inject constructor(
 
     private fun changeTag(isNext: Boolean): String? {
         val tagList = state.value.nowTagList
-        val nextTag: String?
+        var nextTag: String?
         val nowTag = state.value.nowTag
 
-        if(tagList.size <= 1) {
-            viewModelScope.launch {
-                _state.update {
-                    it.copy(
-                        tagCanGoPrevious = false,
-                        tagCanGoNext = false
-                    )
+        // TODO : 추후 코드 개편 필요
+        try {
+            nextTag = when (tagList.indexOf(nowTag)) {
+                0 -> {
+                    if (isNext) tagList[tagList.indexOf(nowTag) + 1] else tagList[0]
                 }
+                in 1 until tagList.lastIndex -> {
+                    if (isNext) {
+                        tagList[tagList.indexOf(nowTag) + 1]
+                    } else {
+                        tagList[tagList.indexOf(nowTag) - 1]
+                    }
+                }
+                tagList.lastIndex -> {
+                    if (isNext) tagList[tagList.lastIndex] else tagList[tagList.indexOf(state.value.nowTag) - 1]
+                }
+                else -> null
             }
+        } catch (_: Exception) {
+            nextTag = null
         }
 
-        nextTag = when (tagList.indexOf(nowTag)) {
-            0 -> {
-                if (isNext) tagList[tagList.indexOf(nowTag) + 1] else tagList[0]
-            }
-            in 1..tagList.lastIndex -> {
-                if (isNext) {
-                    tagList[tagList.indexOf(nowTag) + 1]
-                } else {
-                    tagList[tagList.indexOf(nowTag) - 1]
-                }
-            }
-            tagList.lastIndex -> {
-                if (isNext) tagList[tagList.lastIndex] else tagList[tagList.indexOf(state.value.nowTag) - 1]
-            }
-            else -> null
-        }
-
-        checkTagCanChange()
+        checkTagCanChange(tagList, nextTag ?: nowTag)
 
         return if (nextTag.isNullOrEmpty()) {
             null
         } else nextTag
     }
 
-    private fun checkTagCanChange() {
-        val tagList = state.value.nowTagList
-        val nowTag = state.value.nowTag
-
-        val result: Pair<Boolean, Boolean> = when (tagList.indexOf(nowTag)) {
+    private fun checkTagCanChange(tagList : List<String>, nowTag : String) {
+        var result: Pair<Boolean?, Boolean?> = when (tagList.indexOf(nowTag)) {
             0 -> {
                 Pair(false, true)
             }
-            in 1..tagList.lastIndex -> {
+            in 1 until tagList.lastIndex -> {
                 Pair(true, true)
             }
             tagList.lastIndex -> {
                 Pair(true, false)
             }
             else -> {
-                Pair(false, false)
+                Pair(null, null)
             }
+        }
+
+        if(tagList.isEmpty()) {
+            result = Pair(null, null)
+        }
+
+        if(tagList.indexOf(nowTag) == tagList.lastIndex && tagList.indexOf(nowTag) == 0) {
+            Pair(false, false)
         }
 
         viewModelScope.launch {
