@@ -18,8 +18,9 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.ddd.sikdorok.core_ui.base.BackFrameActivity
-import com.ddd.sikdorok.core_ui.util.DateUtil
 import com.ddd.sikdorok.extensions.compressBitmap
+import com.ddd.sikdorok.extensions.convertImageBitmapToByteArray
+import com.ddd.sikdorok.extensions.uriToBitmap
 import com.ddd.sikdorok.modify.databinding.ActivityModifyBinding
 import com.ddd.sikdorok.shared.code.Icon
 import com.ddd.sikdorok.shared.code.Tag
@@ -34,7 +35,9 @@ import kotlinx.coroutines.flow.onEach
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
+import java.lang.Exception
 
+// TODO : 데바로 변경
 @AndroidEntryPoint
 class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBinding::inflate) {
 
@@ -89,11 +92,13 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             viewModel.event(ModifyContract.Event.OnClickTime(binding.tvTime.text.toString()))
         }
         binding.tvSave.setOnClickListener {
+            val bitmap = uriToBitmap(this, viewModel.state.value.image)
+            val byteArray = convertImageBitmapToByteArray(bitmap)
             viewModel.event(
                 ModifyContract.Event.OnSavedFeed(
-                    fileName = viewModel.state.value.image.toString(),
+                    file = byteArray,
                     tag = viewModel.state.value.tag,
-                    time = viewModel.state.value.date,
+                    time = viewModel.state.value.time,
                     memo = viewModel.state.value.memo,
                     icon = viewModel.state.value.icon,
                     isMainFeed = viewModel.state.value.isMainPost
@@ -114,8 +119,6 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         }
 
         viewModel.getFeedInfo()
-
-        setResult(10)
     }
 
     override fun onClickBackFrameIcon() {
@@ -126,13 +129,13 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         viewModel.state
             .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
             .onEach { state ->
-                if (state.id.isNotEmpty()) {
-                    val now = DateTime.parse(state.time, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
+                try {
+                    val now =
+                        DateTime.parse(state.time, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
                     binding.tvDate.text = now.toString(DATE_PATTERNS)
                     binding.tvTime.text = now.toString(TIME_PATTERNS)
-                } else {
-                    binding.tvDate.text = DateTime.now().toString(DATE_PATTERNS)
-                    binding.tvTime.text = DateTime.now().toString(TIME_PATTERNS)
+                } catch (_: Exception) {
+
                 }
 
                 if (state.image != Uri.EMPTY) {
@@ -147,7 +150,6 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                         .load(state.imageUrl)
                         .into(binding.ivMain)
                 }
-
 
                 binding.editInput.setText(state.memo)
 
@@ -164,15 +166,18 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             .onEach { sideEffect ->
                 when (sideEffect) {
                     ModifyContract.SideEffect.OnFinishCreate -> {
-                        setResult(RESULT_CODE_CREATE)
+                        setResult(RESULT_CODE_CREATE, intent)
                         finish()
                     }
                     ModifyContract.SideEffect.OnFinishModify -> {
-                        setResult(RESULT_CODE_MODIFY)
+                        setResult(RESULT_CODE_MODIFY, intent)
                         finish()
                     }
                     ModifyContract.SideEffect.OnFinishDelete -> {
-                        setResult(RESULT_CODE_DELETE)
+                        setResult(RESULT_CODE_DELETE, intent)
+                        finish()
+                    }
+                    ModifyContract.SideEffect.OnFinish -> {
                         finish()
                     }
                     ModifyContract.SideEffect.ShowPostDialog -> {
@@ -279,17 +284,17 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
     }
 
     @IdRes
-    private fun getViewIdByTag(iconCode : String): Int? {
+    private fun getViewIdByTag(iconCode: String): Int? {
         return when (iconCode) {
-             Icon.RICE.code -> R.id.type_button_rice
-             Icon.SALAD.code -> R.id.type_button_salad
-             Icon.NOODLE.code -> R.id.type_button_noodle
-             Icon.MEAT.code -> R.id.type_button_meat
-             Icon.BREAD.code  -> R.id.type_button_bread
-             Icon.FAST_FOOD.code  -> R.id.type_button_burger
-             Icon.SUSHI.code  -> R.id.type_button_sushi
-             Icon.CAKE.code  -> R.id.type_button_snack
-             Icon.NOTHING.code  -> R.id.type_button_nothing
+            Icon.RICE.code -> R.id.type_button_rice
+            Icon.SALAD.code -> R.id.type_button_salad
+            Icon.NOODLE.code -> R.id.type_button_noodle
+            Icon.MEAT.code -> R.id.type_button_meat
+            Icon.BREAD.code -> R.id.type_button_bread
+            Icon.FAST_FOOD.code -> R.id.type_button_burger
+            Icon.SUSHI.code -> R.id.type_button_sushi
+            Icon.CAKE.code -> R.id.type_button_snack
+            Icon.NOTHING.code -> R.id.type_button_nothing
             else -> null
         }
     }
@@ -297,10 +302,10 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
     @IdRes
     private fun getViewIdByIcon(tagCode: String?): Int? {
         return when (tagCode) {
-             Tag.MORNING.code -> R.id.tag_button_morning
-             Tag.LUNCH.code -> R.id.tag_button_lunch
-             Tag.DINNER.code -> R.id.tag_button_evening
-             Tag.SNACK.code-> R.id.tag_button_snack
+            Tag.MORNING.code -> R.id.tag_button_morning
+            Tag.LUNCH.code -> R.id.tag_button_lunch
+            Tag.DINNER.code -> R.id.tag_button_evening
+            Tag.SNACK.code -> R.id.tag_button_snack
             else -> null
         }
     }
