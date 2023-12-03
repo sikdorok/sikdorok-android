@@ -3,7 +3,10 @@ package com.ddd.sikdorok.settings
 import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.core_ui.base.BaseContract
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.domain.login.PostSaveTokenUseCase
 import com.ddd.sikdorok.domain.settings.GetSettingsUserDeviceInfoUseCase
+import com.ddd.sikdorok.domain.settings.SetUserLogoutUseCase
+import com.ddd.sikdorok.shared.login.TokenType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val getSettingsUserDeviceInfoUseCase : GetSettingsUserDeviceInfoUseCase
+    private val getSettingsUserDeviceInfoUseCase : GetSettingsUserDeviceInfoUseCase,
+    private val setUserLogoutUseCase: SetUserLogoutUseCase,
+    private val postSaveTokenUseCase: PostSaveTokenUseCase
 ) : BaseViewModel(), BaseContract<SettingsContract.State, SettingsContract.Event, SettingsContract.SideEffect> {
 
     private val _state = MutableStateFlow(SettingsContract.State())
@@ -40,6 +45,9 @@ class SettingsViewModel @Inject constructor(
                 SettingsContract.Event.OnClickProfileManage -> {
                     _effect.emit(SettingsContract.SideEffect.NaviToProfileManage)
                 }
+                SettingsContract.Event.OnClickLogout -> {
+                    _effect.emit(SettingsContract.SideEffect.Logout)
+                }
             }
         }
     }
@@ -57,6 +65,25 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun setUserLogout() {
+        viewModelScope.launch {
+            setUserLogoutUseCase().apply {
+                if(code == 200) {
+                    postSaveTokenUseCase(TokenType.ACCESS_TOKEN, "")
+                    postSaveTokenUseCase(TokenType.REFRESH_TOKEN, "")
+
+                    _effect.emit(SettingsContract.SideEffect.NaviToSplash)
+                } else {
+                    _effect.emit(SettingsContract.SideEffect.Fail(message))
+                }
+            }
+        }
+    }
+
+    fun onClickLogout() {
+        event(SettingsContract.Event.OnClickLogout)
     }
 
     companion object {
