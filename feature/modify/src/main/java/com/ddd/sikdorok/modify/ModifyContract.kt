@@ -13,7 +13,6 @@ class ModifyContract {
         val isMainPost: Boolean = false,
         val memo: String = "",
         val imageUrl : String? = null,
-
     )
 
     sealed class Event {
@@ -42,7 +41,7 @@ class ModifyContract {
         data class OnClickTime(val time: String) : Event()
 
         data class OnSavedFeed(
-            val fileName: String,
+            val file: ByteArray,
             val tag: String?,
             val time: String,
             val memo: String,
@@ -57,6 +56,8 @@ class ModifyContract {
         object OnFinishModify : SideEffect()
 
         object OnFinishDelete : SideEffect()
+
+        object OnFinish : SideEffect()
 
         object RequestPermission : SideEffect()
 
@@ -73,5 +74,7 @@ class ModifyContract {
         data class ShowDatePicker(val date: String) : SideEffect()
 
         data class ShowTimePicker(val time: String) : SideEffect()
+
+        data class Fail(val errorMsg : String) : SideEffect()
     }
 }

@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":core-design"))
 
     implementation libs.androidCoreX
     implementation libs.coroutine.core

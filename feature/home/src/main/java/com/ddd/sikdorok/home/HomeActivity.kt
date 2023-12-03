@@ -68,7 +68,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
         }
 
         initDeepLink()
-        viewModel.getWeeklyMealboxInfo()
 
         onBackPressedDispatcher.addCallback {
             finish()
@@ -91,7 +90,13 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
                     startActivity(settingsNavigator.start(this))
                 }
                 is HomeContract.Effect.Move.Feed -> {
-                    modifyLauncher.launch(modifyNavigator.start(this, effect.id))
+                    modifyLauncher.launch(
+                        modifyNavigator.start(
+                            this,
+                            effect.id,
+                            effect.postDate
+                        )
+                    )
                 }
             }
         }
@@ -108,9 +113,16 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
     }
 
     private fun initDeepLink() {
+        // TODO : 마이그레이션
         intent.getStringExtra(KEY_DEEPLINK)?.let {
             viewModel.event(HomeContract.Event.DeepLink(it))
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.getWeeklyMealboxInfo()
     }
 
     private fun goToChangeDate(nowDate: DateTime) {
@@ -127,7 +139,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
         showSnackBar(
             view = binding.root,
             message = text,
-            backgroundColor = R.color.input_complete,
+            backgroundColor = R.color.email_login_background,
             textColor = R.color.white,
             duration = Snackbar.LENGTH_LONG
         )

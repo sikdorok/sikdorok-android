@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:textAppearance="@style/Typography.H4.Regular"
-                    tools:text="@tools:sample/lorem" />
+                    tools:text="2023년 11월 11일 토요일" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:textAppearance="@style/Typography.H4.Regular"
-                    tools:text="@tools:sample/lorem" />
+                    tools:text="오후 12:23" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -211,11 +211,9 @@
 
             <ImageView
                 android:id="@+id/iv_default_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:alpha="0.3"
-                bind:visibility="@{vm.state.imageUrl.empty &amp;&amp; vm.state.image == null}"
-                android:src="@drawable/ic_default_add"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/img_modify_default"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_main"
                 app:layout_constraintEnd_toEndOf="@+id/iv_main"
                 app:layout_constraintStart_toStartOf="@+id/iv_main"

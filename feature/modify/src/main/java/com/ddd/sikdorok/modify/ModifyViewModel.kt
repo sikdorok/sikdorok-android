@@ -44,11 +44,15 @@ class ModifyViewModel @Inject constructor(
         savedStateHandle.get<String>(KEY_POST_ID) ?: ""
     }
 
+    val postDate: String by lazy {
+        savedStateHandle.get<String>(KEY_POST_DATE).orEmpty()
+    }
+
     override fun event(event: ModifyContract.Event) {
         viewModelScope.launch {
             when (event) {
                 ModifyContract.Event.OnClickBackIcon -> {
-                    _effect.emit(ModifyContract.SideEffect.OnFinishModify)
+                    _effect.emit(ModifyContract.SideEffect.OnFinish)
                 }
                 ModifyContract.Event.OnClickCameraFAB -> {
                     _effect.emit(ModifyContract.SideEffect.ShowPostDialog)
@@ -88,42 +92,39 @@ class ModifyViewModel @Inject constructor(
                     _state.update { it.copy(tag = event.code) }
                 }
                 is ModifyContract.Event.OnSavedFeed -> {
-                    viewModelScope.launch {
-
-                        // TODO : VM으로 이전 예정
-
-                        if(postId.isEmpty()) {
-                            createFeedUseCase.invoke(
-                                event.fileName,
-                                FeedRequest(
-                                    tag = Tag.MORNING,
-                                    time = event.time,
-                                    memo = event.memo,
-                                    icon = Icon.CAKE,
-                                    isMain = event.isMainFeed,
-                                    deletePhotoTokens = emptyList()
-                                )
-                            ).apply {
-                                if (code == 200) {
-                                    _effect.emit(ModifyContract.SideEffect.OnFinishModify)
-                                }
+                    if (postId.isEmpty()) {
+                        createFeedUseCase.invoke(
+                            event.file,
+                            FeedRequest(
+                                tag = Tag.findTag(state.value.tag),
+                                time = event.time,
+                                memo = event.memo,
+                                icon = Icon.findIcon(state.value.icon),
+                                isMain = event.isMainFeed,
+                                deletePhotoTokens = emptyList()
+                            )
+                        ).apply {
+                            if (code == 200) {
+                                _effect.emit(ModifyContract.SideEffect.OnFinishCreate)
+                            } else {
+                                _effect.emit(ModifyContract.SideEffect.Fail(this.message))
                             }
-                        } else {
-                            modifyFeedUseCase.invoke(
-                                event.fileName,
-                                FeedRequest(
-                                    feedId = postId,
-                                    tag = Tag.MORNING,
-                                    time = event.time,
-                                    memo = event.memo,
-                                    icon = Icon.CAKE,
-                                    isMain = event.isMainFeed,
-                                    deletePhotoTokens = emptyList()
-                                )
-                            ).apply {
-                                if (code == 200) {
-                                    _effect.emit(ModifyContract.SideEffect.OnFinishModify)
-                                }
+                        }
+                    } else {
+                        modifyFeedUseCase.invoke(
+                            event.file, // TODO : 수정
+                            FeedRequest(
+                                feedId = postId,
+                                tag = Tag.MORNING,
+                                time = event.time,
+                                memo = event.memo,
+                                icon = Icon.CAKE,
+                                isMain = event.isMainFeed,
+                                deletePhotoTokens = emptyList()
+                            )
+                        ).apply {
+                            if (code == 200) {
+                                _effect.emit(ModifyContract.SideEffect.OnFinishModify)
                             }
                         }
                     }
@@ -150,10 +151,19 @@ class ModifyViewModel @Inject constructor(
                     }
                 }
             }
+        } else {
+            viewModelScope.launch {
+                _state.update {
+                    it.copy(
+                        time = postDate
+                    )
+                }
+            }
         }
     }
 
     companion object {
         const val KEY_POST_ID = "post_id"
+        const val KEY_POST_DATE = "post_date"
     }
 }

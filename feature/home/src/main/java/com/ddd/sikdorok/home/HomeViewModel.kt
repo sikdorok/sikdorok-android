@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,7 +60,15 @@ class HomeViewModel @Inject constructor(
                         _effect.emit(HomeContract.Effect.Move.Setting)
                     }
                     is HomeContract.Event.Click.Feed -> {
-                        _effect.emit(HomeContract.Effect.Move.Feed(event.id))
+                        val date = "${state.value.nowTime.toString("yyyy-MM-dd")} " +
+                                DateTime.now().toString("HH:mm:ss")
+
+                        _effect.emit(
+                            HomeContract.Effect.Move.Feed(
+                                event.id,
+                                date
+                            )
+                        )
                     }
                     is HomeContract.Event.Click.Date -> {
                         getWeeklyMealboxInfo(DateUtil.parseDate(event.date))
@@ -121,19 +128,22 @@ class HomeViewModel @Inject constructor(
                             nowTagList = response.tags.distinct()
                         )
                     }
-                    checkTagCanChange(response.tags.distinct(), response.initTag ?: Tag.MORNING.code)
+                    checkTagCanChange(
+                        response.tags.distinct(),
+                        response.initTag ?: Tag.MORNING.code
+                    )
                 }
             }
         }
     }
 
     fun changeMealTime(isNext: Boolean) {
-        when(isNext) {
+        when (isNext) {
             true -> {
-                if(state.value.tagCanGoNext == null) return
+                if (state.value.tagCanGoNext == null) return
             }
             false -> {
-                if(state.value.tagCanGoPrevious == null) return
+                if (state.value.tagCanGoPrevious == null) return
             }
         }
 
@@ -193,7 +203,7 @@ class HomeViewModel @Inject constructor(
         } else nextTag
     }
 
-    private fun checkTagCanChange(tagList : List<String>, nowTag : String) {
+    private fun checkTagCanChange(tagList: List<String>, nowTag: String) {
         var result: Pair<Boolean?, Boolean?> = when (tagList.indexOf(nowTag)) {
             0 -> {
                 Pair(false, true)
@@ -209,11 +219,11 @@ class HomeViewModel @Inject constructor(
             }
         }
 
-        if(tagList.isEmpty()) {
+        if (tagList.isEmpty()) {
             result = Pair(null, null)
         }
 
-        if(tagList.indexOf(nowTag) == tagList.lastIndex && tagList.indexOf(nowTag) == 0) {
+        if (tagList.indexOf(nowTag) == tagList.lastIndex && tagList.indexOf(nowTag) == 0) {
             Pair(false, false)
         }
 

@@ -12,6 +12,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
+import retrofit2.http.PartMap
 import retrofit2.http.Path
 
 interface ModifyService {
@@ -19,8 +20,8 @@ interface ModifyService {
         @Multipart
         @POST("/feed")
         suspend fun createFeed(
-            @Part("content") file: RequestBody,
-            @Part feedBody: FeedRequest
+            @Part file: MultipartBody.Part,
+            @Part("request") feedBody: FeedRequest
         ): SikdorokResponse<String>
     }
 
@@ -35,8 +36,8 @@ interface ModifyService {
         @Multipart
         @PUT("/feed")
         suspend fun updateFeed(
-            @Part("content") file: RequestBody,
-            @Body feedBody: FeedRequest
+            @Part file: MultipartBody.Part,
+            @Part("request") feedBody: FeedRequest
         ): SikdorokResponse<String>
     }
 

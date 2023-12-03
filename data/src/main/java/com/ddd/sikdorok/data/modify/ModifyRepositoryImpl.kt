@@ -1,6 +1,5 @@
 package com.ddd.sikdorok.data.modify
 
-import androidx.core.net.toUri
 import com.ddd.sikdorok.data.modify.data.ModifyRemoteDataSource
 import com.ddd.sikdorok.domain.repository.ModifyRepository
 import com.ddd.sikdorok.shared.base.SikdorokResponse
@@ -16,16 +15,16 @@ import javax.inject.Singleton
 internal class ModifyRepositoryImpl @Inject constructor(
     private val modifyRemoteDataSource: ModifyRemoteDataSource
 ) : ModifyRepository {
-    override suspend fun createFeed(file: String, body: FeedRequest): SikdorokResponse<String> {
-        return modifyRemoteDataSource.createFeed(file.toUri(), body)
-    }
-
     override suspend fun getFeed(feedId: String): SikdorokResponse<FeedResponse> {
         return modifyRemoteDataSource.getFeed(feedId)
     }
 
-    override suspend fun updateFeed(file: String, body: FeedRequest): SikdorokResponse<String> {
-        return modifyRemoteDataSource.updateFeed(file.toUri(), body)
+    override suspend fun createFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String> {
+        return modifyRemoteDataSource.createFeed(file, body)
+    }
+
+    override suspend fun updateFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String> {
+        return modifyRemoteDataSource.updateFeed(file, body)
     }
 
     override suspend fun deleteFeed(feedId: String): SikdorokResponse<Unit> {

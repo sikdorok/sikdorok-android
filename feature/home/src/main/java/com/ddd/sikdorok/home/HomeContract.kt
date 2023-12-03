@@ -44,7 +44,7 @@ interface HomeContract :
 
             data class ChangeDate(val nowDate: DateTime = DateTime.now()) : Move
             data class DeepLink(val link: String) : Move
-            data class Feed(val id: String) : Move
+            data class Feed(val id: String, val postDate : String) : Move
         }
     }
 }
