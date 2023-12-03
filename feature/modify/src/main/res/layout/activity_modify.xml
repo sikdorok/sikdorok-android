@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/bind"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.ddd.sikdorok.modify.ModifyViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ModifyActivity">
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <FrameLayout
+                android:id="@+id/frame_back"
+                android:layout_width="48dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view"
+                app:layout_constraintStart_toStartOf="@+id/view"
+                app:layout_constraintTop_toTopOf="@+id/view">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_arrow_left" />
+            </FrameLayout>
+
+
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view"
+                app:layout_constraintEnd_toEndOf="@+id/view"
+                app:layout_constraintTop_toTopOf="@+id/view">
+
+                <TextView
+                    android:id="@+id/tv_save"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/modify_save"
+                    android:textAppearance="@style/Typography.H4.Regular"
+                    android:textColor="@color/gray80" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_date"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintEnd_toStartOf="@+id/rl_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textAppearance="@style/Typography.H4.Regular"
+                    tools:text="2023년 11월 11일 토요일" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_toRightOf="@+id/tv_date"
+                    android:src="@drawable/ic_arrow_small_down" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_time"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rl_date"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textAppearance="@style/Typography.H4.Regular"
+                    tools:text="오후 12:23" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_toRightOf="@+id/tv_time"
+                    android:src="@drawable/ic_arrow_small_down" />
+            </RelativeLayout>
+
+            <RadioGroup
+                android:id="@+id/radio_tag"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rl_date">
+
+                <RadioButton
+                    android:id="@+id/tag_button_morning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_button_bg"
+                    android:button="@null"
+                    android:drawableStart="@drawable/ic_selected_sun"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:tag="C000300001"
+                    android:text="@string/modify_morning"
+                    android:textAppearance="@style/Typography.Body2.Bold"
+                    android:textColor="@color/selector_button_text_color" />
+
+                <RadioButton
+                    android:id="@+id/tag_button_lunch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_button_bg"
+                    android:button="@null"
+                    android:drawableStart="@drawable/ic_selected_sun"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:tag="C000300002"
+                    android:text="@string/modify_lunch"
+                    android:textAppearance="@style/Typography.Body2.Bold"
+                    android:textColor="@color/selector_button_text_color" />
+
+                <RadioButton
+                    android:id="@+id/tag_button_evening"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_button_bg"
+                    android:button="@null"
+                    android:drawableStart="@drawable/ic_selected_moon"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:tag="C000300003"
+                    android:text="@string/modify_evening"
+                    android:textAppearance="@style/Typography.Body2.Bold"
+                    android:textColor="@color/selector_button_text_color" />
+
+                <RadioButton
+                    android:id="@+id/tag_button_snack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_button_bg"
+                    android:button="@null"
+                    android:drawableStart="@drawable/ic_cake"
+                    android:gravity="center"
+                    android:paddingHorizontal="10dp"
+                    android:tag="C000300004"
+                    android:text="@string/modify_snack"
+                    android:textAppearance="@style/Typography.Body2.Bold"
+                    android:textColor="@color/selector_button_text_color" />
+
+            </RadioGroup>
+
+            <ImageView
+                android:id="@+id/iv_main"
+                android:layout_width="320dp"
+                android:layout_height="320dp"
+                android:layout_marginHorizontal="20dp"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/modify_image_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radio_tag"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <ImageView
+                android:id="@+id/iv_default_add"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/img_modify_default"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_main"
+                app:layout_constraintEnd_toEndOf="@+id/iv_main"
+                app:layout_constraintStart_toStartOf="@+id/iv_main"
+                app:layout_constraintTop_toTopOf="@+id/iv_main" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/ic_camera"
+                app:backgroundTint="@color/modify_fab_color"
+                app:elevation="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_main"
+                app:layout_constraintEnd_toEndOf="@+id/iv_main"
+                app:tint="@color/white" />
+
+            <RadioGroup
+                android:id="@+id/radio_meal_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_main">
+
+                <RadioButton
+                    android:id="@+id/type_button_rice"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_rice"
+                    android:button="@null"
+                    android:tag="C000400002" />
+
+                <RadioButton
+                    android:id="@+id/type_button_salad"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_salad"
+                    android:button="@null"
+                    android:tag="C000400004" />
+
+                <RadioButton
+                    android:id="@+id/type_button_noodle"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_noodle"
+                    android:button="@null"
+                    android:tag="C000400003" />
+
+                <RadioButton
+                    android:id="@+id/type_button_meat"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_meat"
+                    android:button="@null"
+                    android:tag="C000400005" />
+
+                <RadioButton
+                    android:id="@+id/type_button_bread"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_bread"
+                    android:button="@null"
+                    android:tag="C000400006" />
+
+                <RadioButton
+                    android:id="@+id/type_button_burger"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_hamburger"
+                    android:button="@null"
+                    android:tag="C000400007" />
+
+                <RadioButton
+                    android:id="@+id/type_button_sushi"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_sushi"
+                    android:button="@null"
+                    android:tag="C000400008" />
+
+                <RadioButton
+                    android:id="@+id/type_button_snack"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_cake"
+                    android:button="@null"
+                    android:tag="C000400009" />
+
+                <RadioButton
+                    android:id="@+id/type_button_nothing"
+                    android:background="@drawable/ic_nothing"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:button="@null" />
+            </RadioGroup>
+
+            <CheckBox
+                android:id="@+id/check_main_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/transparent"
+                android:button="@null"
+                android:drawableStart="@drawable/ic_check_box"
+                android:drawablePadding="6dp"
+                android:text="@string/modify_main_post"
+                android:textAppearance="@style/Typography.Body2.Regular"
+                android:textColor="@color/gray80"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radio_meal_type" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_info"
+                app:layout_constraintBottom_toBottomOf="@+id/check_main_post"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toEndOf="@+id/check_main_post"
+                app:layout_constraintTop_toTopOf="@+id/check_main_post" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/container_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:layout_marginHorizontal="20dp"
+                app:cardBackgroundColor="#FBF8F3"
+                android:layout_marginTop="20dp"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/check_main_post">
+
+                <EditText
+                    android:id="@+id/edit_input"
+                    android:layout_width="wrap_content"
+                    android:background="@null"
+                    android:paddingVertical="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:hint="@string/modify_hint"
+                    android:textAppearance="@style/Typography.Body2.Regular" />
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

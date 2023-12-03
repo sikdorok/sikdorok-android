@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/bind"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.ddd.sikdorok.home.list.dialog.HomeListMonthlyViewModel" />
+
+        <import type="com.ddd.sikdorok.home.list.dialog.HomeListMonthlyContract" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_home_dialog"
+        android:paddingBottom="14dp"
+        android:minHeight="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="날짜 이동하기"
+            android:textAppearance="@style/Typography.H3.Regular"
+            android:textColor="@color/text_color"
+            android:textSize="18dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="20dp"
+            android:onClick="@{() -> vm.onClickClose()}"
+            android:src="@drawable/ic_home_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list_month"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="20dp"
+            android:maxHeight="100dp"
+            android:orientation="vertical"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/confirm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            bind:list_item="@{vm.state.monthlyList}"
+            tools:itemCount="2"
+            tools:listitem="@layout/item_month" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="10dp"
+            android:text="확인"
+            android:textAppearance="@style/Typography.H3.Regular"
+            android:textColor="@color/text_color"
+            android:textSize="18dp"
+            android:onClick="@{() -> vm.onClickConfirm()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="10dp"
+            android:text="취소"
+            android:onClick="@{() -> vm.onClickClose()}"
+            android:textAppearance="@style/Typography.H3.Regular"
+            android:textColor="@color/text_color"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/confirm" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

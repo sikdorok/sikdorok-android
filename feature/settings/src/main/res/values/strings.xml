@@ -1,0 +1,10 @@
+<resources>
+    <string name="settings_title">설정</string>
+    <string name="settings_app_title">앱 설정</string>
+    
+    <string name="settings_profile_manage">프로필 관리</string>
+    <string name="settings_policy">개인정보 처리방침</string>
+    <string name="settings_account_delete">계정 삭제</string>
+    <string name="settings_app_versions">현재 버전 %1$s</string>
+    <string name="settings_logout"><u>로그아웃</u></string>
+</resources>

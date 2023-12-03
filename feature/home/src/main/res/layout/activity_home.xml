@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/binds"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.ddd.sikdorok.home.HomeViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="9dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:drawableEnd="@drawable/ic_home_arrow_down"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="@{() -> vm.onClickChangeDate()}"
+                android:text="@{String.format(@string/title_monthly_mealbox, vm.state.nowTime.monthOfYear)}"
+                android:textAppearance="@style/Typography.H3.Regular"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="6월의 도시락" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/header_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="@{() -> vm.onClickListPage()}"
+                android:src="@drawable/ic_home_list"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/header_setting"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/header_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="@{() -> vm.onClickSetting()}"
+                android:src="@drawable/ic_home_setting"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/action_bar">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="20dp"
+                android:paddingBottom="70dp">
+
+                <!-- 주간 기록  -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container_weekly"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/weekly_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:text="@{String.format(@string/title_monthly_week, vm.state.nowTime.monthOfYear, vm.state.weekCount)}"
+                            android:textAppearance="@style/Typography.H4.Regular"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="6월 2째주" />
+
+                        <include
+                            android:id="@+id/view_week_days"
+                            layout="@layout/view_week_days"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/weekly_title" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/list_weekly"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:overScrollMode="never"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/view_week_days"
+                            app:spanCount="7"
+                            bind:list_item="@{vm.state.weeklyList}"
+                            tools:itemCount="7"
+                            tools:listitem="@layout/item_weekday" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- 일간 기록  -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/container_daily"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingBottom="20dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/container_weekly">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/daily_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:drawableEnd="@drawable/ic_mealbox"
+                            android:drawablePadding="4dp"
+                            android:text="@string/title_today_mealbox"
+                            android:textAppearance="@style/Typography.H3.Regular"
+                            android:textColor="@color/text_color"
+                            android:textSize="18dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/list_mealbox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="16dp"
+                            android:layout_marginBottom="18dp"
+                            android:orientation="vertical"
+                            android:overScrollMode="never"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/daily_title"
+                            bind:list_item="@{vm.state.feedList}"
+                            tools:itemCount="2"
+                            tools:listitem="@layout/item_mealbox" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/meal_previous"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="4dp"
+                            android:onClick="@{() -> vm.changeMealTime(false)}"
+                            android:src="@drawable/selector_home_arrow_left"
+                            app:layout_constraintBottom_toBottomOf="@id/meal_type"
+                            app:layout_constraintEnd_toStartOf="@id/icon_meal_type"
+                            app:layout_constraintTop_toTopOf="@id/meal_type"
+                            bind:selected="@{vm.state.tagCanGoPrevious}" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/meal_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="4dp"
+                            android:textAppearance="@style/Typography.H4.Regular"
+                            android:textColor="@color/text_color"
+                            app:layout_constraintEnd_toStartOf="@id/meal_next"
+                            app:layout_constraintTop_toTopOf="parent"
+                            bind:home_main_tag_text="@{vm.state.nowTag}"
+                            tools:text="아침" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/icon_meal_type"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_marginEnd="4dp"
+                            app:layout_constraintBottom_toBottomOf="@id/meal_type"
+                            app:layout_constraintEnd_toStartOf="@id/meal_type"
+                            app:layout_constraintTop_toTopOf="@id/meal_type"
+                            bind:home_main_tag_icon="@{vm.state.nowTag}"
+                            tools:src="@drawable/ic_selected_sun" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/meal_next"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="14dp"
+                            android:onClick="@{() -> vm.changeMealTime(true)}"
+                            android:src="@drawable/selector_home_arrow_right"
+                            app:layout_constraintBottom_toBottomOf="@id/meal_type"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/meal_type"
+                            bind:selected="@{vm.state.tagCanGoNext}" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="14dp"
+            android:onClick="@{() -> vm. onClickCreateFeed()}"
+            android:src="@drawable/ic_home_post"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

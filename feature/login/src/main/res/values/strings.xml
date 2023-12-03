@@ -1,0 +1,6 @@
+<resources>
+    <string name="email_login">이메일로 로그인</string>
+    <string name="kakao_login">카카오로 로그인</string>
+    <string name="login_title">매일먹는 도시락,\n간편하게 기록하세요!</string>
+    <string name="login_description">식도록과 함께하는 도시락 일기</string>
+</resources>

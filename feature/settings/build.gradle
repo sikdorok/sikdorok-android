@@ -1,0 +1,62 @@
+plugins {
+    alias(libs.plugins.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt.plugin)
+}
+
+android {
+    namespace 'com.ddd.sikdorok.settings'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        dataBinding true
+    }
+}
+
+dependencies {
+    implementation(project(":domain"))
+    implementation(project(":shared"))
+
+    implementation(project(":core-design"))
+    implementation(project(":core-ui"))
+    implementation(project(":extensions"))
+
+    implementation(project(":navigator:core"))
+    implementation(project(":navigator:delete-account"))
+
+    implementation libs.bundles.android
+    implementation libs.material
+    implementation libs.glide
+
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
+
+    implementation libs.fragment.ktx
+
+    testImplementation libs.junit
+    androidTestImplementation libs.junit.ext
+    androidTestImplementation libs.espresso
+
+}

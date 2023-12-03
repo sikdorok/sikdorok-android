@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="7dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/weekday_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            tools:background="@drawable/bg_home_weekday"
+            android:padding="7dp"
+            tools:textColor="@color/white"
+            android:textAppearance="@style/Typography.Body2.Regular"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="30" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/weekday_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weekday_number"
+            tools:src="@drawable/ic_selected_bread" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

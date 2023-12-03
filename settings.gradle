@@ -10,7 +10,42 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' }
     }
 }
-rootProject.name = "DDD-9-Android2-Sikdorok"
+rootProject.name = "sikdorok-android"
+
 include ':app'
+include ':core-design'
+include ':shared'
+include ':domain'
+include ':core-api'
+include ':feature'
+include ':feature:home'
+include ':feature:detail'
+include ':extensions'
+include ':data'
+include ':feature:login'
+include ':feature:signin'
+include ':navigator'
+include ':navigator:core'
+include ':navigator:signin'
+include ':core-ui'
+include ':feature:signup'
+include ':navigator:signup'
+include ':navigator:home'
+include ':navigator:find-password'
+include ':feature:find-password'
+include ':preference'
+include ':feature:send-password'
+include ':navigator:send-password'
+include ':feature:modify'
+include ':feature:splash'
+include ':navigator:splash'
+include ':feature:settings'
+include ':navigator:management'
+include ':navigator:delete-account'
+include ':feature:delete-account'
+include ':navigator:login'
+include ':navigator:settings'
+include ':navigator:modify'

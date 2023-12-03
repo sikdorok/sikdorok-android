@@ -1,0 +1,82 @@
+plugins {
+    alias(libs.plugins.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt.plugin)
+}
+
+android {
+    namespace 'com.ddd.sikdorok.home'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+
+    implementation(project(":core-design"))
+    implementation(project(":core-ui"))
+    implementation(project(":extensions"))
+
+    implementation(project(":navigator:core"))
+    implementation(project(":navigator:settings"))
+    implementation(project(":navigator:modify"))
+    implementation(project(":navigator:home"))
+
+    implementation(project(":domain"))
+    implementation(project(":shared"))
+
+    implementation libs.androidCoreX
+    implementation libs.fragment.ktx
+    implementation libs.kakao.login
+
+    implementation libs.bundles.android
+    implementation libs.material
+    implementation libs.viewmodel.ktx
+
+    implementation libs.glide
+
+    implementation(platform(libs.firebase.bom))
+    implementation libs.firebase.analysis
+    implementation libs.firebase.dynamic.links
+
+    implementation libs.hilt.android
+    kapt libs.hilt.compiler
+
+    implementation libs.androidCoreX
+    implementation libs.androidCompat
+    implementation libs.material
+
+    implementation libs.timber
+    implementation libs.jodatime
+
+    testImplementation libs.junit
+
+    androidTestImplementation libs.junit.ext
+    androidTestImplementation libs.espresso
+}

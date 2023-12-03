@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="title_monthly_mealbox">%d월의 도시락</string>
+    <string name="title_monthly_week">%d월 %d째주</string>
+
+    <string name="title_today_mealbox">오늘의 도시락</string>
+    <string name="title_today_mealbox_menu">오늘의 메뉴</string>
+    <string name="title_today_mealbox_no_memo">입력된 메모가 없습니다</string>
+
+</resources>

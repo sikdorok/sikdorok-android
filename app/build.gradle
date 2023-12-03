@@ -1,6 +1,9 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hilt.plugin)
+    alias(libs.plugins.gms.plugin)
 }
 
 android {
@@ -11,34 +14,97 @@ android {
         applicationId "com.ddd.sikdorok"
         minSdk 24
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode libs.versions.versionCode.get().toInteger()
+        versionName libs.versions.versionName.get()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
+            debuggable true
+
+            resValue "string", "kakao_native_key", "kakao37987d37deae711f16a7ded700cd6a81"
+            resValue "string", "native_key", "37987d37deae711f16a7ded700cd6a81"
+
+        }
+
+        release {
+            debuggable false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            resValue "string", "kakao_native_key", "kakao37987d37deae711f16a7ded700cd6a81"
+            resValue "string", "native_key", "37987d37deae711f16a7ded700cd6a81"
         }
     }
+
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
+            def buildType = variant.buildType.name
+            def versionName = variant.versionName
+            outputFileName = "sikdorok-${buildType}-${versionName}.apk"
+        }
+    }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
+    }
+    buildFeatures {
+        dataBinding true
     }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation(project(":feature:splash"))
+    implementation(project(":feature:login"))
+    implementation(project(":feature:signup"))
+    implementation(project(":feature:signin"))
+    implementation(project(":feature:home"))
+    implementation(project(":feature:find-password"))
+    implementation(project(":feature:send-password"))
+    implementation(project(":feature:modify"))
+    implementation(project(":feature:settings"))
+    implementation(project(":feature:delete-account"))
+
+    implementation(project(":navigator:core"))
+    implementation(project(":navigator:splash"))
+    implementation(project(":navigator:signin"))
+    implementation(project(":navigator:signup"))
+    implementation(project(":navigator:home"))
+    implementation(project(":navigator:find-password"))
+    implementation(project(":navigator:send-password"))
+    implementation(project(":navigator:management"))
+    implementation(project(":navigator:delete-account"))
+    implementation(project(":navigator:login"))
+    implementation(project(":navigator:settings"))
+    implementation(project(":navigator:modify"))
+
+    implementation(project(":core-design"))
+    implementation(project(":core-api"))
+
+    implementation(project(":data"))
+    implementation(project(":shared"))
+    implementation(project(":domain"))
+    implementation(project(":preference"))
+
+
+    implementation libs.androidCoreX
+    implementation libs.androidCompat
+    implementation libs.hilt.android
+
+    implementation libs.kakao.login
+    kapt libs.hilt.compiler
+
+    implementation libs.timber
+
+    implementation(platform(libs.firebase.bom))
+    implementation libs.firebase.analysis
+
 }
