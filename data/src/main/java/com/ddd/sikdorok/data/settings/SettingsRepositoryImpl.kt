@@ -18,6 +18,10 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun getUserDeviceInfo(version: String): SikdorokResponse<UserDeviceInfo> {
         return settingsRemoteDataSource.getUserDeviceInfo(version)
     }
+
+    override suspend fun setUserLogout(): SikdorokResponse<Boolean> {
+        return settingsRemoteDataSource.setUserLogout()
+    }
 }
 
 @Module

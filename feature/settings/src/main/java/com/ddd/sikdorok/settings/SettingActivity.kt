@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.FrameLayout
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -11,10 +12,12 @@ import com.ddd.sikdorok.core_ui.base.BackFrameActivity
 import com.ddd.sikdorok.extensions.getPackageInfoCompat
 import com.ddd.sikdorok.navigator.delete_account.DeleteAccountNavigator
 import com.ddd.sikdorok.settings.databinding.ActivitySettingBinding
+import com.ddd.sikdorok.splash.SplashNavigator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
+import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettingBinding::inflate) {
@@ -24,6 +27,9 @@ class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettin
     override val backFrame: FrameLayout by lazy {
         binding.frameBack
     }
+
+    @Inject
+    lateinit var splashNavigator: SplashNavigator
 
     @Inject
     lateinit var deleteAccountNavigator: DeleteAccountNavigator
@@ -68,6 +74,22 @@ class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettin
                     }
                     SettingsContract.SideEffect.NaviToDeleteAccount -> {
                         startActivity(deleteAccountNavigator.start(this))
+                    }
+                    SettingsContract.SideEffect.Logout -> {
+                        AlertDialog.Builder(this)
+                            .apply {
+                                setMessage("로그아웃 하시겠습니까?")
+                                setPositiveButton("네") { dialog, which ->
+                                    viewModel.setUserLogout()
+                                }
+                                setNegativeButton("아니오") { dialog, which -> }
+                            }.show()
+                    }
+                    SettingsContract.SideEffect.NaviToSplash -> {
+                        startActivity(splashNavigator.start(this))
+                    }
+                    is SettingsContract.SideEffect.Fail -> {
+
                     }
                 }
             }

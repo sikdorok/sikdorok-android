@@ -8,6 +8,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.ResponseBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,6 +18,10 @@ internal class SettingsRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getUserDeviceInfo(version: String): SikdorokResponse<UserDeviceInfo> {
         return settingsService.getUserDeviceInfo(version)
+    }
+
+    override suspend fun setUserLogout(): SikdorokResponse<Boolean> {
+        return settingsService.setUserLogout()
     }
 }
 
