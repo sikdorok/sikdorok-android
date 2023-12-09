@@ -34,6 +34,14 @@ class ModifyContract {
 
         data class InputMemo(val memo: String) : Event()
 
+        object OnClickMore : Event()
+
+        data class OnClickCheck(val isChecked: Boolean) : Event()
+
+        object OnClickDelete : Event()
+
+        object OnClickShare : Event()
+
         data class OnUpdateImage(val uri: Uri) : Event()
 
         data class OnClickDate(val date: String) : Event()
@@ -70,6 +78,8 @@ class ModifyContract {
         object NaviToCamera : SideEffect()
 
         object NaviToAlbum : SideEffect()
+
+        object OpenMenu : SideEffect()
 
         data class ShowDatePicker(val date: String) : SideEffect()
 

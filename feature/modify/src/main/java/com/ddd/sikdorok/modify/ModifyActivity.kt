@@ -7,6 +7,9 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.view.ContextMenu
+import android.view.MenuItem
+import android.view.View
 import android.widget.FrameLayout
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,8 +21,10 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.ddd.sikdorok.core_ui.base.BackFrameActivity
+import com.ddd.sikdorok.core_ui.util.makeAlertDialog
 import com.ddd.sikdorok.extensions.compressBitmap
 import com.ddd.sikdorok.extensions.convertImageBitmapToByteArray
+import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.extensions.uriToBitmap
 import com.ddd.sikdorok.modify.databinding.ActivityModifyBinding
 import com.ddd.sikdorok.shared.code.Icon
@@ -29,13 +34,13 @@ import com.ddd.sikdorok.shared.code.camera
 import com.ddd.sikdorok.shared.date.DATE_PATTERNS
 import com.ddd.sikdorok.shared.date.TIME_PATTERNS
 import com.ddd.sikdorok.shared.key.Keys
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
-import java.lang.Exception
 
 // TODO : 데바로 변경
 @AndroidEntryPoint
@@ -68,7 +73,6 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         }
     }
 
-
     override val backFrame: FrameLayout by lazy { binding.frameBack }
 
     override val viewModel: ModifyViewModel by viewModels()
@@ -92,18 +96,11 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             viewModel.event(ModifyContract.Event.OnClickTime(binding.tvTime.text.toString()))
         }
         binding.tvSave.setOnClickListener {
-            val bitmap = uriToBitmap(this, viewModel.state.value.image)
-            val byteArray = convertImageBitmapToByteArray(bitmap)
-            viewModel.event(
-                ModifyContract.Event.OnSavedFeed(
-                    file = byteArray,
-                    tag = viewModel.state.value.tag,
-                    time = viewModel.state.value.time,
-                    memo = viewModel.state.value.memo,
-                    icon = viewModel.state.value.icon,
-                    isMainFeed = viewModel.state.value.isMainPost
-                )
-            )
+            savePost()
+        }
+
+        binding.checkMainPost.setOnCheckedChangeListener { buttonView, isChecked ->
+            viewModel.event(ModifyContract.Event.OnClickCheck(isChecked))
         }
 
         binding.radioTag.setOnCheckedChangeListener { radioGroup, i ->
@@ -138,17 +135,18 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
 
                 }
 
-                if (state.image != Uri.EMPTY) {
-                    Glide.with(this)
-                        .load(state.image)
-                        .centerCrop()
-                        .into(binding.ivMain)
-                }
-
-                state.imageUrl?.takeIf { it.isNotEmpty() }?.let {
-                    Glide.with(this)
-                        .load(state.imageUrl)
-                        .into(binding.ivMain)
+                when {
+                    !state.imageUrl.isNullOrEmpty() -> {
+                        Glide.with(this)
+                            .load(state.imageUrl)
+                            .into(binding.ivMain)
+                    }
+                    (state.image != Uri.EMPTY) && state.image != null -> {
+                        Glide.with(this)
+                            .load(state.image)
+                            .centerCrop()
+                            .into(binding.ivMain)
+                    }
                 }
 
                 binding.editInput.setText(state.memo)
@@ -166,15 +164,15 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             .onEach { sideEffect ->
                 when (sideEffect) {
                     ModifyContract.SideEffect.OnFinishCreate -> {
-                        setResult(RESULT_CODE_CREATE, intent)
+                        setResult(RESULT_CODE_CREATE)
                         finish()
                     }
                     ModifyContract.SideEffect.OnFinishModify -> {
-                        setResult(RESULT_CODE_MODIFY, intent)
+                        setResult(RESULT_CODE_MODIFY)
                         finish()
                     }
                     ModifyContract.SideEffect.OnFinishDelete -> {
-                        setResult(RESULT_CODE_DELETE, intent)
+                        setResult(RESULT_CODE_DELETE)
                         finish()
                     }
                     ModifyContract.SideEffect.OnFinish -> {
@@ -195,6 +193,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                                 Manifest.permission.READ_MEDIA_IMAGES
                             } else {
                                 Manifest.permission.READ_EXTERNAL_STORAGE
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
                             }
 
                         requestPermissions(
@@ -227,6 +226,19 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
 
                         ModifyTimePicker.getInstance(time.toString())
                             .show(supportFragmentManager, Keys.MODIFY_TIME_FRAGMENT)
+                    }
+                    ModifyContract.SideEffect.OpenMenu -> {
+                        registerForContextMenu(binding.more)
+                        binding.more.showContextMenu()
+                    }
+                    is ModifyContract.SideEffect.Fail -> {
+                        showSnackBar(
+                            view = binding.root,
+                            message = sideEffect.errorMsg,
+                            backgroundColor = com.ddd.sikdorok.core_design.R.color.text_color,
+                            textColor = com.ddd.sikdorok.core_design.R.color.white,
+                            duration = Snackbar.LENGTH_LONG
+                        )
                     }
                     else -> Unit
                 }
@@ -334,6 +346,52 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             R.id.tag_button_snack -> Tag.SNACK
             else -> null
         }
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        menuInflater.inflate(R.menu.menu, menu)
+        super.onCreateContextMenu(menu, v, menuInfo)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_item_save -> {
+                savePost()
+            }
+            R.id.menu_item_delete -> {
+                makeAlertDialog(
+                    title = "저장하신 도시락 기록을 삭제하시겠어요?",
+                    confirmText = "확인",
+                    cancelText = "취소",
+                    onConfirm = {
+                        viewModel.onClickDelete()
+                    }
+                )
+            }
+            R.id.menu_item_share -> {
+                viewModel.onClickShare()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun savePost() {
+        val bitmap = uriToBitmap(this, viewModel.state.value.image)
+        val byteArray = convertImageBitmapToByteArray(bitmap)
+        viewModel.event(
+            ModifyContract.Event.OnSavedFeed(
+                file = byteArray,
+                tag = viewModel.state.value.tag,
+                time = viewModel.state.value.time,
+                memo = binding.editInput.text.toString(),
+                icon = viewModel.state.value.icon,
+                isMainFeed = viewModel.state.value.isMainPost
+            )
+        )
     }
 
     companion object {

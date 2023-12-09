@@ -14,4 +14,29 @@
         <item name="boxStrokeErrorColor">@color/input_error</item>
         <item name="errorEnabled">true</item>
     </style>
+
+    <style name="AppAlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowTitleStyle">@style/AppAlertDialogTitle</item>
+        <item name="buttonBarNegativeButtonStyle">@style/AppAlertButtonStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/AppAlertButtonStyle</item>
+        <item name="buttonBarNeutralButtonStyle">@style/AppOtherAlertButtonStyle</item>
+    </style>
+
+    <style name="AppAlertDialogTitle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:fontFamily">@font/leeseoyun</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="AppAlertButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:fontFamily">@font/leeseoyun</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="AppOtherAlertButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:fontFamily">@font/leeseoyun</item>
+        <item name="android:textSize">16dp</item>
+    </style>
 </resources>

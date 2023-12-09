@@ -53,7 +53,8 @@
                 android:layout_marginEnd="10dp"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="@+id/view"
-                app:layout_constraintTop_toTopOf="@+id/view">
+                app:layout_constraintTop_toTopOf="@+id/view"
+                bind:visibility="@{vm.state.id.empty}">
 
                 <TextView
                     android:id="@+id/tv_save"
@@ -64,6 +65,19 @@
                     android:textAppearance="@style/Typography.H4.Regular"
                     android:textColor="@color/gray80" />
             </FrameLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/more"
+                android:layout_width="48dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="10dp"
+                android:onClick="@{()-> vm.onClickMore()}"
+                android:padding="13dp"
+                android:src="@drawable/ic_more"
+                app:layout_constraintBottom_toBottomOf="@+id/view"
+                app:layout_constraintEnd_toEndOf="@+id/view"
+                app:layout_constraintTop_toTopOf="@+id/view"
+                bind:visibility="@{!vm.state.id.empty}" />
 
             <RelativeLayout
                 android:id="@+id/rl_date"
@@ -124,8 +138,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:gravity="center"
                 android:layout_marginTop="10dp"
+                android:gravity="center"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -201,8 +215,8 @@
                 android:layout_width="320dp"
                 android:layout_height="320dp"
                 android:layout_marginHorizontal="20dp"
-                android:adjustViewBounds="true"
                 android:layout_marginTop="30dp"
+                android:adjustViewBounds="true"
                 android:background="@drawable/modify_image_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -239,6 +253,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
+                android:weightSum="9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_main">
@@ -317,10 +332,10 @@
 
                 <RadioButton
                     android:id="@+id/type_button_nothing"
-                    android:background="@drawable/ic_nothing"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_nothing"
                     android:button="@null" />
             </RadioGroup>
 
@@ -355,10 +370,10 @@
                 android:id="@+id/container_edit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
                 android:layout_marginHorizontal="20dp"
-                app:cardBackgroundColor="#FBF8F3"
                 android:layout_marginTop="20dp"
+                android:paddingHorizontal="12dp"
+                app:cardBackgroundColor="#FBF8F3"
                 app:cardCornerRadius="6dp"
                 app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -368,12 +383,12 @@
                 <EditText
                     android:id="@+id/edit_input"
                     android:layout_width="wrap_content"
-                    android:background="@null"
-                    android:paddingVertical="20dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@null"
                     android:hint="@string/modify_hint"
+                    android:paddingVertical="20dp"
                     android:textAppearance="@style/Typography.Body2.Regular" />
 
             </androidx.cardview.widget.CardView>
