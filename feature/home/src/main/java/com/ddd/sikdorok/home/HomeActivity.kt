@@ -149,8 +149,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
         const val KEY_DEEPLINK = "deeplink"
         const val KEY_NOW_DATE = "now_date"
 
-        const val RESULT_CODE_CREATE = 10
-        const val RESULT_CODE_MODIFY = 11
-        const val RESULT_CODE_DELETE = 12
+        const val RESULT_CODE_CREATE = 3000
+        const val RESULT_CODE_MODIFY = 3001
+        const val RESULT_CODE_DELETE = 3002
     }
 }

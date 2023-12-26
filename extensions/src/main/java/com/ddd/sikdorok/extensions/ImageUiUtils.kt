@@ -8,17 +8,21 @@ import java.io.ByteArrayOutputStream
 import java.io.IOException
 
 @Throws(IOException::class)
-fun uriToBitmap(context: Context, uri: Uri?): Bitmap {
-    val resolver = context.contentResolver
-    val inputStream = resolver.openInputStream(uri!!)
-    return BitmapFactory.decodeStream(inputStream)
+fun uriToBitmap(context: Context, uri: Uri?): Bitmap? {
+    return if (uri == null) {
+        null
+    } else {
+        val resolver = context.contentResolver
+        val inputStream = resolver.openInputStream(uri)
+        BitmapFactory.decodeStream(inputStream)
+    }
 }
 
-fun convertImageBitmapToByteArray(imageBitmap: Bitmap): ByteArray {
+fun convertImageBitmapToByteArray(imageBitmap: Bitmap?): ByteArray {
     val stream = ByteArrayOutputStream()
     return try {
         stream.use {
-            imageBitmap.compress(
+            imageBitmap?.compress(
                 Bitmap.CompressFormat.PNG,
                 100,
                 stream

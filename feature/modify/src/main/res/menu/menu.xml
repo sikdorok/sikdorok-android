@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item_save"
+        android:title="저장"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_delete"
+        android:title="삭제"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_item_share"
+        android:title="카카오톡으로 공유"
+        app:showAsAction="never"/>
+</menu>

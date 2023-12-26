@@ -40,6 +40,8 @@ class ModifyViewModel @Inject constructor(
     override val state: StateFlow<ModifyContract.State>
         get() = _state.asStateFlow()
 
+    var savedImageToken: ArrayList<String> = arrayListOf()
+
     val postId: String by lazy {
         savedStateHandle.get<String>(KEY_POST_ID) ?: ""
     }
@@ -56,6 +58,13 @@ class ModifyViewModel @Inject constructor(
                 }
                 ModifyContract.Event.OnClickCameraFAB -> {
                     _effect.emit(ModifyContract.SideEffect.ShowPostDialog)
+                }
+                is ModifyContract.Event.OnClickCheck -> {
+                    _state.update {
+                        it.copy(
+                            isMainPost = event.isChecked
+                        )
+                    }
                 }
                 is ModifyContract.Event.OnClickPostItem -> {
                     val type = event.type
@@ -101,7 +110,11 @@ class ModifyViewModel @Inject constructor(
                                 memo = event.memo,
                                 icon = Icon.findIcon(state.value.icon),
                                 isMain = event.isMainFeed,
-                                deletePhotoTokens = emptyList()
+                                deletePhotoTokens = if (event.file.isEmpty()) {
+                                    emptyList()
+                                } else {
+                                    savedImageToken
+                                }
                             )
                         ).apply {
                             if (code == 200) {
@@ -112,20 +125,38 @@ class ModifyViewModel @Inject constructor(
                         }
                     } else {
                         modifyFeedUseCase.invoke(
-                            event.file, // TODO : 수정
+                            event.file,
                             FeedRequest(
                                 feedId = postId,
-                                tag = Tag.MORNING,
+                                tag = Tag.findTag(state.value.tag),
                                 time = event.time,
                                 memo = event.memo,
-                                icon = Icon.CAKE,
+                                icon = Icon.findIcon(state.value.icon),
                                 isMain = event.isMainFeed,
-                                deletePhotoTokens = emptyList()
+                                deletePhotoTokens = if (event.file.isEmpty()) {
+                                    emptyList()
+                                } else {
+                                    savedImageToken
+                                }
                             )
                         ).apply {
                             if (code == 200) {
                                 _effect.emit(ModifyContract.SideEffect.OnFinishModify)
+                            } else {
+                                _effect.emit(ModifyContract.SideEffect.Fail(this.message))
                             }
+                        }
+                    }
+                }
+                ModifyContract.Event.OnClickMore -> {
+                    _effect.emit(ModifyContract.SideEffect.OpenMenu)
+                }
+                ModifyContract.Event.OnClickDelete -> {
+                    deleteFeedUseCase(postId).apply {
+                        if(code == 200) {
+                            _effect.emit(ModifyContract.SideEffect.OnFinishDelete)
+                        } else {
+                            _effect.emit(ModifyContract.SideEffect.Fail(this.message))
                         }
                     }
                 }
@@ -138,6 +169,10 @@ class ModifyViewModel @Inject constructor(
         if (postId.isNotEmpty()) {
             viewModelScope.launch {
                 readFeedUseCase(postId).data?.let { response ->
+                    savedImageToken.addAll(
+                        response.feedInfo.photosInfoList?.map { it.token.orEmpty() }
+                            ?: arrayListOf())
+
                     _state.update {
                         it.copy(
                             imageUrl = response.feedInfo.photosInfoList?.firstOrNull()?.uploadFullPath,
@@ -160,6 +195,18 @@ class ModifyViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onClickMore() {
+        event(ModifyContract.Event.OnClickMore)
+    }
+
+    fun onClickDelete() {
+        event(ModifyContract.Event.OnClickDelete)
+    }
+
+    fun onClickShare() {
+        event(ModifyContract.Event.OnClickShare)
     }
 
     companion object {

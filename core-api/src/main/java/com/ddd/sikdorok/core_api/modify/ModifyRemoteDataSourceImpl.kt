@@ -28,7 +28,9 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun createFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String> {
         return createService.createFeed(
-            file = createMultipartBody(convertByteArrayToPngFile(file)),
+            file = if(file.isEmpty()) null else {
+                createMultipartBody(convertByteArrayToPngFile(file)!!)
+            },
             feedBody = body
         )
     }
@@ -39,7 +41,9 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun updateFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String> {
         return updateService.updateFeed(
-            file = createMultipartBody(convertByteArrayToPngFile(file)),
+            file = if(file.isEmpty()) null else {
+                createMultipartBody(convertByteArrayToPngFile(file)!!)
+            },
             feedBody = body
         )
     }
@@ -48,22 +52,26 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
         return deleteService.deleteFeed(feedId)
     }
 
-    private fun convertByteArrayToPngFile(byteArray: ByteArray): File {
-        val imageFile = File.createTempFile("IMG_", ".png")
+    private fun convertByteArrayToPngFile(byteArray: ByteArray): File? {
+        if (byteArray.isEmpty()) {
+            return null
+        } else {
+            val imageFile = File.createTempFile("IMG_", ".png")
 
-        try {
-            FileOutputStream(imageFile).use { stream ->
-                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-                bitmap.compress(
-                    Bitmap.CompressFormat.PNG,
-                    100,
-                    stream
-                )
+            try {
+                FileOutputStream(imageFile).use { stream ->
+                    val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                    bitmap.compress(
+                        Bitmap.CompressFormat.PNG,
+                        100,
+                        stream
+                    )
+                }
+            } catch (_: Exception) {
             }
-        } catch (_: Exception) {
-        }
 
-        return imageFile
+            return imageFile
+        }
     }
 
     private fun createMultipartBody(file: File): MultipartBody.Part {

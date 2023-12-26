@@ -20,7 +20,7 @@ interface ModifyService {
         @Multipart
         @POST("/feed")
         suspend fun createFeed(
-            @Part file: MultipartBody.Part,
+            @Part file: MultipartBody.Part?,
             @Part("request") feedBody: FeedRequest
         ): SikdorokResponse<String>
     }
@@ -36,13 +36,13 @@ interface ModifyService {
         @Multipart
         @PUT("/feed")
         suspend fun updateFeed(
-            @Part file: MultipartBody.Part,
+            @Part file: MultipartBody.Part?,
             @Part("request") feedBody: FeedRequest
         ): SikdorokResponse<String>
     }
 
     interface Delete {
-        @DELETE
+        @DELETE("/feed/{feedId}")
         suspend fun deleteFeed(
             @Path("feedId") feedId: String
         ): SikdorokResponse<Unit>
