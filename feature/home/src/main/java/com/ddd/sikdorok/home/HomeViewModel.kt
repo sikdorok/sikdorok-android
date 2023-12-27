@@ -91,6 +91,8 @@ class HomeViewModel @Inject constructor(
 
     fun getWeeklyMealboxInfo(date: DateTime = state.value.nowTime) {
         viewModelScope.launch() {
+            showLoading()
+
             getHomeMonthlyFeedsUseCase(
                 date.toString("yyyy-MM-dd")
             ).data?.let { response ->
@@ -121,11 +123,12 @@ class HomeViewModel @Inject constructor(
                     20,
                     selectedDate
                 ).data?.let { response ->
+                    hideLoading()
                     _state.update {
                         it.copy(
                             nowTag = response.initTag ?: Tag.MORNING.code,
                             feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
-                            nowTagList = response.tags.distinct()
+                            nowTagList = response.tags.distinct().sorted()
                         )
                     }
                     checkTagCanChange(
@@ -150,6 +153,8 @@ class HomeViewModel @Inject constructor(
         val nowTime = state.value.nowTime.toString("yyyy-MM-dd")
 
         viewModelScope.launch() {
+            showLoading()
+
             changeTag(isNext)?.let { nextTag ->
                 // TODO : Paging 적용
                 getHomeDailyFeedsUseCase(
@@ -159,7 +164,7 @@ class HomeViewModel @Inject constructor(
                         it.copy(
                             nowTag = nextTag,
                             feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
-                            nowTagList = response.tags.distinct()
+                            nowTagList = response.tags.distinct().sorted()
                         )
                     }
 
@@ -206,7 +211,11 @@ class HomeViewModel @Inject constructor(
     private fun checkTagCanChange(tagList: List<String>, nowTag: String) {
         var result: Pair<Boolean?, Boolean?> = when (tagList.indexOf(nowTag)) {
             0 -> {
-                Pair(false, true)
+                if(tagList.size == 1) {
+                    Pair(false, false)
+                } else {
+                    Pair(false, true)
+                }
             }
             in 1 until tagList.lastIndex -> {
                 Pair(true, true)
@@ -234,6 +243,23 @@ class HomeViewModel @Inject constructor(
                     tagCanGoNext = result.second
                 )
             }
+        }
+        hideLoading()
+    }
+
+    private fun showLoading() {
+        _state.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+    }
+
+    private fun hideLoading() {
+        _state.update {
+            it.copy(
+                isLoading = false
+            )
         }
     }
 

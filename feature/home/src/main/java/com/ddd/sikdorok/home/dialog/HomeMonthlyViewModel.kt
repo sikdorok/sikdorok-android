@@ -45,10 +45,10 @@ class HomeMonthlyViewModel @Inject constructor(
         DateUtil.parseDate(dateString)
     }
 
+    // 굉장히 위험..
     private var selectedMonth = state.value.selectedDate
 
     init {
-        initMonthList()
         getWeekFeeds(selectedDate)
     }
 
@@ -67,14 +67,22 @@ class HomeMonthlyViewModel @Inject constructor(
 
         }
 
-
         viewModelScope.launch {
             when (event) {
                 HomeMonthlyContract.Event.ClickPreviousMonth -> {
-                    getWeekFeeds(DateUtil.parseDate(state.value.selectedDate).minusMonths(1))
+                    selectedMonth = DateUtil.parseDate(state.value.selectedDate).minusMonths(1)
+                        .toString("yyyy-MM-dd")
+
+                    getWeekFeeds(
+                        DateUtil.parseDate(state.value.selectedDate).minusMonths(1)
+                    )
                 }
                 HomeMonthlyContract.Event.ClickNextMonth -> {
-                    getWeekFeeds(DateUtil.parseDate(state.value.selectedDate).plusMonths(1))
+                    selectedMonth = DateUtil.parseDate(state.value.selectedDate).plusMonths(1)
+                        .toString("yyyy-MM-dd")
+                    getWeekFeeds(
+                        DateUtil.parseDate(state.value.selectedDate).plusMonths(1)
+                    )
                 }
                 is HomeMonthlyContract.Event.ClickWeeklyDate -> {
                     _state.update {
@@ -98,6 +106,7 @@ class HomeMonthlyViewModel @Inject constructor(
     }
 
     private fun getWeekFeeds(date: DateTime = selectedDate) {
+        showLoading()
         viewModelScope.launch {
             getHomeMonthlyFeedsUseCase(date.toString("yyyy-MM-dd")).data?.let { response ->
 
@@ -121,10 +130,12 @@ class HomeMonthlyViewModel @Inject constructor(
                         weeklyList = weekList
                     )
                 }
+
+                initMonthList()
+                hideLoading()
             }
         }
     }
-
 
     private fun initMonthList() {
         val monthsList = mutableListOf<DateTime>()
@@ -203,8 +214,23 @@ class HomeMonthlyViewModel @Inject constructor(
                     selectedDate = selectedMonth
                 )
             }
-            initMonthList()
             getWeekFeeds(DateUtil.parseDate(selectedMonth))
+        }
+    }
+
+    private fun showLoading() {
+        _state.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+    }
+
+    private fun hideLoading() {
+        _state.update {
+            it.copy(
+                isLoading = false
+            )
         }
     }
 

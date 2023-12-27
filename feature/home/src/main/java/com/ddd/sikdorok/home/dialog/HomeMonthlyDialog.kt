@@ -56,6 +56,16 @@ class HomeMonthlyDialog :
                 }
             }
         }
+        
+        repeatCallDefaultOnStarted {
+            viewModel.state.collect {
+                if (it.isLoading) {
+                    showLoading()
+                } else {
+                    hideLoading()
+                }
+            }
+        }
     }
 
     private fun setupDialogView() {

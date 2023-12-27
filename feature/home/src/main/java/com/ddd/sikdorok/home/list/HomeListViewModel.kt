@@ -75,6 +75,8 @@ class HomeListViewModel @Inject constructor(
     }
 
     fun getWeeklyMealList(date: DateTime = selectedDate) {
+        showLoading()
+
         viewModelScope.launch(exceptionHandler) {
             getHomeListFeedsUseCase(
                 size = 20,
@@ -90,6 +92,7 @@ class HomeListViewModel @Inject constructor(
                 }
 
                 checkArrowEnabled(date)
+                hideLoading()
             }
         }
     }
@@ -108,6 +111,22 @@ class HomeListViewModel @Inject constructor(
                     canGoNext = canGoNext
                 )
             }
+        }
+    }
+
+    private fun showLoading() {
+        _state.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+    }
+
+    private fun hideLoading() {
+        _state.update {
+            it.copy(
+                isLoading = false
+            )
         }
     }
 

@@ -137,19 +137,21 @@
                 android:id="@+id/radio_tag"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginStart="14dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
                 android:gravity="center"
                 android:orientation="horizontal"
+                android:weightSum="4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rl_date">
 
                 <RadioButton
                     android:id="@+id/tag_button_morning"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
@@ -163,13 +165,13 @@
 
                 <RadioButton
                     android:id="@+id/tag_button_lunch"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
-                    android:drawableStart="@drawable/ic_selected_sun"
+                    android:drawableStart="@drawable/ic_selected_sun_cloudy"
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:tag="C000300002"
@@ -179,9 +181,9 @@
 
                 <RadioButton
                     android:id="@+id/tag_button_evening"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
@@ -195,8 +197,9 @@
 
                 <RadioButton
                     android:id="@+id/tag_button_snack"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
@@ -356,6 +359,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/radio_meal_type" />
 
             <ImageView
+                android:id="@+id/iv_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"

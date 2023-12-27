@@ -98,7 +98,9 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         binding.tvSave.setOnClickListener {
             savePost()
         }
+        binding.ivInfo.setOnClickListener {
 
+        }
         binding.checkMainPost.setOnCheckedChangeListener { buttonView, isChecked ->
             viewModel.event(ModifyContract.Event.OnClickCheck(isChecked))
         }
@@ -392,6 +394,10 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                 isMainFeed = viewModel.state.value.isMainPost
             )
         )
+    }
+
+    private fun showTooltip() {
+
     }
 
     companion object {

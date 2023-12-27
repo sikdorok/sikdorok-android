@@ -27,14 +27,14 @@ class SignUpActivity : BackFrameActivity<ActivitySignUpBinding>(ActivitySignUpBi
 
 
     override fun initLayout() {
-
-
         if(email.orEmpty().isNotEmpty()) {
             binding.editEmail.isEnabled = false
             binding.editEmail.setText(email)
         }
 
         binding.tvSubmit.setOnClickListener {
+            showLoading()
+
             viewModel.event(SignUpContract.Event.SignUp(
                 binding.editName.text.toString(),
                 binding.editEmail.text.toString(),
@@ -106,6 +106,9 @@ class SignUpActivity : BackFrameActivity<ActivitySignUpBinding>(ActivitySignUpBi
                         binding.inputPasswordCheck.error = getString(R.string.password_check_error)
                     }
                     is SignUpContract.SideEffect.NaviToHome -> {
+                        hideLoading()
+
+                        // TODO : 스낵바 도출 필요
                         setResult(Activity.RESULT_OK)
                         finish()
                     }
@@ -113,6 +116,9 @@ class SignUpActivity : BackFrameActivity<ActivitySignUpBinding>(ActivitySignUpBi
                         finish()
                     }
                     is SignUpContract.SideEffect.SnowSnackBar -> {
+                        // TODO : ?????
+                        hideLoading()
+
                         showSnackBar(
                             view = binding.tvSubmit,
                             message = sideEffect.message,

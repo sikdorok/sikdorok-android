@@ -59,6 +59,7 @@
             android:src="@drawable/selector_home_dialog_arrow_left"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
+            bind:selected="@{true}"
             bind:visibility="@{vm.state.viewType == HomeMonthlyContract.TYPE_WEEKLY}" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -71,6 +72,7 @@
             android:src="@drawable/selector_home_dialog_arrow_right"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
+            bind:selected="@{true}"
             bind:visibility="@{vm.state.viewType == HomeMonthlyContract.TYPE_WEEKLY}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,6 +82,8 @@
             android:layout_marginTop="16dp"
             android:foreground="?android:attr/selectableItemBackground"
             android:onClick="@{() -> vm.onClickChangeViewType()}"
+            android:paddingStart="5dp"
+            android:paddingEnd="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title">
