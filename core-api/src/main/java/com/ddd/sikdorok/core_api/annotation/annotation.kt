@@ -17,6 +17,10 @@ internal annotation class RefreshInterceptor
 
 @Qualifier
 @Retention(value = AnnotationRetention.RUNTIME)
+internal annotation class FlipperInterceptor
+
+@Qualifier
+@Retention(value = AnnotationRetention.RUNTIME)
 internal annotation class NoAuthOkHttpClient
 
 @Qualifier
@@ -30,5 +34,4 @@ internal annotation class NoAuthRetrofit
 @Qualifier
 @Retention(value = AnnotationRetention.RUNTIME)
 internal annotation class NormalRetrofit
-
 

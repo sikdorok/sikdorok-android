@@ -57,6 +57,7 @@ android {
     }
     buildFeatures {
         dataBinding true
+        buildConfig true
     }
 }
 
@@ -94,7 +95,6 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":preference"))
 
-
     implementation libs.androidCoreX
     implementation libs.androidCompat
     implementation libs.hilt.android
@@ -103,6 +103,8 @@ dependencies {
     kapt libs.hilt.compiler
 
     implementation libs.timber
+    debugImplementation libs.bundles.flipper
+    releaseImplementation libs.flipper.release
 
     implementation(platform(libs.firebase.bom))
     implementation libs.firebase.analysis
