@@ -2,7 +2,7 @@
 versionCode = "1"
 versionName = "0.0.0"
 
-application = "8.0.2"
+application = "8.2.0"
 kotlin-android = "1.8.20"
 androidCoreX = "1.8.0"
 androidFragmentX = "1.5.7"
@@ -27,6 +27,9 @@ firebase-plugin = "4.3.15"
 firebase-bom = "32.2.2"
 glide = "4.15.1"
 jodatime = "2.12.5"
+flipper = "0.240.0"
+soloader = "0.10.5"
+leakCanary = "2.8.1"
 
 [libraries]
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
@@ -47,13 +50,19 @@ hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.r
 inject = { group = "javax.inject", name = "javax.inject", version.ref = "inject" }
 coroutine = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutine" }
 coroutine-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine-core" }
-kakao-login = { group ="com.kakao.sdk", name="v2-user", version.ref="kakao" }
-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref="glide" }
-jodatime = { group = "joda-time", name = "joda-time", version.ref="jodatime"}
-timber = { group="com.jakewharton.timber", name="timber", version.ref="timber"}
-junit = { group = "junit", name="junit", version.ref="junit" }
-junit-ext = { group = "androidx.test.ext", name="junit", version.ref="junit-ext" }
-espresso = { group = "androidx.test.espresso", name="espresso-core", version.ref="espresso" }
+kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+jodatime = { group = "joda-time", name = "joda-time", version.ref = "jodatime" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "junit-ext" }
+espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso" }
+flipper = { group = "com.facebook.flipper", name = "flipper", version.ref = "flipper" }
+soloader = { group = "com.facebook.soloader", name = "soloader", version.ref = "soloader" }
+flipper-release = { group = "com.facebook.flipper", name = "flipper-noop", version.ref = "flipper" }
+leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
+flipper-leakCanary = { group = "com.facebook.flipper", name = "flipper-leakcanary2-plugin", version.ref = "flipper" }
+flipper-network = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref = "flipper" }
 
 [plugins]
 application = { id = "com.android.application", version.ref = "application" }
@@ -68,3 +77,4 @@ gms-plugin = { id = "com.google.gms.google-services", version.ref = "firebase-pl
 [bundles]
 android = ["androidCoreX", "androidCompat", "androidConstraint"]
 network = ["retrofit", "http-logging", "gson-converter"]
+flipper = ["flipper", "soloader", "flipper-leakCanary", "leakCanary", "flipper-network"]
