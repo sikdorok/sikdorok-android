@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.core_ui.base.BaseContract
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import com.ddd.sikdorok.domain.login.PostOnCheckUserUseCase
+import com.ddd.sikdorok.domain.login.PostSaveTokenUseCase
+import com.ddd.sikdorok.shared.login.TokenType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val postOnCheckUserUseCase: PostOnCheckUserUseCase
+    private val postOnCheckUserUseCase: PostOnCheckUserUseCase,
+    private val postSaveTokenUseCase: PostSaveTokenUseCase
 ) : BaseViewModel(),
     BaseContract<LoginContract.State, LoginContract.Event, LoginContract.SideEffect> {
 
@@ -38,10 +41,33 @@ class LoginViewModel @Inject constructor(
                     _effect.emit(LoginContract.SideEffect.NaviToSikdorokLogin)
                 }
                 is LoginContract.Event.CheckKakaoUser -> {
-                    val result = postOnCheckUserUseCase.invoke(event.code)
+                    val result = postOnCheckUserUseCase(event.code)
 
                     if (result.data?.isRegistered == true) {
-                        _effect.emit(LoginContract.SideEffect.NaviToHome)
+                        val accessToken = result.data?.login?.accessToken
+                        val refreshToken = result.data?.login?.refreshToken
+
+                        if (accessToken.isNullOrEmpty().not()) {
+                            postSaveTokenUseCase.invoke(
+                                TokenType.REFRESH_TOKEN,
+                                refreshToken.orEmpty()
+                            )
+                                .mapCatching {
+                                    postSaveTokenUseCase.invoke(
+                                        TokenType.ACCESS_TOKEN,
+                                        accessToken.orEmpty()
+                                    )
+                                }.fold(
+                                    onSuccess = {
+                                        _effect.emit(LoginContract.SideEffect.NaviToHome)
+                                    },
+                                    onFailure = {
+                                        it.printStackTrace()
+                                    }
+                                )
+                        } else {
+                            _effect.emit(LoginContract.SideEffect.NaviToSignUp(result.data?.login?.email))
+                        }
                     } else {
                         _effect.emit(LoginContract.SideEffect.NaviToSignUp(result.data?.login?.email))
                     }
