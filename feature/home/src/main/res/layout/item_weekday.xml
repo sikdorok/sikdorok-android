@@ -10,7 +10,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/weekday_number"
-            android:layout_width="30dp"
+            android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
             tools:background="@drawable/bg_home_weekday"

@@ -40,6 +40,10 @@ internal class SikdorokPrefernceImpl @Inject constructor(
         return preference.getBoolean(key, false)
     }
 
+    override fun clearAllData(): Boolean {
+        preference.edit().clear().apply()
+        return true
+    }
 }
 
 @Module

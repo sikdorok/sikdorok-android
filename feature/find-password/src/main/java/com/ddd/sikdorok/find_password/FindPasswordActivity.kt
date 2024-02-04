@@ -6,11 +6,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ddd.sikdorok.core_design.R
+import com.ddd.sikdorok.core_ui.base.BackFrameActivity
+import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.extensions.textChanges
 import com.ddd.sikdorok.find_password.databinding.ActivityFindPasswordBinding
 import com.ddd.sikdorok.send_password.SendPasswordNavigator
-import com.ddd.sikdorok.core_ui.base.BackFrameActivity
-import com.ddd.sikdorok.extensions.showSnackBar
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -18,7 +18,8 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FindPasswordActivity : BackFrameActivity<ActivityFindPasswordBinding>(ActivityFindPasswordBinding::inflate) {
+class FindPasswordActivity :
+    BackFrameActivity<ActivityFindPasswordBinding>(ActivityFindPasswordBinding::inflate) {
 
     @Inject
     lateinit var sendPasswordNavigator: SendPasswordNavigator
@@ -35,6 +36,7 @@ class FindPasswordActivity : BackFrameActivity<ActivityFindPasswordBinding>(Acti
             .launchIn(lifecycleScope)
 
         binding.tvSubmit.setOnClickListener {
+            showLoading()
             viewModel.event(FindPasswordContract.Event.Submit(binding.editEmail.text.toString()))
         }
 
@@ -50,14 +52,16 @@ class FindPasswordActivity : BackFrameActivity<ActivityFindPasswordBinding>(Acti
         viewModel.effect
             .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
             .onEach { sideEffect ->
-                when(sideEffect) {
+                when (sideEffect) {
                     FindPasswordContract.SideEffect.NaviToBack -> {
                         finish()
                     }
                     is FindPasswordContract.SideEffect.NaviToSuccess -> {
+                        hideLoading()
                         startActivity(sendPasswordNavigator.start(this, sideEffect.email))
                     }
                     FindPasswordContract.SideEffect.InValidateEmail -> {
+                        hideLoading()
                         binding.inputEmail.error = "올바른 이메일 주소를 입력해주세요"
                         binding.tvSubmit.isEnabled = false
                         binding.tvSubmit.isSelected = false
@@ -68,6 +72,7 @@ class FindPasswordActivity : BackFrameActivity<ActivityFindPasswordBinding>(Acti
                         binding.tvSubmit.isSelected = true
                     }
                     is FindPasswordContract.SideEffect.ShowSnackBar -> {
+                        hideLoading()
                         showSnackBar(
                             view = binding.root,
                             message = sideEffect.message,

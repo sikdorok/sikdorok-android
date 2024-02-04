@@ -3,6 +3,7 @@ package com.ddd.sikdorok.home.feed
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -42,8 +43,10 @@ class HomeFeedViewHolder(
             }
 
             time.text = item.time
-            imgMealbox.bindImageRes(item.photosInfoList?.firstOrNull()?.uploadFullPath)
-            containerMealbox.bindVisibleOrGone(!item.photosInfoList.isNullOrEmpty())
+            val imgUrl = item.photosInfoList?.firstOrNull()?.uploadFullPath
+            imgMealbox.bindImageRes(imgUrl)
+            containerMealbox.bindVisibleOrGone(item.feedId.isNotEmpty())
+            imgMealboxDefault.isVisible = imgUrl.isNullOrEmpty()
             iconIsMain.bindVisibleOrGone(item.isMain)
 
             if (item.memo.isNullOrEmpty()) {

@@ -2,8 +2,11 @@ package com.ddd.sikdorok.data.modify
 
 import com.ddd.sikdorok.data.modify.data.ModifyRemoteDataSource
 import com.ddd.sikdorok.domain.repository.ModifyRepository
+import com.ddd.sikdorok.shared.base.ApiResult
 import com.ddd.sikdorok.shared.base.SikdorokResponse
+import com.ddd.sikdorok.shared.modify.CreateFeedRes
 import com.ddd.sikdorok.shared.modify.FeedRequest
+import com.ddd.sikdorok.shared.modify.FeedRes
 import com.ddd.sikdorok.shared.modify.FeedResponse
 import dagger.Binds
 import dagger.Module
@@ -15,19 +18,19 @@ import javax.inject.Singleton
 internal class ModifyRepositoryImpl @Inject constructor(
     private val modifyRemoteDataSource: ModifyRemoteDataSource
 ) : ModifyRepository {
-    override suspend fun getFeed(feedId: String): SikdorokResponse<FeedResponse> {
+    override suspend fun getFeed(feedId: String): ApiResult<FeedRes> {
         return modifyRemoteDataSource.getFeed(feedId)
     }
 
-    override suspend fun createFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String> {
+    override suspend fun createFeed(file: ByteArray?, body: FeedRequest): ApiResult<CreateFeedRes> {
         return modifyRemoteDataSource.createFeed(file, body)
     }
 
-    override suspend fun updateFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String> {
+    override suspend fun updateFeed(file: ByteArray?, body: FeedRequest): ApiResult<CreateFeedRes> {
         return modifyRemoteDataSource.updateFeed(file, body)
     }
 
-    override suspend fun deleteFeed(feedId: String): SikdorokResponse<Unit> {
+    override suspend fun deleteFeed(feedId: String): ApiResult<Unit> {
         return modifyRemoteDataSource.deleteFeed(feedId)
     }
 }

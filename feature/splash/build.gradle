@@ -44,6 +44,7 @@ dependencies {
     implementation(project(":navigator:core"))
     implementation(project(":navigator:home"))
     implementation(project(":navigator:login"))
+    implementation(project(":navigator:reset-password"))
 
     implementation(project(":domain"))
     implementation(project(":shared"))

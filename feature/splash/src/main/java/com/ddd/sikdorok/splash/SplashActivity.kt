@@ -1,5 +1,6 @@
 package com.ddd.sikdorok.splash
 
+import android.net.Uri
 import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -9,6 +10,7 @@ import com.ddd.sikdorok.core_ui.base.BaseActivity
 import com.ddd.sikdorok.home.HomeNavigator
 import com.ddd.sikdorok.navigator.login.LoginNavigator
 import com.ddd.sikdorok.splash.databinding.ActivitySplashBinding
+import com.example.reset_password.ResetPasswordNavigator
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
@@ -30,6 +32,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
 
     @Inject
     lateinit var signInNavigator: LoginNavigator
+
+    @Inject
+    lateinit var resetPasswordNavigator: ResetPasswordNavigator
 
     override val viewModel: SplashViewModel by viewModels()
 
@@ -58,7 +63,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             .onEach { effect ->
                 when (effect) {
                     is SplashContract.Effect.GoToMain -> {
-                        startActivity(homeNavigator.start(this, effect.deeplink))
+                        handleDeeplink(effect.deeplink.orEmpty())
                         finish()
                     }
                     is SplashContract.Effect.NaviToSignIn -> {
@@ -88,5 +93,29 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             .addOnFailureListener(this) { e ->
                 Timber.d("Failed to receive Dynamic link")
             }
+    }
+
+    private fun handleDeeplink(deeplink: String) {
+        val deepLinkUri: Uri = Uri.parse(deeplink)
+
+        when (deepLinkUri.path) {
+            "/reset" -> {
+                val userId = deepLinkUri.getQueryParameter("userid")
+                val code = deepLinkUri.getQueryParameter("code")
+                startActivity(
+                    resetPasswordNavigator.start(
+                        context = this,
+                        userId = userId.orEmpty(),
+                        code = code.orEmpty()
+                    )
+                )
+            }
+            "/share" -> {
+                // TODO : 공유하기 연결
+            }
+            else -> {
+                startActivity(homeNavigator.start(this, deeplink))
+            }
+        }
     }
 }

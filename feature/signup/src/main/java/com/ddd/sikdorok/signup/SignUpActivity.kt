@@ -22,13 +22,21 @@ import com.ddd.sikdorok.core_design.R as coreDesignR
 class SignUpActivity : BackFrameActivity<ActivitySignUpBinding>(ActivitySignUpBinding::inflate) {
 
     private val email by lazy { intent.extras?.getString(PAYLOAD) }
+
+    private val oauthId : Long? by lazy {
+        intent.extras?.getLong(KEY_OAUTH_ID)
+    }
+    private val oauthType : String? by lazy {
+        intent.extras?.getString(KEY_OAUTH_TYPE)
+    }
+
     override val viewModel: SignUpViewModel by viewModels()
     override val backFrame: FrameLayout by lazy { binding.frameClose }
 
 
     override fun initLayout() {
         if(email.orEmpty().isNotEmpty()) {
-            binding.editEmail.isEnabled = false
+            binding.editEmail.isEnabled = oauthId != null
             binding.editEmail.setText(email)
         }
 
@@ -36,10 +44,12 @@ class SignUpActivity : BackFrameActivity<ActivitySignUpBinding>(ActivitySignUpBi
             showLoading()
 
             viewModel.event(SignUpContract.Event.SignUp(
-                binding.editName.text.toString(),
-                binding.editEmail.text.toString(),
-                binding.editPassword.text.toString(),
-                binding.editPasswordCheck.text.toString()
+                oauthType = oauthType,
+                oauthId = oauthId,
+                nickname = binding.editName.text.toString(),
+                email = binding.editEmail.text.toString(),
+                password = binding.editPassword.text.toString(),
+                passwordCheck = binding.editPasswordCheck.text.toString()
             ))
         }
     }
@@ -142,5 +152,7 @@ class SignUpActivity : BackFrameActivity<ActivitySignUpBinding>(ActivitySignUpBi
 
     companion object {
         private const val PAYLOAD = "payload"
+        private const val KEY_OAUTH_ID = "oauthId"
+        private const val KEY_OAUTH_TYPE = "oauthType"
     }
 }

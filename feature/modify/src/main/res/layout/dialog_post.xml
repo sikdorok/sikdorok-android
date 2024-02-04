@@ -11,24 +11,23 @@
             android:id="@+id/view_camera"
             android:layout_width="0dp"
             android:layout_height="?android:attr/actionBarSize"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/view_album"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/view_album" />
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_camera"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            app:layout_constrainedWidth="true"
             android:text="@string/modify_post_dialog_camera"
             android:textAppearance="@style/Typography.H4.Regular"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/view_camera"
             app:layout_constraintEnd_toStartOf="@+id/iv_camera"
-            app:layout_constraintTop_toTopOf="@+id/view_camera"
             app:layout_constraintStart_toStartOf="@+id/view_camera"
-            app:layout_constraintBottom_toBottomOf="@+id/view_camera"/>
+            app:layout_constraintTop_toTopOf="@+id/view_camera" />
 
         <ImageView
             android:id="@+id/iv_camera"
@@ -36,19 +35,18 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:src="@drawable/ic_camera"
+            android:tint="#9D9792"
+            app:layout_constraintBottom_toBottomOf="@+id/view_camera"
             app:layout_constraintEnd_toEndOf="@+id/view_camera"
             app:layout_constraintStart_toEndOf="@+id/tv_camera"
-            app:layout_constraintTop_toTopOf="@+id/view_camera"
-            app:layout_constraintBottom_toBottomOf="@+id/view_camera"
-            app:tint="@color/gray80" />
-
+            app:layout_constraintTop_toTopOf="@+id/view_camera" />
 
         <View
             android:id="@+id/view_album"
             android:layout_width="0dp"
             android:layout_height="?android:attr/actionBarSize"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_camera" />
 
         <TextView
@@ -56,24 +54,41 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
+            android:drawableEnd="@drawable/ic_picture"
+            android:drawableTint="#9D9792"
+            android:paddingEnd="16dp"
             android:text="@string/modify_post_dialog_album"
-            app:layout_constrainedWidth="true"
             android:textAppearance="@style/Typography.H4.Regular"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/view_album"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/view_album"
-            app:layout_constraintTop_toTopOf="@+id/view_album"
-            app:layout_constraintBottom_toBottomOf="@+id/view_album"
-            app:layout_constraintEnd_toStartOf="@+id/iv_album"/>
+            app:layout_constraintTop_toTopOf="@+id/view_album" />
 
-        <ImageView
-            android:id="@+id/iv_album"
-            android:layout_width="wrap_content"
+        <View
+            android:id="@+id/view_default"
+            android:layout_width="0dp"
+            android:layout_height="?android:attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_album" />
+
+        <TextView
+            android:id="@+id/tv_default"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_picture"
-            app:layout_constraintEnd_toEndOf="@+id/view_album"
-            app:layout_constraintBottom_toBottomOf="@+id/view_album"
-            app:layout_constraintTop_toTopOf="@+id/view_album"
-            app:layout_constraintStart_toEndOf="@+id/tv_album" />
+            android:layout_marginStart="14dp"
+            android:drawableEnd="@drawable/ic_nothing_selected"
+            android:drawableTint="#9D9792"
+            android:paddingEnd="16dp"
+            android:text="기본 이미지로 변경"
+            android:textAppearance="@style/Typography.H4.Regular"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/view_default"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/view_default"
+            app:layout_constraintTop_toTopOf="@+id/view_default" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

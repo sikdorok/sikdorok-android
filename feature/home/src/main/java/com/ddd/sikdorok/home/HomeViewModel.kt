@@ -6,6 +6,8 @@ import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import com.ddd.sikdorok.core_ui.util.DateUtil
 import com.ddd.sikdorok.domain.home.GetHomeDailyFeedsUseCase
 import com.ddd.sikdorok.domain.home.GetHomeMonthlyFeedsUseCase
+import com.ddd.sikdorok.shared.base.onFailure
+import com.ddd.sikdorok.shared.base.onSuccess
 import com.ddd.sikdorok.shared.code.Tag
 import com.ddd.sikdorok.shared.home.HomeDailyFeed
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -90,53 +92,63 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getWeeklyMealboxInfo(date: DateTime = state.value.nowTime) {
-        viewModelScope.launch() {
+        viewModelScope.launch(exceptionHandler) {
             showLoading()
 
             getHomeMonthlyFeedsUseCase(
                 date.toString("yyyy-MM-dd")
-            ).data?.let { response ->
-                val selectedDate = response.date
+            ).onSuccess {
+                it?.data?.let { response ->
+                    val selectedDate = response.date
 
-                _state.update {
-                    it.copy(
-                        nowTime = DateTime.parse(
-                            selectedDate,
-                            DateTimeFormat.forPattern("yyyy-MM-dd")
-                        ),
-                        weeklyList = response.weeklyCovers.first {
-                            it.weeklyFeeds.map { it.time }.contains(selectedDate)
-                        }.weeklyFeeds.map {
-                            it.copy(
-                                isSelected = it.time == date.toString("yyyy-MM-dd")
-                            )
-                        },
-                        weekCount = response.weeklyCovers.first {
-                            it.weeklyFeeds.map { it.time }.contains(selectedDate)
-                        }.week,
-                    )
-                }
-
-                // TODO : Paging 적용
-                getHomeDailyFeedsUseCase(
-                    1,
-                    20,
-                    selectedDate
-                ).data?.let { response ->
-                    hideLoading()
                     _state.update {
                         it.copy(
-                            nowTag = response.initTag ?: Tag.MORNING.code,
-                            feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
-                            nowTagList = response.tags.distinct().sorted()
+                            nowTime = DateTime.parse(
+                                selectedDate,
+                                DateTimeFormat.forPattern("yyyy-MM-dd")
+                            ),
+                            weeklyList = response.weeklyCovers.first {
+                                it.weeklyFeeds.map { it.time }.contains(selectedDate)
+                            }.weeklyFeeds.map {
+                                it.copy(
+                                    isSelected = it.time == date.toString("yyyy-MM-dd")
+                                )
+                            },
+                            weekCount = response.weeklyCovers.first {
+                                it.weeklyFeeds.map { it.time }.contains(selectedDate)
+                            }.week,
                         )
                     }
-                    checkTagCanChange(
-                        response.tags.distinct(),
-                        response.initTag ?: Tag.MORNING.code
-                    )
+
+                    // TODO : Paging 적용
+                    getHomeDailyFeedsUseCase(
+                        1,
+                        20,
+                        selectedDate
+                    ).onSuccess {
+                        hideLoading()
+                        it?.data?.let { response ->
+                            _state.update {
+                                it.copy(
+                                    nowTag = response.initTag ?: Tag.MORNING.code,
+                                    feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
+                                    nowTagList = response.tags.distinct().sorted()
+                                )
+                            }
+                            checkTagCanChange(
+                                response.tags.distinct(),
+                                response.initTag ?: Tag.MORNING.code
+                            )
+                        }
+                    }
+                        .onFailure {
+                            hideLoading()
+                        }
                 }
             }
+                .onFailure {
+                    hideLoading()
+                }
         }
     }
 
@@ -159,16 +171,18 @@ class HomeViewModel @Inject constructor(
                 // TODO : Paging 적용
                 getHomeDailyFeedsUseCase(
                     1, 20, nowTime, nextTag
-                ).data?.let { response ->
-                    _state.update {
-                        it.copy(
-                            nowTag = nextTag,
-                            feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
-                            nowTagList = response.tags.distinct().sorted()
-                        )
-                    }
+                ).onSuccess {
+                    it?.data?.let { response ->
+                        _state.update {
+                            it.copy(
+                                nowTag = nextTag,
+                                feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
+                                nowTagList = response.tags.distinct().sorted()
+                            )
+                        }
 
-                    checkTagCanChange(response.tags.distinct(), nextTag)
+                        checkTagCanChange(response.tags.distinct(), nextTag)
+                    }
                 }
             }
         }
@@ -211,7 +225,7 @@ class HomeViewModel @Inject constructor(
     private fun checkTagCanChange(tagList: List<String>, nowTag: String) {
         var result: Pair<Boolean?, Boolean?> = when (tagList.indexOf(nowTag)) {
             0 -> {
-                if(tagList.size == 1) {
+                if (tagList.size == 1) {
                     Pair(false, false)
                 } else {
                     Pair(false, true)

@@ -3,6 +3,12 @@ package com.ddd.sikdorok.shared.home
 import com.ddd.sikdorok.shared.code.Icon
 import com.ddd.sikdorok.shared.code.Tag
 
+data class HomeFeedRes(
+    val code: Int,
+    val message: String,
+    val data: HomeFeed?
+)
+
 data class HomeFeed(
     val paging: HomeListPaging,
     val dailyFeeds: List<HomeDailyFeed>,

@@ -50,6 +50,16 @@ class SignInActivity : BackFrameActivity<ActivitySignInBinding>(ActivitySignInBi
     override val backFrame: FrameLayout by lazy { binding.frameBack }
 
     override fun initLayout() {
+        if (viewModel.isFromEdit) {
+            showSnackBar(
+                view = binding.view,
+                message = "비밀번호 재설정이 완료되었습니다",
+                backgroundColor = coreDesignR.color.text_color,
+                textColor = coreDesignR.color.white,
+                duration = Snackbar.LENGTH_LONG
+            )
+        }
+
         binding.tvFindPassword.setOnClickListener {
             viewModel.event(SignInContract.Event.NaviToFindPassword)
         }

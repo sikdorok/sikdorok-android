@@ -2,6 +2,12 @@ package com.ddd.sikdorok.shared.home
 
 import com.ddd.sikdorok.shared.code.Icon
 
+data class WeekFeedRes (
+    val code: Int,
+    val message: String,
+    val data: WeekFeed?
+)
+
 data class WeekFeed(
     val date: String,
     val weeklyCovers: List<WeeklyCovers>

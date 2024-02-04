@@ -44,6 +44,7 @@ dependencies {
     implementation libs.bundles.android
     implementation libs.material
     implementation libs.fragment.ktx
+    implementation libs.balloon
 
     implementation libs.hilt.android
     kapt libs.hilt.compiler

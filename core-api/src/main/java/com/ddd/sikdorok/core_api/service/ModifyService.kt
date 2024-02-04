@@ -1,7 +1,10 @@
 package com.ddd.sikdorok.core_api.service
 
+import com.ddd.sikdorok.shared.base.ApiResult
 import com.ddd.sikdorok.shared.base.SikdorokResponse
+import com.ddd.sikdorok.shared.modify.CreateFeedRes
 import com.ddd.sikdorok.shared.modify.FeedRequest
+import com.ddd.sikdorok.shared.modify.FeedRes
 import com.ddd.sikdorok.shared.modify.FeedResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -22,14 +25,14 @@ interface ModifyService {
         suspend fun createFeed(
             @Part file: MultipartBody.Part?,
             @Part("request") feedBody: FeedRequest
-        ): SikdorokResponse<String>
+        ): ApiResult<CreateFeedRes>
     }
 
     interface Read {
         @GET("/feed/{feedId}")
         suspend fun getFeed(
             @Path("feedId") feedId: String,
-        ): SikdorokResponse<FeedResponse>
+        ): ApiResult<FeedRes>
     }
 
     interface Update {
@@ -38,13 +41,13 @@ interface ModifyService {
         suspend fun updateFeed(
             @Part file: MultipartBody.Part?,
             @Part("request") feedBody: FeedRequest
-        ): SikdorokResponse<String>
+        ): ApiResult<CreateFeedRes>
     }
 
     interface Delete {
         @DELETE("/feed/{feedId}")
         suspend fun deleteFeed(
             @Path("feedId") feedId: String
-        ): SikdorokResponse<Unit>
+        ): ApiResult<Unit>
     }
 }

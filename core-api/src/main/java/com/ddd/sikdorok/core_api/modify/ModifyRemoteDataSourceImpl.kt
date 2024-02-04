@@ -4,9 +4,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.ddd.sikdorok.core_api.service.ModifyService
 import com.ddd.sikdorok.data.modify.data.ModifyRemoteDataSource
-import com.ddd.sikdorok.shared.base.SikdorokResponse
+import com.ddd.sikdorok.shared.base.ApiResult
+import com.ddd.sikdorok.shared.modify.CreateFeedRes
 import com.ddd.sikdorok.shared.modify.FeedRequest
-import com.ddd.sikdorok.shared.modify.FeedResponse
+import com.ddd.sikdorok.shared.modify.FeedRes
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,34 +27,30 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
     private val deleteService: ModifyService.Delete
 ) : ModifyRemoteDataSource {
 
-    override suspend fun createFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String> {
+    override suspend fun createFeed(file: ByteArray?, body: FeedRequest): ApiResult<CreateFeedRes> {
         return createService.createFeed(
-            file = if(file.isEmpty()) null else {
-                createMultipartBody(convertByteArrayToPngFile(file)!!)
-            },
+            file = createMultipartBody(convertByteArrayToPngFile(file)).takeIf { file != null && file.isNotEmpty() },
             feedBody = body
         )
     }
 
-    override suspend fun getFeed(feedId: String): SikdorokResponse<FeedResponse> {
+    override suspend fun getFeed(feedId: String): ApiResult<FeedRes> {
         return readService.getFeed(feedId)
     }
 
-    override suspend fun updateFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String> {
+    override suspend fun updateFeed(file: ByteArray?, body: FeedRequest): ApiResult<CreateFeedRes> {
         return updateService.updateFeed(
-            file = if(file.isEmpty()) null else {
-                createMultipartBody(convertByteArrayToPngFile(file)!!)
-            },
+            file = createMultipartBody(convertByteArrayToPngFile(file)).takeIf { file != null && file.isNotEmpty() },
             feedBody = body
         )
     }
 
-    override suspend fun deleteFeed(feedId: String): SikdorokResponse<Unit> {
+    override suspend fun deleteFeed(feedId: String): ApiResult<Unit> {
         return deleteService.deleteFeed(feedId)
     }
 
-    private fun convertByteArrayToPngFile(byteArray: ByteArray): File? {
-        if (byteArray.isEmpty()) {
+    private fun convertByteArrayToPngFile(byteArray: ByteArray?): File? {
+        if (byteArray == null || byteArray.isEmpty()) {
             return null
         } else {
             val imageFile = File.createTempFile("IMG_", ".png")
@@ -74,14 +71,17 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    private fun createMultipartBody(file: File): MultipartBody.Part {
+    private fun createMultipartBody(file: File?): MultipartBody.Part? {
+
         val MEDIA_TYPE_IMAGE = "image/png"
 
-        return MultipartBody.Part.createFormData(
-            "file",
-            "profile.png",
-            file.asRequestBody(MEDIA_TYPE_IMAGE.toMediaType())
-        )
+        return file?.asRequestBody(MEDIA_TYPE_IMAGE.toMediaType())?.let {
+            MultipartBody.Part.createFormData(
+                "file",
+                "profile.png",
+                it
+            )
+        }
     }
 }
 

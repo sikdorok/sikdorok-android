@@ -8,6 +8,8 @@ import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import com.ddd.sikdorok.domain.email.PostOnCheckEmailUseCase
 import com.ddd.sikdorok.domain.login.PostSaveTokenUseCase
 import com.ddd.sikdorok.domain.signup.PostSignUpUseCase
+import com.ddd.sikdorok.shared.base.onFailure
+import com.ddd.sikdorok.shared.base.onSuccess
 import com.ddd.sikdorok.shared.login.TokenType
 import com.ddd.sikdorok.shared.sign.SignUp
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +30,8 @@ class SignUpViewModel @Inject constructor(
     private val onPostSignUpUseCase: PostSignUpUseCase,
     private val onPostEmailCheckUseCase: PostOnCheckEmailUseCase,
     private val onPostSaveTokenUseCase: PostSaveTokenUseCase
-): BaseViewModel(), BaseContract<SignUpContract.State, SignUpContract.Event, SignUpContract.SideEffect> {
+) : BaseViewModel(),
+    BaseContract<SignUpContract.State, SignUpContract.Event, SignUpContract.SideEffect> {
 
     private val email: String
         get() = savedStateHandle.get<String>(PAYLOAD).orEmpty()
@@ -37,23 +40,26 @@ class SignUpViewModel @Inject constructor(
     override val effect: SharedFlow<SignUpContract.SideEffect>
         get() = _effect.asSharedFlow()
 
-    private val _state = MutableStateFlow(SignUpContract.State(
-        email = email
-    ))
+    private val _state = MutableStateFlow(
+        SignUpContract.State(
+            email = email
+        )
+    )
     override val state: StateFlow<SignUpContract.State>
         get() = _state.asStateFlow()
 
     private val emailRegex = Regex("\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\\b")
-    private val passwordRegex = """^(?=.*[a-zA-Z0-9!@#\$%^&*()\\-_=+|{}\\[\\]:;<>,./?]).{8,}$""".toRegex()
+    private val passwordRegex =
+        """^(?=.*[a-zA-Z0-9!@#\$%^&*()\\-_=+|{}\\[\\]:;<>,./?]).{8,}$""".toRegex()
 
     override fun event(event: SignUpContract.Event) {
         viewModelScope.launch {
-            when(event) {
+            when (event) {
                 is SignUpContract.Event.EmailCheck -> {
-                    if(event.email.matches(emailRegex)) {
-                        val isAlreadyUser = onPostEmailCheckUseCase(event.email).data
+                    if (event.email.matches(emailRegex)) {
+                        val isAlreadyUser = onPostEmailCheckUseCase(event.email).getOrNull()
 
-                        if(isAlreadyUser == false || isAlreadyUser == null) {
+                        if (isAlreadyUser == false || isAlreadyUser == null) {
                             _effect.emit(SignUpContract.SideEffect.ValidateEmail)
                         } else {
                             _effect.emit(SignUpContract.SideEffect.InValidateEmail)
@@ -65,7 +71,7 @@ class SignUpViewModel @Inject constructor(
                     }
                 }
                 is SignUpContract.Event.InputName -> {
-                    if(event.name.length in 2..10) {
+                    if (event.name.length in 2..10) {
                         _effect.emit(SignUpContract.SideEffect.ValidateName)
                         _state.update { _state.value.copy(name = event.name) }
                     } else {
@@ -74,14 +80,14 @@ class SignUpViewModel @Inject constructor(
                     }
                 }
                 is SignUpContract.Event.PasswordCheck -> {
-                    if(event.isSame) {
+                    if (event.isSame) {
                         _effect.emit(SignUpContract.SideEffect.ValidatePasswordCheck)
                     } else {
                         _effect.emit(SignUpContract.SideEffect.InValidatePasswordCheck)
                     }
                 }
                 is SignUpContract.Event.InputPassword -> {
-                    if(event.password.length in 8.. 20 && event.password.matches(passwordRegex)) {
+                    if (event.password.length in 8..20 && event.password.matches(passwordRegex)) {
                         _effect.emit(SignUpContract.SideEffect.ValidatePassword)
                         _state.update { _state.value.copy(password = event.password) }
                     } else {
@@ -90,7 +96,7 @@ class SignUpViewModel @Inject constructor(
                     }
                 }
                 is SignUpContract.Event.InputPasswordCheck -> {
-                    if(event.password.length in 8.. 20) {
+                    if (event.password.length in 8..20) {
                         _state.update { _state.value.copy(passwordCheck = event.password) }
                     } else {
                         _state.update { _state.value.copy(passwordCheck = "") }
@@ -100,30 +106,42 @@ class SignUpViewModel @Inject constructor(
                     viewModelScope.launch(CoroutineExceptionHandler { _, throwable ->
                         Log.e("error", throwable.stackTraceToString())
                     }) {
-                        val result = onPostSignUpUseCase.invoke(SignUp.Request(
-                            event.nickname,
-                            event.email,
-                            event.password,
-                            event.passwordCheck
-                        ))
+                        onPostSignUpUseCase(
+                            SignUp.Request(
+                                oauthType = event.oauthType,
+                                oauthId = event.oauthId,
+                                nickname = event.nickname,
+                                email = event.email,
+                                password = event.password,
+                                passwordCheck = event.passwordCheck
+                            )
+                        ).onSuccess {result ->
+                            val accessToken = result?.data?.login?.accessToken
+                            val refreshToken = result?.data?.login?.refreshToken
 
-                        val accessToken = result.data?.login?.accessToken
-                        val refreshToken = result.data?.login?.refreshToken
-
-                        if(accessToken.isNullOrEmpty().not()) {
-                            onPostSaveTokenUseCase.invoke(TokenType.REFRESH_TOKEN, refreshToken.orEmpty())
-                                .mapCatching {
-                                    onPostSaveTokenUseCase.invoke(TokenType.ACCESS_TOKEN, accessToken.orEmpty())
-                                }.fold(
-                                    onSuccess = {
-                                        _effect.emit(SignUpContract.SideEffect.NaviToHome)
-                                    },
-                                    onFailure = {
-                                        it.printStackTrace()
-                                    }
+                            if (accessToken.isNullOrEmpty().not()) {
+                                onPostSaveTokenUseCase.invoke(
+                                    TokenType.REFRESH_TOKEN,
+                                    refreshToken.orEmpty()
                                 )
-                        } else {
-                            _effect.emit(SignUpContract.SideEffect.SnowSnackBar(result.message))
+                                    .mapCatching {
+                                        onPostSaveTokenUseCase.invoke(
+                                            TokenType.ACCESS_TOKEN,
+                                            accessToken.orEmpty()
+                                        )
+                                    }.fold(
+                                        onSuccess = {
+                                            _effect.emit(SignUpContract.SideEffect.NaviToHome)
+                                        },
+                                        onFailure = {
+                                            it.printStackTrace()
+                                        }
+                                    )
+                            } else {
+                                _effect.emit(SignUpContract.SideEffect.SnowSnackBar(result?.message.orEmpty()))
+                            }
+                        }.onFailure {
+                            _effect.emit(SignUpContract.SideEffect.SnowSnackBar("오류가 발생했습니다. 다시 시도해 주세요"))
                         }
                     }
                 }

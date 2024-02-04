@@ -41,8 +41,8 @@ fun Context.compressBitmap(
 ): Uri? {
 
     val contentValues = contentValuesOf(
-        MediaStore.MediaColumns.DISPLAY_NAME to "${System.currentTimeMillis()}.png",
-        MediaStore.MediaColumns.MIME_TYPE to "image/png",
+        MediaStore.MediaColumns.DISPLAY_NAME to "${System.currentTimeMillis()}.jpeg",
+        MediaStore.MediaColumns.MIME_TYPE to "image/jpeg",
         MediaStore.MediaColumns.RELATIVE_PATH to Environment.DIRECTORY_PICTURES,
     )
 

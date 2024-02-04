@@ -22,7 +22,7 @@ class ModifyDateTimePicker : DialogFragment(), DatePickerDialog.OnDateSetListene
 //            com.ddd.sikdorok.core_design.R.style.AppDatePickerTheme, // TODO : 이거 색 변경 필요
             this, date.year, date.monthOfYear - 1, date.dayOfMonth
         ).apply {
-            datePicker.minDate = DateTime.now().millis
+            datePicker.maxDate = DateTime.now().millis
             datePicker.solidColor
         }
     }

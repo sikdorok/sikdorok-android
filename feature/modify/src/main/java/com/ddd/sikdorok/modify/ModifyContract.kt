@@ -12,7 +12,8 @@ class ModifyContract {
         val tag: String = "",
         val isMainPost: Boolean = false,
         val memo: String = "",
-        val imageUrl : String? = null,
+        val imageUrl: String? = null,
+        val imageRefresh: Boolean? = null
     )
 
     sealed class Event {
@@ -26,11 +27,19 @@ class ModifyContract {
             }
         }
 
+        object OnClickImageForDefault : Event()
+
         data class OnClickDay(val code: String) : Event()
 
         data class OnClickIcon(val code: String) : Event()
 
+        data class EditText(val text: String) : Event()
+
         data class OnClickMainPost(val isChecked: Boolean) : Event()
+
+        data class OnFinishTimePicker(val time: String) : Event()
+
+        data class OnFinishDatePicker(val time: String) : Event()
 
         data class InputMemo(val memo: String) : Event()
 
@@ -49,7 +58,7 @@ class ModifyContract {
         data class OnClickTime(val time: String) : Event()
 
         data class OnSavedFeed(
-            val file: ByteArray,
+            val file: ByteArray?,
             val tag: String?,
             val time: String,
             val memo: String,
@@ -85,6 +94,6 @@ class ModifyContract {
 
         data class ShowTimePicker(val time: String) : SideEffect()
 
-        data class Fail(val errorMsg : String) : SideEffect()
+        data class Fail(val errorMsg: String) : SideEffect()
     }
 }

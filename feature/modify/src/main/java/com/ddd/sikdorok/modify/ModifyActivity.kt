@@ -4,17 +4,23 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.view.ContextMenu
+import android.view.Gravity
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.FrameLayout
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -35,6 +41,10 @@ import com.ddd.sikdorok.shared.date.DATE_PATTERNS
 import com.ddd.sikdorok.shared.date.TIME_PATTERNS
 import com.ddd.sikdorok.shared.key.Keys
 import com.google.android.material.snackbar.Snackbar
+import com.skydoves.balloon.ArrowPositionRules
+import com.skydoves.balloon.Balloon
+import com.skydoves.balloon.BalloonAnimation
+import com.skydoves.balloon.BalloonSizeSpec
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -42,7 +52,7 @@ import org.joda.time.DateTime
 import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 
-// TODO : 데바로 변경
+// TODO : 데바로 변경 언제해...
 @AndroidEntryPoint
 class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBinding::inflate) {
 
@@ -50,12 +60,13 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             val bitmap = result.data?.extras?.getParcelable<Bitmap>("data")
                 ?: return@registerForActivityResult
-            val data = Bitmap.createScaledBitmap(bitmap, bitmap.width, bitmap.height, false).copy(
-                Bitmap.Config.ARGB_8888, true
-            )
+            val data =
+                Bitmap.createScaledBitmap(bitmap, binding.ivMain.width, binding.ivMain.height, true)
+                    .copy(Bitmap.Config.ARGB_8888, true)
+
             viewModel.event(
                 ModifyContract.Event.OnUpdateImage(
-                    compressBitmap(Bitmap.CompressFormat.PNG, data, 100) ?: Uri.EMPTY
+                    compressBitmap(Bitmap.CompressFormat.JPEG, data, 100) ?: Uri.EMPTY
                 )
             )
         }
@@ -96,10 +107,11 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             viewModel.event(ModifyContract.Event.OnClickTime(binding.tvTime.text.toString()))
         }
         binding.tvSave.setOnClickListener {
+            showLoading()
             savePost()
         }
         binding.ivInfo.setOnClickListener {
-
+            showTooltip()
         }
         binding.checkMainPost.setOnCheckedChangeListener { buttonView, isChecked ->
             viewModel.event(ModifyContract.Event.OnClickCheck(isChecked))
@@ -117,7 +129,32 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             }
         }
 
+        // TODO : 이거 어떻게 해보기
+//        binding.editInput.textChanges()
+//            .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
+//            .onEach { text ->
+//                viewModel.event(ModifyContract.Event.EditText(text.toString()))
+//            }
+//            .launchIn(lifecycleScope)
+
+        showLoading()
         viewModel.getFeedInfo()
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        val focusView = currentFocus
+        if (focusView != null) {
+            val rect = Rect()
+            focusView.getGlobalVisibleRect(rect)
+            val x = ev.x.toInt()
+            val y = ev.y.toInt()
+            if (!rect.contains(x, y)) {
+                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                imm?.hideSoftInputFromWindow(focusView.windowToken, 0)
+                focusView.clearFocus()
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     override fun onClickBackFrameIcon() {
@@ -128,6 +165,8 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         viewModel.state
             .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
             .onEach { state ->
+                hideLoading()
+
                 try {
                     val now =
                         DateTime.parse(state.time, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
@@ -138,6 +177,10 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                 }
 
                 when {
+                    state.imageRefresh == true -> {
+                        Glide.with(this)
+                            .clear(binding.ivMain)
+                    }
                     !state.imageUrl.isNullOrEmpty() -> {
                         Glide.with(this)
                             .load(state.imageUrl)
@@ -153,7 +196,9 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
 
                 binding.editInput.setText(state.memo)
 
-                binding.ivDefaultAdd.isVisible = state.image == Uri.EMPTY
+                // 기본 이미지 규칙 -
+                binding.ivDefaultAdd.isVisible =
+                    (state.image == null) && (state.imageUrl.isNullOrEmpty())
                 binding.checkMainPost.isChecked = state.isMainPost
 
                 getViewIdByIcon(state.tag)?.let { binding.radioTag.check(it) }
@@ -166,14 +211,17 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             .onEach { sideEffect ->
                 when (sideEffect) {
                     ModifyContract.SideEffect.OnFinishCreate -> {
+                        hideLoading()
                         setResult(RESULT_CODE_CREATE)
                         finish()
                     }
                     ModifyContract.SideEffect.OnFinishModify -> {
+                        hideLoading()
                         setResult(RESULT_CODE_MODIFY)
                         finish()
                     }
                     ModifyContract.SideEffect.OnFinishDelete -> {
+                        hideLoading()
                         setResult(RESULT_CODE_DELETE)
                         finish()
                     }
@@ -228,12 +276,15 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
 
                         ModifyTimePicker.getInstance(time.toString())
                             .show(supportFragmentManager, Keys.MODIFY_TIME_FRAGMENT)
+
                     }
                     ModifyContract.SideEffect.OpenMenu -> {
                         registerForContextMenu(binding.more)
                         binding.more.showContextMenu()
                     }
                     is ModifyContract.SideEffect.Fail -> {
+                        hideLoading()
+
                         showSnackBar(
                             view = binding.root,
                             message = sideEffect.errorMsg,
@@ -257,8 +308,9 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         ) { _, bundle ->
             val data = bundle.getSerializable(Keys.MODIFY_DATE_RESULT) as PickerData.Date
 
-            binding.tvDate.text =
-                DateTime.parse("${data.year}-${data.month}-${data.day}").toString(DATE_PATTERNS)
+            val time = DateTime.parse("${data.year}-${data.month}-${data.day}").toString("yyyy-MM-dd HH:mm:ss")
+
+            viewModel.event(ModifyContract.Event.OnFinishDatePicker(time))
         }
 
         supportFragmentManager.setFragmentResultListener(
@@ -267,8 +319,14 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         ) { _, bundle ->
             val data = bundle.getSerializable(Keys.MODIFY_TIME_RESULT) as PickerData.Time
 
-            binding.tvTime.text =
-                LocalTime.parse("${data.hours}:${data.minute}").toString(TIME_PATTERNS)
+            val timeData = viewModel.state.value.time
+            val time = DateTime.parse(timeData, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
+
+            val newTime = DateTime.parse("${time.year}-${time.monthOfYear}-${time.dayOfMonth} ${data.hours}:${data.minute}:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
+
+//            val time2 = LocalTime.parse("${data.hours}:${data.minute}").toString(TIME_PATTERNS)
+
+            viewModel.event(ModifyContract.Event.OnFinishTimePicker(newTime.toString("yyyy-MM-dd HH:mm:ss")))
         }
     }
 
@@ -362,6 +420,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_item_save -> {
+                showLoading()
                 savePost()
             }
             R.id.menu_item_delete -> {
@@ -370,6 +429,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                     confirmText = "확인",
                     cancelText = "취소",
                     onConfirm = {
+                        showLoading()
                         viewModel.onClickDelete()
                     }
                 )
@@ -383,10 +443,20 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
 
     private fun savePost() {
         val bitmap = uriToBitmap(this, viewModel.state.value.image)
+
+        val bitmap2: Bitmap = BitmapFactory.decodeResource(
+            resources,
+            com.ddd.sikdorok.core_design.R.drawable.img_modify_default
+        )
         val byteArray = convertImageBitmapToByteArray(bitmap)
+        val defaultImageBitmap = convertImageBitmapToByteArray(bitmap2)
+
         viewModel.event(
             ModifyContract.Event.OnSavedFeed(
-                file = byteArray,
+                file = byteArray.takeIf {
+                    viewModel.state.value.image != null
+                            || !viewModel.state.value.imageUrl.isNullOrEmpty()
+                },
                 tag = viewModel.state.value.tag,
                 time = viewModel.state.value.time,
                 memo = binding.editInput.text.toString(),
@@ -397,7 +467,30 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
     }
 
     private fun showTooltip() {
+        val balloon = Balloon.Builder(this)
+            .setWidth(BalloonSizeSpec.WRAP)
+            .setHeight(BalloonSizeSpec.WRAP)
+            .setTextGravity(Gravity.LEFT)
+            .setText("대표 아이콘을 설정해\n달력에 대표 아이콘을 표시해보세요.")
+            .setTextColorResource(com.ddd.sikdorok.core_design.R.color.white)
+            .setTextSize(15f)
+            .setArrowPositionRules(ArrowPositionRules.ALIGN_BALLOON)
+            .setArrowSize(10)
+            .setArrowPosition(0.1f)
+            .setPadding(12)
+            .setCornerRadius(8f)
+            .setTextTypeface(
+                ResourcesCompat.getFont(
+                    this,
+                    com.ddd.sikdorok.core_design.R.font.leeseoyun
+                )!!
+            )
+            .setBackgroundColorResource(com.ddd.sikdorok.core_design.R.color.text_color)
+            .setBalloonAnimation(BalloonAnimation.ELASTIC)
+            .setLifecycleOwner(this)
+            .build()
 
+        balloon.showAlignTop(binding.ivInfo, 212, -5)
     }
 
     companion object {
