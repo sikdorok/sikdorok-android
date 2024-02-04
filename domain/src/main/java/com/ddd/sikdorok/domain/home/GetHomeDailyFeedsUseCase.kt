@@ -1,8 +1,10 @@
 package com.ddd.sikdorok.domain.home
 
 import com.ddd.sikdorok.domain.repository.HomeRepository
+import com.ddd.sikdorok.shared.base.ApiResult
 import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.home.HomeFeed
+import com.ddd.sikdorok.shared.home.HomeFeedRes
 import javax.inject.Inject
 
 class GetHomeDailyFeedsUseCase @Inject constructor(
@@ -13,7 +15,7 @@ class GetHomeDailyFeedsUseCase @Inject constructor(
         size: Int,
         date: String,
         tag: String? = null
-    ): SikdorokResponse<HomeFeed> {
+    ): ApiResult<HomeFeedRes> {
         return homeRepository.getHomeDailyFeeds(page, size, date, tag)
     }
 }

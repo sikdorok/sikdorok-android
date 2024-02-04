@@ -39,4 +39,23 @@
         <item name="android:fontFamily">@font/leeseoyun</item>
         <item name="android:textSize">16dp</item>
     </style>
+
+    <style name="AppDatePickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- 상단 색 변경 -->
+        <item name="colorAccent">@color/white</item>
+
+        <item name="android:textColorPrimaryInverse">@color/text_color</item>
+        <item name="android:textColorSecondaryInverse">@color/text_color</item>
+
+        <item name="android:textColorPrimary">@color/text_color</item>
+        <item name="android:textColorSecondary">@color/text_color</item>
+
+        <!-- 선택한 날짜를 표시할 색상 -->
+        <item name="colorControlActivated">@color/text_color</item>
+        <item name="colorControlHighlight">@color/text_color</item>
+
+        <!-- 취소/확인버튼 색상 -->
+        <item name="android:textColor">@color/text_color</item>
+        <item name="colorButtonNormal">@color/text_color</item>
+    </style>
 </resources>

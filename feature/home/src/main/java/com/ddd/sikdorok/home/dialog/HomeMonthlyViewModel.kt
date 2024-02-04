@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import com.ddd.sikdorok.core_ui.util.DateUtil
 import com.ddd.sikdorok.domain.home.GetHomeMonthlyFeedsUseCase
+import com.ddd.sikdorok.shared.base.onSuccess
 import com.ddd.sikdorok.shared.home.WeeklyFeeds
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -45,10 +46,10 @@ class HomeMonthlyViewModel @Inject constructor(
         DateUtil.parseDate(dateString)
     }
 
+    // 굉장히 위험..
     private var selectedMonth = state.value.selectedDate
 
     init {
-        initMonthList()
         getWeekFeeds(selectedDate)
     }
 
@@ -67,14 +68,22 @@ class HomeMonthlyViewModel @Inject constructor(
 
         }
 
-
         viewModelScope.launch {
             when (event) {
                 HomeMonthlyContract.Event.ClickPreviousMonth -> {
-                    getWeekFeeds(DateUtil.parseDate(state.value.selectedDate).minusMonths(1))
+                    selectedMonth = DateUtil.parseDate(state.value.selectedDate).minusMonths(1)
+                        .toString("yyyy-MM-dd")
+
+                    getWeekFeeds(
+                        DateUtil.parseDate(state.value.selectedDate).minusMonths(1)
+                    )
                 }
                 HomeMonthlyContract.Event.ClickNextMonth -> {
-                    getWeekFeeds(DateUtil.parseDate(state.value.selectedDate).plusMonths(1))
+                    selectedMonth = DateUtil.parseDate(state.value.selectedDate).plusMonths(1)
+                        .toString("yyyy-MM-dd")
+                    getWeekFeeds(
+                        DateUtil.parseDate(state.value.selectedDate).plusMonths(1)
+                    )
                 }
                 is HomeMonthlyContract.Event.ClickWeeklyDate -> {
                     _state.update {
@@ -97,34 +106,49 @@ class HomeMonthlyViewModel @Inject constructor(
         }
     }
 
-    private fun getWeekFeeds(date: DateTime = selectedDate) {
+    private fun getWeekFeeds(date: DateTime = selectedDate, isToWeeklyFeeds: Boolean = false) {
+        showLoading()
         viewModelScope.launch {
-            getHomeMonthlyFeedsUseCase(date.toString("yyyy-MM-dd")).data?.let { response ->
+            getHomeMonthlyFeedsUseCase(date.toString("yyyy-MM-dd"))
+                .onSuccess {
+                    it?.data?.let { response ->
 
-                val weekList = mutableListOf<WeeklyFeeds>()
-                response.weeklyCovers.forEach {
-                    val week = if (it.weeklyFeeds.map { it.time }
-                            .contains(selectedDate.toString("yyyy-MM-dd"))) {
-                        it.weeklyFeeds.map {
+                        val weekList = mutableListOf<WeeklyFeeds>()
+                        response.weeklyCovers.forEach {
+                            val week = if (it.weeklyFeeds.map { it.time }
+                                    .contains(selectedDate.toString("yyyy-MM-dd"))) {
+                                it.weeklyFeeds.map {
+                                    it.copy(
+                                        isSelected = it.time == date.toString("yyyy-MM-dd")
+                                    )
+                                }
+                            } else it.weeklyFeeds
+
+                            weekList.addAll(week)
+                        }
+
+                        _state.update {
                             it.copy(
-                                isSelected = it.time == date.toString("yyyy-MM-dd")
+                                selectedDate = date.toString("yyyy-MM-dd"),
+                                weeklyList = weekList
                             )
                         }
-                    } else it.weeklyFeeds
 
-                    weekList.addAll(week)
-                }
+                        if (isToWeeklyFeeds) {
+                            _state.update {
+                                it.copy(
+                                    viewType = HomeMonthlyContract.TYPE_WEEKLY,
+                                    isLoading = false
+                                )
+                            }
+                        }
 
-                _state.update {
-                    it.copy(
-                        selectedDate = date.toString("yyyy-MM-dd"),
-                        weeklyList = weekList
-                    )
+                        initMonthList()
+                        hideLoading()
+                    }
                 }
-            }
         }
     }
-
 
     private fun initMonthList() {
         val monthsList = mutableListOf<DateTime>()
@@ -200,11 +224,27 @@ class HomeMonthlyViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update {
                 it.copy(
-                    selectedDate = selectedMonth
+                    selectedDate = selectedMonth,
+                    isLoading = true
                 )
             }
-            initMonthList()
-            getWeekFeeds(DateUtil.parseDate(selectedMonth))
+            getWeekFeeds(DateUtil.parseDate(selectedMonth), isToWeeklyFeeds = true)
+        }
+    }
+
+    private fun showLoading() {
+        _state.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+    }
+
+    private fun hideLoading() {
+        _state.update {
+            it.copy(
+                isLoading = false
+            )
         }
     }
 

@@ -2,10 +2,12 @@ package com.ddd.sikdorok.core_api.home
 
 import com.ddd.sikdorok.core_api.service.HomeService
 import com.ddd.sikdorok.data.home.data.HomeRemoteDataSource
-import com.ddd.sikdorok.shared.base.SikdorokResponse
+import com.ddd.sikdorok.shared.base.ApiResult
 import com.ddd.sikdorok.shared.home.HomeFeed
+import com.ddd.sikdorok.shared.home.HomeFeedRes
 import com.ddd.sikdorok.shared.home.ListFeed
-import com.ddd.sikdorok.shared.home.WeekFeed
+import com.ddd.sikdorok.shared.home.ListFeedRes
+import com.ddd.sikdorok.shared.home.WeekFeedRes
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,7 +19,7 @@ internal class HomeRemoteDataSourceImpl @Inject constructor(
     private val sikdorokHomeService: HomeService,
 ) : HomeRemoteDataSource {
 
-    override suspend fun getHomeMonthlyFeeds(date: String): SikdorokResponse<WeekFeed> {
+    override suspend fun getHomeMonthlyFeeds(date: String): ApiResult<WeekFeedRes> {
         return sikdorokHomeService.getHomeMonthlyFeeds(date)
     }
 
@@ -26,7 +28,7 @@ internal class HomeRemoteDataSourceImpl @Inject constructor(
         size: Int,
         date: String,
         tag: String?
-    ): SikdorokResponse<HomeFeed> {
+    ): ApiResult<HomeFeedRes> {
         return sikdorokHomeService.getHomeDailyFeeds(page, size, date, tag)
     }
 
@@ -34,7 +36,7 @@ internal class HomeRemoteDataSourceImpl @Inject constructor(
         size: Int,
         date: String,
         cursorDate: String?
-    ): SikdorokResponse<ListFeed> {
+    ): ApiResult<ListFeedRes> {
         return sikdorokHomeService.getHomeListFeeds(size, date, cursorDate)
     }
 }

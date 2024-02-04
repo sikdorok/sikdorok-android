@@ -9,6 +9,7 @@ interface HomeMonthlyContract :
     BaseContract<HomeMonthlyContract.State, HomeMonthlyContract.Event, HomeMonthlyContract.Effect> {
 
     data class State(
+        val isLoading : Boolean = false,
         val viewType: Int = TYPE_WEEKLY,
         val selectedDate: String = DateTime.now().toString("yyyy-MM-dd"),
         val weeklyList: List<WeeklyFeeds> = WeeklyFeeds.emptyList,

@@ -7,4 +7,6 @@ interface SikdorokPreference {
     fun getString(key: String): String
 
     fun getBoolean(key: String): Boolean
+
+    fun clearAllData() : Boolean
 }

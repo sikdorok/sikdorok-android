@@ -44,6 +44,11 @@ class PostDialog : BaseDialogFragment<DialogPostBinding>(DialogPostBinding::infl
             )
             dismiss()
         }
+
+        binding.viewDefault.setOnClickListener {
+            viewModel.event(ModifyContract.Event.OnClickImageForDefault)
+            dismiss()
+        }
     }
 
     override fun onCreateView(

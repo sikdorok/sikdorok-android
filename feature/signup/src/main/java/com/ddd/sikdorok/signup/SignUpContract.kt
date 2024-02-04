@@ -26,6 +26,8 @@ class SignUpContract {
         data class PasswordCheck(val isSame: Boolean) : Event()
 
         data class SignUp(
+            val oauthType: String?,
+            val oauthId: Long?,
             val nickname: String,
             val email: String,
             val password: String,

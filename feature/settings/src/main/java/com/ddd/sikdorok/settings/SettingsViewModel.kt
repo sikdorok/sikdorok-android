@@ -6,6 +6,8 @@ import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import com.ddd.sikdorok.domain.login.PostSaveTokenUseCase
 import com.ddd.sikdorok.domain.settings.GetSettingsUserDeviceInfoUseCase
 import com.ddd.sikdorok.domain.settings.SetUserLogoutUseCase
+import com.ddd.sikdorok.shared.base.onFailure
+import com.ddd.sikdorok.shared.base.onSuccess
 import com.ddd.sikdorok.shared.login.TokenType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -20,10 +22,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val getSettingsUserDeviceInfoUseCase : GetSettingsUserDeviceInfoUseCase,
+    private val getSettingsUserDeviceInfoUseCase: GetSettingsUserDeviceInfoUseCase,
     private val setUserLogoutUseCase: SetUserLogoutUseCase,
     private val postSaveTokenUseCase: PostSaveTokenUseCase
-) : BaseViewModel(), BaseContract<SettingsContract.State, SettingsContract.Event, SettingsContract.SideEffect> {
+) : BaseViewModel(),
+    BaseContract<SettingsContract.State, SettingsContract.Event, SettingsContract.SideEffect> {
 
     private val _state = MutableStateFlow(SettingsContract.State())
     override val state: StateFlow<SettingsContract.State>
@@ -35,7 +38,7 @@ class SettingsViewModel @Inject constructor(
 
     override fun event(event: SettingsContract.Event) {
         viewModelScope.launch {
-            when(event) {
+            when (event) {
                 SettingsContract.Event.OnClickPolicy -> {
                     _effect.emit(SettingsContract.SideEffect.NaviToPolicy)
                 }
@@ -52,32 +55,31 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun getUserDeviceInfo(versionName : String){
+    fun getUserDeviceInfo(versionName: String) {
         viewModelScope.launch {
-            getSettingsUserDeviceInfoUseCase(versionName).data?.let { response ->
-                _state.update {
-                    it.copy(
-                        email =  response.email,
-                        nickname = response.nickname ?: "",
-                        isNeedUpdate = !response.isLatest,
-                        isKakaoUser = response.oauthType == KAKAO_USER_TYPE
-                    )
+            getSettingsUserDeviceInfoUseCase(versionName).onSuccess {
+                it?.data?.let { response ->
+                    _state.update {
+                        it.copy(
+                            email = response.email,
+                            nickname = response.nickname ?: "",
+                            isNeedUpdate = !response.isLatest,
+                            isKakaoUser = response.oauthType == KAKAO_USER_TYPE
+                        )
+                    }
                 }
-            }
+            }.onFailure { }
         }
     }
 
     fun setUserLogout() {
         viewModelScope.launch {
             setUserLogoutUseCase().apply {
-                if(code == 200) {
-                    postSaveTokenUseCase(TokenType.ACCESS_TOKEN, "")
-                    postSaveTokenUseCase(TokenType.REFRESH_TOKEN, "")
+                postSaveTokenUseCase(TokenType.ACCESS_TOKEN, "")
+                postSaveTokenUseCase(TokenType.REFRESH_TOKEN, "")
 
-                    _effect.emit(SettingsContract.SideEffect.NaviToSplash)
-                } else {
-                    _effect.emit(SettingsContract.SideEffect.Fail(message))
-                }
+                _effect.emit(SettingsContract.SideEffect.NaviToSplash)
+
             }
         }
     }

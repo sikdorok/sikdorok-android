@@ -7,6 +7,6 @@ import javax.inject.Inject
 class UpdateFeedUseCase @Inject constructor(
     private val modifyRepository: ModifyRepository
 ) {
-    suspend operator fun invoke(file: ByteArray, body: FeedRequest) =
+    suspend operator fun invoke(file: ByteArray?, body: FeedRequest) =
         modifyRepository.updateFeed(file, body)
 }

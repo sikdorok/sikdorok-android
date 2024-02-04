@@ -1,15 +1,16 @@
 package com.ddd.sikdorok.domain.repository
 
-import com.ddd.sikdorok.shared.base.SikdorokResponse
+import com.ddd.sikdorok.shared.base.ApiResult
+import com.ddd.sikdorok.shared.modify.CreateFeedRes
+import com.ddd.sikdorok.shared.modify.FeedRes
 import com.ddd.sikdorok.shared.modify.FeedRequest
-import com.ddd.sikdorok.shared.modify.FeedResponse
 
 interface ModifyRepository {
-    suspend fun createFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String>
+    suspend fun createFeed(file: ByteArray?, body: FeedRequest): ApiResult<CreateFeedRes>
 
-    suspend fun getFeed(feedId: String): SikdorokResponse<FeedResponse>
+    suspend fun getFeed(feedId: String): ApiResult<FeedRes>
 
-    suspend fun updateFeed(file: ByteArray, body: FeedRequest): SikdorokResponse<String>
+    suspend fun updateFeed(file: ByteArray?, body: FeedRequest): ApiResult<CreateFeedRes>
 
-    suspend fun deleteFeed(feedId: String): SikdorokResponse<Unit>
+    suspend fun deleteFeed(feedId: String): ApiResult<Unit>
 }

@@ -6,4 +6,6 @@ import com.ddd.sikdorok.navigator.core.Navigator
 
 interface SignUpNavigator : Navigator {
     fun start(context: Context, payload: Any?): Intent
+
+    fun start(context: Context, email: String?, oauthId: Long?, oauthType: String?): Intent
 }

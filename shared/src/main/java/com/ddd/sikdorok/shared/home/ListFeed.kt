@@ -1,5 +1,11 @@
 package com.ddd.sikdorok.shared.home
 
+data class ListFeedRes(
+    val code: Int,
+    val message: String,
+    val data: ListFeed?
+)
+
 data class ListFeed(
     val hasNext: Boolean,
     val cursorDate: String,

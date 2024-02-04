@@ -1,6 +1,5 @@
 package com.ddd.sikdorok.shared.login
 
-import com.ddd.sikdorok.shared.base.Response
 import com.google.gson.annotations.SerializedName
 
 @Suppress("SpellCheckingInspection")
@@ -14,13 +13,19 @@ sealed class Request {
         val password: String
     ) : Request()
 
-    data class RefreshToken(val token: String) : Request()
+    data class RefreshToken(val refreshToken: String) : Request()
 }
+
+data class LoginRes(
+    val code: Int,
+    val message: String,
+    val data: Response
+)
 
 data class Response(
     val isRegistered: Boolean,
     @SerializedName("usersInfo") val login: Login
-) : Response {
+) {
     data class Login(
         @SerializedName("usersId") val userId: String,
         val accessToken: String?,
@@ -32,3 +37,9 @@ data class Response(
         val oauthType: String?
     )
 }
+
+data class RefreshTokenRes(
+    val code: Int,
+    val message: String,
+    val data: String
+)

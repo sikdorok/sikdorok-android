@@ -1,6 +1,6 @@
 [versions]
-versionCode = "1"
-versionName = "0.0.0"
+versionCode = "9"
+versionName = "0.0.9"
 
 application = "8.2.0"
 kotlin-android = "1.8.20"
@@ -30,6 +30,7 @@ jodatime = "2.12.5"
 flipper = "0.240.0"
 soloader = "0.10.5"
 leakCanary = "2.8.1"
+balloon = "1.6.4"
 
 [libraries]
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
@@ -63,6 +64,7 @@ flipper-release = { group = "com.facebook.flipper", name = "flipper-noop", versi
 leakCanary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leakCanary" }
 flipper-leakCanary = { group = "com.facebook.flipper", name = "flipper-leakcanary2-plugin", version.ref = "flipper" }
 flipper-network = { group = "com.facebook.flipper", name = "flipper-network-plugin", version.ref = "flipper" }
+balloon = { group = "com.github.skydoves", name = "balloon", version.ref = "balloon" }
 
 [plugins]
 application = { id = "com.android.application", version.ref = "application" }

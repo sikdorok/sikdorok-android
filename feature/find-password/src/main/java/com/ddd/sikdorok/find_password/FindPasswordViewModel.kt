@@ -1,10 +1,11 @@
 package com.ddd.sikdorok.find_password
 
 import androidx.lifecycle.viewModelScope
-import com.ddd.sikdorok.domain.password.PostFindPasswordUseCase
-import com.ddd.sikdorok.extensions.NotFound
 import com.ddd.sikdorok.core_ui.base.BaseContract
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
+import com.ddd.sikdorok.domain.password.PostFindPasswordUseCase
+import com.ddd.sikdorok.shared.base.onFailure
+import com.ddd.sikdorok.shared.base.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FindPasswordViewModel @Inject constructor(
     private val postFindPasswordUseCase: PostFindPasswordUseCase
-): BaseViewModel(),
+) : BaseViewModel(),
     BaseContract<FindPasswordContract.State, FindPasswordContract.Event, FindPasswordContract.SideEffect> {
 
     private val _effect = MutableSharedFlow<FindPasswordContract.SideEffect>()
@@ -34,9 +35,9 @@ class FindPasswordViewModel @Inject constructor(
 
     override fun event(event: FindPasswordContract.Event) {
         viewModelScope.launch {
-            when(event) {
+            when (event) {
                 is FindPasswordContract.Event.InputEmail -> {
-                    if(event.value.length in 2..25 && event.value.matches(emailRegex)) {
+                    if (event.value.length in 2..25 && event.value.matches(emailRegex)) {
                         _effect.emit(FindPasswordContract.SideEffect.ValidateEmail)
                         _state.update { it.copy(email = event.value) }
                     } else {
@@ -48,23 +49,14 @@ class FindPasswordViewModel @Inject constructor(
                     _effect.emit(FindPasswordContract.SideEffect.NaviToBack)
                 }
                 is FindPasswordContract.Event.Submit -> {
-                    runCatching {
-                        postFindPasswordUseCase.invoke(event.email)
-                    }.fold(
-                        onSuccess = { result ->
-                            if(result.code.NotFound) {
-                                _effect.emit(FindPasswordContract.SideEffect.ShowSnackBar(result.message))
-                            } else {
-                                _effect.emit(FindPasswordContract.SideEffect.NaviToSuccess(event.email))
-                            }
-                        },
-                        onFailure = { error ->
-                            _effect.emit(FindPasswordContract.SideEffect.ShowSnackBar(error.message.orEmpty()))
+                    postFindPasswordUseCase(event.email)
+                        .onSuccess { result ->
+                            _effect.emit(FindPasswordContract.SideEffect.NaviToSuccess(event.email))
+                        }.onFailure { error ->
+                            _effect.emit(FindPasswordContract.SideEffect.ShowSnackBar("이메일 형식이 올바르지 않습니다. 다시 시도해 주세요"))
                         }
-                    )
                 }
             }
         }
     }
-
 }

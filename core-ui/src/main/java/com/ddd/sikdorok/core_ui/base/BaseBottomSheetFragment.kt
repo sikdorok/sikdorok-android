@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
+import com.ddd.sikdorok.core_ui.common.LoadingDialogFragment
+import com.ddd.sikdorok.core_ui.util.show
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 abstract class BaseBottomSheetFragment<T : ViewDataBinding>(private val inflater: (LayoutInflater) -> T) : BottomSheetDialogFragment() {
@@ -12,6 +14,8 @@ abstract class BaseBottomSheetFragment<T : ViewDataBinding>(private val inflater
     lateinit var binding: T
 
     protected abstract val viewModel: BaseViewModel
+
+    protected var loadingDialogFragment: LoadingDialogFragment? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +42,30 @@ abstract class BaseBottomSheetFragment<T : ViewDataBinding>(private val inflater
 
     protected fun bind(action: T.() -> Unit) {
         binding.run(action)
+    }
+
+    protected fun showLoading() {
+        if (activity?.isFinishing == false
+            && activity?.isDestroyed == false
+            && !parentFragmentManager.isDestroyed
+            && !parentFragmentManager.isStateSaved
+            && loadingDialogFragment == null
+        ) {
+            loadingDialogFragment = LoadingDialogFragment()
+            loadingDialogFragment?.show(parentFragmentManager)
+        }
+    }
+
+    protected fun hideLoading() {
+        if (activity?.isFinishing == false
+            && activity?.isDestroyed == false
+            && loadingDialogFragment?.parentFragmentManager?.isDestroyed == false
+            && loadingDialogFragment?.parentFragmentManager?.isStateSaved == false
+            && loadingDialogFragment != null
+        ) {
+            loadingDialogFragment?.dismissAllowingStateLoss()
+            loadingDialogFragment = null
+        }
     }
 
 }

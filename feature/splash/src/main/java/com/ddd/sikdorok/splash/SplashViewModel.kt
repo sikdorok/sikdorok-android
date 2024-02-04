@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import com.ddd.sikdorok.domain.login.GetSavedTokenUseCase
 import com.ddd.sikdorok.shared.key.Keys.ACCESS_TOKEN
+import com.ddd.sikdorok.shared.key.Keys.REFRESH_TOKEN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +33,8 @@ class SplashViewModel @Inject constructor(
             when (event) {
                 SplashContract.Event.LoginCheck -> {
                     if (deeplinkReceived.not()) { // 딥링크 리스너 동작 시 동시 동작 X
-                        if(getSavedTokenUseCase.invoke(ACCESS_TOKEN).isEmpty()) {
+                        if(getSavedTokenUseCase.invoke(ACCESS_TOKEN).isEmpty()
+                            || getSavedTokenUseCase.invoke(REFRESH_TOKEN).isEmpty()) {
                             _effect.emit(SplashContract.Effect.NaviToSignIn)
                         } else {
                             _effect.emit(SplashContract.Effect.GoToMain())

@@ -8,6 +8,8 @@ import com.ddd.sikdorok.domain.modify.CreateFeedUseCase
 import com.ddd.sikdorok.domain.modify.DeleteFeedUseCase
 import com.ddd.sikdorok.domain.modify.ReadFeedUseCase
 import com.ddd.sikdorok.domain.modify.UpdateFeedUseCase
+import com.ddd.sikdorok.shared.base.onFailure
+import com.ddd.sikdorok.shared.base.onSuccess
 import com.ddd.sikdorok.shared.code.Icon
 import com.ddd.sikdorok.shared.code.Tag
 import com.ddd.sikdorok.shared.modify.FeedRequest
@@ -85,8 +87,16 @@ class ModifyViewModel @Inject constructor(
                         }
                     }
                 }
+
+
                 is ModifyContract.Event.OnUpdateImage -> {
-                    _state.update { it.copy(image = event.uri) }
+                    _state.update {
+                        it.copy(
+                            image = event.uri,
+                            imageUrl = null,
+                            imageRefresh = false
+                        )
+                    }
                 }
                 is ModifyContract.Event.OnClickTime -> {
                     _effect.emit(ModifyContract.SideEffect.ShowTimePicker(event.time))
@@ -96,6 +106,9 @@ class ModifyViewModel @Inject constructor(
                 }
                 is ModifyContract.Event.OnClickIcon -> {
                     _state.update { it.copy(icon = event.code) }
+                }
+                is ModifyContract.Event.EditText -> {
+                    _state.update { it.copy(memo = event.text) }
                 }
                 is ModifyContract.Event.OnClickDay -> {
                     _state.update { it.copy(tag = event.code) }
@@ -110,18 +123,16 @@ class ModifyViewModel @Inject constructor(
                                 memo = event.memo,
                                 icon = Icon.findIcon(state.value.icon),
                                 isMain = event.isMainFeed,
-                                deletePhotoTokens = if (event.file.isEmpty()) {
-                                    emptyList()
-                                } else {
+                                deletePhotoTokens = if (event.file?.isEmpty() == true || event.file == null) {
                                     savedImageToken
+                                } else {
+                                    emptyList()
                                 }
                             )
-                        ).apply {
-                            if (code == 200) {
-                                _effect.emit(ModifyContract.SideEffect.OnFinishCreate)
-                            } else {
-                                _effect.emit(ModifyContract.SideEffect.Fail(this.message))
-                            }
+                        ).onSuccess {
+                            _effect.emit(ModifyContract.SideEffect.OnFinishCreate)
+                        }.onFailure {
+                            _effect.emit(ModifyContract.SideEffect.Fail("오류가 발생했습니다. 다시 시도해 주세요"))
                         }
                     } else {
                         modifyFeedUseCase.invoke(
@@ -133,31 +144,52 @@ class ModifyViewModel @Inject constructor(
                                 memo = event.memo,
                                 icon = Icon.findIcon(state.value.icon),
                                 isMain = event.isMainFeed,
-                                deletePhotoTokens = if (event.file.isEmpty()) {
-                                    emptyList()
-                                } else {
+                                deletePhotoTokens = if (event.file?.isEmpty() == true || event.file == null) {
                                     savedImageToken
+                                } else {
+                                    emptyList()
                                 }
                             )
-                        ).apply {
-                            if (code == 200) {
-                                _effect.emit(ModifyContract.SideEffect.OnFinishModify)
-                            } else {
-                                _effect.emit(ModifyContract.SideEffect.Fail(this.message))
-                            }
+                        ).onSuccess {
+                            _effect.emit(ModifyContract.SideEffect.OnFinishModify)
+                        }.onFailure {
+                            _effect.emit(ModifyContract.SideEffect.Fail("오류가 발생했습니다. 다시 시도해 주세요"))
                         }
                     }
                 }
+
                 ModifyContract.Event.OnClickMore -> {
                     _effect.emit(ModifyContract.SideEffect.OpenMenu)
                 }
                 ModifyContract.Event.OnClickDelete -> {
-                    deleteFeedUseCase(postId).apply {
-                        if(code == 200) {
+                    deleteFeedUseCase(postId)
+                        .onSuccess {
                             _effect.emit(ModifyContract.SideEffect.OnFinishDelete)
-                        } else {
-                            _effect.emit(ModifyContract.SideEffect.Fail(this.message))
+                        }.onFailure {
+                            _effect.emit(ModifyContract.SideEffect.Fail("오류가 발생했습니다. 다시 시도해 주세요"))
                         }
+                }
+                is ModifyContract.Event.OnFinishTimePicker -> {
+                    _state.update {
+                        it.copy(
+                            time = event.time
+                        )
+                    }
+                }
+                is ModifyContract.Event.OnFinishDatePicker -> {
+                    _state.update {
+                        it.copy(
+                            time = event.time
+                        )
+                    }
+                }
+                ModifyContract.Event.OnClickImageForDefault -> {
+                    _state.update {
+                        it.copy(
+                            image = null,
+                            imageUrl = null,
+                            imageRefresh = true
+                        )
                     }
                 }
                 else -> Unit
@@ -168,21 +200,24 @@ class ModifyViewModel @Inject constructor(
     fun getFeedInfo() {
         if (postId.isNotEmpty()) {
             viewModelScope.launch {
-                readFeedUseCase(postId).data?.let { response ->
-                    savedImageToken.addAll(
-                        response.feedInfo.photosInfoList?.map { it.token.orEmpty() }
-                            ?: arrayListOf())
+                readFeedUseCase(postId).onSuccess {
+                    it?.data?.let { response ->
+                        savedImageToken.addAll(
+                            response.feedInfo.photosInfoList?.map { it.token.orEmpty() }
+                                ?: arrayListOf())
 
-                    _state.update {
-                        it.copy(
-                            imageUrl = response.feedInfo.photosInfoList?.firstOrNull()?.uploadFullPath,
-                            icon = response.feedInfo.icon,
-                            tag = response.feedInfo.tag,
-                            memo = response.feedInfo.memo ?: "",
-                            isMainPost = response.feedInfo.isMain,
-                            time = response.feedInfo.time,
-                            id = response.feedInfo.feedId
-                        )
+                        _state.update {
+                            it.copy(
+                                imageUrl = response.feedInfo.photosInfoList?.firstOrNull()?.uploadFullPath,
+                                icon = response.feedInfo.icon,
+                                tag = response.feedInfo.tag,
+                                memo = response.feedInfo.memo ?: "",
+                                isMainPost = response.feedInfo.isMain,
+                                time = response.feedInfo.time,
+                                id = response.feedInfo.feedId,
+                                imageRefresh = false
+                            )
+                        }
                     }
                 }
             }

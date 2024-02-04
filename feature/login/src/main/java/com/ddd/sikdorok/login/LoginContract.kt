@@ -18,7 +18,11 @@ class LoginContract {
         object NaviToKakaoLogin : SideEffect()
         object NaviToSikdorokLogin : SideEffect()
 
-        data class NaviToSignUp(val email: String?) : SideEffect()
+        data class NaviToSignUp(
+            val email: String?,
+            val oauthId : Long? = null,
+            val oauthType : String? = null
+        ) : SideEffect()
         object NaviToHome : SideEffect()
     }
 }

@@ -137,22 +137,25 @@
                 android:id="@+id/radio_tag"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+                android:layout_marginStart="14dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
                 android:gravity="center"
                 android:orientation="horizontal"
+                android:weightSum="4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rl_date">
 
                 <RadioButton
                     android:id="@+id/tag_button_morning"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
+                    android:checked="true"
                     android:drawableStart="@drawable/ic_selected_sun"
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
@@ -163,13 +166,13 @@
 
                 <RadioButton
                     android:id="@+id/tag_button_lunch"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
-                    android:drawableStart="@drawable/ic_selected_sun"
+                    android:drawableStart="@drawable/ic_selected_sun_cloudy"
                     android:gravity="center"
                     android:paddingHorizontal="10dp"
                     android:tag="C000300002"
@@ -179,9 +182,9 @@
 
                 <RadioButton
                     android:id="@+id/tag_button_evening"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
@@ -195,8 +198,9 @@
 
                 <RadioButton
                     android:id="@+id/tag_button_snack"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="32dp"
+                    android:layout_marginStart="6dp"
                     android:layout_weight="1"
                     android:background="@drawable/selector_button_bg"
                     android:button="@null"
@@ -210,28 +214,41 @@
 
             </RadioGroup>
 
-            <ImageView
-                android:id="@+id/iv_main"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/container_image"
                 android:layout_width="320dp"
                 android:layout_height="320dp"
-                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="30dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/modify_image_bg"
+                app:cardElevation="0dp"
+                app:cardCornerRadius="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radio_tag"
-                app:layout_constraintVertical_chainStyle="packed" />
+                app:layout_constraintVertical_chainStyle="packed">
+
+                <ImageView
+                    android:id="@+id/iv_main"
+                    android:layout_width="320dp"
+                    android:layout_height="320dp"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/modify_image_bg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/radio_tag"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+            </androidx.cardview.widget.CardView>
 
             <ImageView
                 android:id="@+id/iv_default_add"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/img_modify_default"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_main"
-                app:layout_constraintEnd_toEndOf="@+id/iv_main"
-                app:layout_constraintStart_toStartOf="@+id/iv_main"
-                app:layout_constraintTop_toTopOf="@+id/iv_main" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/img_modify_default_friends"
+                android:tint="#66FFFFFF"
+                app:layout_constraintBottom_toBottomOf="@+id/container_image"
+                app:layout_constraintEnd_toEndOf="@+id/container_image"
+                app:layout_constraintStart_toStartOf="@+id/container_image"
+                app:layout_constraintTop_toTopOf="@+id/container_image" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_camera"
@@ -242,99 +259,109 @@
                 android:src="@drawable/ic_camera"
                 app:backgroundTint="@color/modify_fab_color"
                 app:elevation="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_main"
-                app:layout_constraintEnd_toEndOf="@+id/iv_main"
+                app:layout_constraintBottom_toBottomOf="@+id/container_image"
+                app:layout_constraintEnd_toEndOf="@+id/container_image"
                 app:tint="@color/white" />
 
             <RadioGroup
                 android:id="@+id/radio_meal_type"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
+                android:layout_height="28dp"
+                android:layout_marginHorizontal="26dp"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 android:weightSum="9"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_main">
+                app:layout_constraintTop_toBottomOf="@+id/container_image">
 
                 <RadioButton
                     android:id="@+id/type_button_rice"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_rice"
                     android:button="@null"
+                    android:checked="true"
                     android:tag="C000400002" />
 
                 <RadioButton
                     android:id="@+id/type_button_salad"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_salad"
                     android:button="@null"
                     android:tag="C000400004" />
 
                 <RadioButton
                     android:id="@+id/type_button_noodle"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_noodle"
                     android:button="@null"
                     android:tag="C000400003" />
 
                 <RadioButton
                     android:id="@+id/type_button_meat"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_meat"
                     android:button="@null"
                     android:tag="C000400005" />
 
                 <RadioButton
                     android:id="@+id/type_button_bread"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_bread"
                     android:button="@null"
                     android:tag="C000400006" />
 
                 <RadioButton
                     android:id="@+id/type_button_burger"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_hamburger"
                     android:button="@null"
                     android:tag="C000400007" />
 
                 <RadioButton
                     android:id="@+id/type_button_sushi"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_sushi"
                     android:button="@null"
                     android:tag="C000400008" />
 
                 <RadioButton
                     android:id="@+id/type_button_snack"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_cake"
                     android:button="@null"
                     android:tag="C000400009" />
 
                 <RadioButton
                     android:id="@+id/type_button_nothing"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
                     android:background="@drawable/ic_nothing"
                     android:button="@null" />
             </RadioGroup>
@@ -356,6 +383,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/radio_meal_type" />
 
             <ImageView
+                android:id="@+id/iv_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
@@ -382,7 +410,7 @@
 
                 <EditText
                     android:id="@+id/edit_input"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="10dp"

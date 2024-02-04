@@ -5,7 +5,8 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.databinding.ViewDataBinding
 
-abstract class BackFrameActivity<T: ViewDataBinding>(inflater: (LayoutInflater) -> T) : BaseActivity<T>(inflater) {
+abstract class BackFrameActivity<T : ViewDataBinding>(inflater: (LayoutInflater) -> T) :
+    BaseActivity<T>(inflater) {
 
     abstract val backFrame: FrameLayout
 

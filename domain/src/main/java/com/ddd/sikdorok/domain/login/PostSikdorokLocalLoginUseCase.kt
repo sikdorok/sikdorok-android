@@ -8,7 +8,7 @@ import javax.inject.Inject
 class PostSikdorokLocalLoginUseCase @Inject constructor(
     private val loginRepository: LoginRepository
 ) {
-    suspend operator fun invoke(body: Request.Sikdorok) = runCatching {
+    suspend operator fun invoke(body: Request.Sikdorok) =
         loginRepository.onRequestSikdorokLocalUser(body)
-    }
+
 }

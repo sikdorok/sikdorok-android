@@ -10,11 +10,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/weekday_number"
-            android:layout_width="wrap_content"
+            android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
             tools:background="@drawable/bg_home_weekday"
             android:padding="7dp"
+            android:gravity="center"
             tools:textColor="@color/white"
             android:textAppearance="@style/Typography.Body2.Regular"
             app:layout_constraintEnd_toEndOf="parent"

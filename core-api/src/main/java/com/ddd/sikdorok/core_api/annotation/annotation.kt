@@ -35,3 +35,7 @@ internal annotation class NoAuthRetrofit
 @Retention(value = AnnotationRetention.RUNTIME)
 internal annotation class NormalRetrofit
 
+@Qualifier
+@Retention(value = AnnotationRetention.RUNTIME)
+internal annotation class AccessManagerRetrofit
+

@@ -9,11 +9,11 @@
         android:paddingTop="30dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_marginHorizontal="7dp"
-            android:layout_marginVertical="7dp"
             android:id="@+id/container_mealbox_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="7dp"
+            android:layout_marginVertical="7dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -30,9 +30,9 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/container_mealbox"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:id="@+id/container_mealbox"
                 android:layout_marginHorizontal="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="40dp"
@@ -48,8 +48,17 @@
                     android:id="@+id/img_mealbox"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    />
+                    android:adjustViewBounds="true" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/img_mealbox_default"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    android:tint="#66FFFFFF"
+                    android:background="@color/modify"
+                    android:src="@drawable/img_modify_default_friends"
+                     />
 
             </androidx.cardview.widget.CardView>
 
@@ -71,8 +80,8 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/weekdays_common"
             android:textAppearance="@style/Typography.Body2.Regular"
+            android:textColor="@color/weekdays_common"
             app:layout_constraintBottom_toBottomOf="@id/title_today_menu"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/title_today_menu"
@@ -102,9 +111,9 @@
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:paddingHorizontal="12dp"
             app:cardBackgroundColor="#FBF8F3"
-            android:layout_marginTop="5dp"
             app:cardCornerRadius="6dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,10 +124,10 @@
                 android:id="@+id/memo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="70dp"
                 android:layout_marginTop="6dp"
-                android:textAppearance="@style/Typography.Body2.Regular"
+                android:minHeight="70dp"
                 android:padding="12dp"
+                android:textAppearance="@style/Typography.Body2.Regular"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title_today_menu"

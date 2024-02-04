@@ -38,6 +38,7 @@ android {
 dependencies {
 
     implementation(project(":core-design"))
+    implementation(project(":extensions"))
 
     implementation(project(":navigator:core"))
     implementation(project(":navigator:signin"))

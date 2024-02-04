@@ -17,8 +17,13 @@ class ModifyDateTimePicker : DialogFragment(), DatePickerDialog.OnDateSetListene
         val argument = requireArguments().getString(Keys.MODIFY_DATE).orEmpty()
         val date = DateTime.parse(argument)
 
-        return DatePickerDialog(requireActivity(), this, date.year, date.monthOfYear - 1, date.dayOfMonth).apply {
-            datePicker.minDate = DateTime.now().millis
+        return DatePickerDialog(
+            requireActivity(),
+//            com.ddd.sikdorok.core_design.R.style.AppDatePickerTheme, // TODO : 이거 색 변경 필요
+            this, date.year, date.monthOfYear - 1, date.dayOfMonth
+        ).apply {
+            datePicker.maxDate = DateTime.now().millis
+            datePicker.solidColor
         }
     }
 

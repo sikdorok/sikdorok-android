@@ -1,6 +1,5 @@
 package com.ddd.sikdorok.home.list
 
-import android.app.Activity
 import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -83,6 +82,16 @@ class HomeListActivity :
                     is HomeListContract.Effect.Move -> {
                         move(effect)
                     }
+                }
+            }
+        }
+
+        repeatCallDefaultOnStarted {
+            viewModel.state.collect {
+                if (it.isLoading) {
+                    showLoading()
+                } else {
+                    hideLoading()
                 }
             }
         }

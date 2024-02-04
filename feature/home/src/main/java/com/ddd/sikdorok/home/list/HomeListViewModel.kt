@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ddd.sikdorok.core_ui.base.BaseViewModel
 import com.ddd.sikdorok.core_ui.util.DateUtil
 import com.ddd.sikdorok.domain.home.GetHomeListFeedsUseCase
+import com.ddd.sikdorok.shared.base.onSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -75,21 +76,26 @@ class HomeListViewModel @Inject constructor(
     }
 
     fun getWeeklyMealList(date: DateTime = selectedDate) {
+        showLoading()
+
         viewModelScope.launch(exceptionHandler) {
             getHomeListFeedsUseCase(
                 size = 20,
                 date = date.toString("yyyy-MM-dd"),
                 cursorDate = null
-            ).data?.let { response ->
+            ).onSuccess {
+                it?.data?.let { response ->
 
-                _state.update {
-                    it.copy(
-                        nowTime = date,
-                        feedList = response.dailyFeeds
-                    )
+                    _state.update {
+                        it.copy(
+                            nowTime = date,
+                            feedList = response.dailyFeeds
+                        )
+                    }
+
+                    checkArrowEnabled(date)
+                    hideLoading()
                 }
-
-                checkArrowEnabled(date)
             }
         }
     }
@@ -108,6 +114,22 @@ class HomeListViewModel @Inject constructor(
                     canGoNext = canGoNext
                 )
             }
+        }
+    }
+
+    private fun showLoading() {
+        _state.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+    }
+
+    private fun hideLoading() {
+        _state.update {
+            it.copy(
+                isLoading = false
+            )
         }
     }
 

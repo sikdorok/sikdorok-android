@@ -14,6 +14,7 @@ import com.ddd.sikdorok.home.databinding.DialogHomeMonthlyBinding
 import com.ddd.sikdorok.home.date.HomeDateAdapter
 import com.ddd.sikdorok.home.month.HomeMonthAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class HomeMonthlyDialog :
@@ -53,6 +54,17 @@ class HomeMonthlyDialog :
                         activityViewModel.getWeeklyMealboxInfo(effect.date)
                         dismissAllowingStateLoss()
                     }
+                }
+            }
+        }
+        
+        repeatCallDefaultOnStarted {
+            viewModel.state.collect {
+                if (it.isLoading) {
+                    showLoading()
+                } else {
+                    delay(1000)
+                    hideLoading()
                 }
             }
         }

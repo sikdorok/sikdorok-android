@@ -3,16 +3,12 @@ package com.ddd.sikdorok.settings
 import android.content.Intent
 import android.net.Uri
 import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ddd.sikdorok.core_ui.base.BackFrameActivity
 import com.ddd.sikdorok.core_ui.util.makeAlertDialog
-import com.ddd.sikdorok.extensions.dpToPx
 import com.ddd.sikdorok.extensions.getPackageInfoCompat
 import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.navigator.delete_account.DeleteAccountNavigator

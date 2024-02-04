@@ -17,6 +17,7 @@ import com.ddd.sikdorok.navigator.modify.ModifyNavigator
 import com.ddd.sikdorok.navigator.settings.SettingsNavigator
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -107,6 +108,16 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
                     is HomeContract.Effect.Move -> {
                         move(effect)
                     }
+                }
+            }
+        }
+
+        repeatCallDefaultOnStarted {
+            viewModel.state.collect {
+                if(it.isLoading) {
+                    showLoading()
+                } else {
+                    hideLoading()
                 }
             }
         }
