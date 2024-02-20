@@ -2,7 +2,6 @@ package com.ddd.sikdorok.core_api
 
 import android.content.Context
 import com.ddd.sikdorok.core_api.annotation.AccessManagerRetrofit
-import com.ddd.sikdorok.core_api.annotation.FlipperInterceptor
 import com.ddd.sikdorok.core_api.annotation.HeaderInterceptor
 import com.ddd.sikdorok.core_api.annotation.LoggingInterceptor
 import com.ddd.sikdorok.core_api.annotation.NoAuthOkHttpClient
@@ -11,9 +10,6 @@ import com.ddd.sikdorok.core_api.annotation.NormalOkHttpClient
 import com.ddd.sikdorok.core_api.annotation.NormalRetrofit
 import com.ddd.sikdorok.core_api.calladapter.ResultCallAdapterFactory
 import com.ddd.sikdorok.core_api.interceptor.AccessTokenInterceptor
-import com.facebook.flipper.android.AndroidFlipperClient
-import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
-import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -66,11 +62,12 @@ internal object NetworkModule {
     fun provideAccessManagerRetrofit(
         @ApplicationContext context: Context,
     ) = OkHttpClient.Builder()
-        .addNetworkInterceptor(
-            FlipperOkhttpInterceptor(
-                AndroidFlipperClient.getInstance(context).getPlugin(NetworkFlipperPlugin.ID)
-            )
-        ).build()
+//        .addNetworkInterceptor(
+//            FlipperOkhttpInterceptor(
+//                AndroidFlipperClient.getInstance(context).getPlugin(NetworkFlipperPlugin.ID)
+//            )
+//        )
+    .build()
 
     // OKHttpClients
     @Provides
@@ -79,11 +76,11 @@ internal object NetworkModule {
     fun providesNormalOkHttpClient(
         @LoggingInterceptor interceptor: Interceptor,
         @HeaderInterceptor accessTokenInterceptor: Interceptor,
-        @FlipperInterceptor flipperInterceptor: Interceptor,
+//        @FlipperInterceptor flipperInterceptor: Interceptor,
     ) = OkHttpClient.Builder()
         .addInterceptor(interceptor)
         .addInterceptor(accessTokenInterceptor)
-        .addNetworkInterceptor(flipperInterceptor)
+//        .addNetworkInterceptor(flipperInterceptor)
         .build()
 
     @Provides
@@ -93,11 +90,11 @@ internal object NetworkModule {
         @ApplicationContext context: Context,
         @LoggingInterceptor interceptor: Interceptor
     ) = OkHttpClient.Builder()
-        .addNetworkInterceptor(
-            FlipperOkhttpInterceptor(
-                AndroidFlipperClient.getInstance(context).getPlugin(NetworkFlipperPlugin.ID)
-            )
-        )
+//        .addNetworkInterceptor(
+//            FlipperOkhttpInterceptor(
+//                AndroidFlipperClient.getInstance(context).getPlugin(NetworkFlipperPlugin.ID)
+//            )
+//        )
         .addInterceptor(interceptor)
         .build()
 
