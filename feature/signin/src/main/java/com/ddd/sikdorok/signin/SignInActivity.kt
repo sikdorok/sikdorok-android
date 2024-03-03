@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ddd.sikdorok.core_ui.base.BackFrameActivity
+import com.ddd.sikdorok.core_ui.util.KeyboardUtil
 import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.find_password.FindPasswordNavigator
 import com.ddd.sikdorok.home.HomeNavigator
@@ -71,6 +72,9 @@ class SignInActivity : BackFrameActivity<ActivitySignInBinding>(ActivitySignInBi
         binding.tvLogin.setOnClickListener {
             showLoading()
 
+            KeyboardUtil.downKeyboard(this, binding.editEmail)
+            KeyboardUtil.downKeyboard(this, binding.editPassword)
+
             viewModel.event(
                 SignInContract.Event.OnClickSubmit(
                     email = binding.editEmail.text.toString(),
@@ -95,7 +99,6 @@ class SignInActivity : BackFrameActivity<ActivitySignInBinding>(ActivitySignInBi
                         )
                     }
                     is SignInContract.SideEffect.NaviToFindPassword -> {
-                        // TODO : 백 토스트 확인
                         startActivity(findPasswordNavigator.start(this))
                     }
                     is SignInContract.SideEffect.NaviToBack -> {

@@ -1,6 +1,7 @@
 package com.ddd.sikdorok.core_api.calladapter
 
 import com.ddd.sikdorok.shared.base.ApiResult
+import com.google.gson.Gson
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call
@@ -24,52 +25,48 @@ private class ApiResultCall<R>(
     private val successType: Type
 ) : Call<ApiResult<R>> {
 
-    override fun enqueue(callback: Callback<ApiResult<R>>) = delegate.enqueue(
-        object : Callback<R> {
+    override fun enqueue(callback: Callback<ApiResult<R>>) = delegate.enqueue(object : Callback<R> {
+        override fun onResponse(call: Call<R>, response: Response<R>) {
+            callback.onResponse(this@ApiResultCall, Response.success(response.toApiResult()))
+        }
 
-            override fun onResponse(call: Call<R>, response: Response<R>) {
-                callback.onResponse(this@ApiResultCall, Response.success(response.toApiResult()))
-            }
+        private fun Response<R>.toApiResult(): ApiResult<R> {
+            // Http error response (4xx - 5xx)
+            if (!isSuccessful) {
+                return Gson().fromJson(
+                    errorBody()?.string(),
+                    ApiResult.Failure.HttpError::class.java
+                )
+            } else {
+                // Http success response with body
+                body()?.let { body -> return ApiResult.successOf(body) }
 
-            private fun Response<R>.toApiResult(): ApiResult<R> {
-                // Http error response (4xx - 5xx)
-                if (!isSuccessful) {
-                    val errorBody = errorBody()!!.string()
-                    return ApiResult.Failure.HttpError(
-                        code = code(),
-                        message = message(),
-                        body = errorBody
-                    )
+                // if we defined Unit as success type it means we expected no response body
+                // e.g. in case of 204 No Content
+                return if (successType == Unit::class.java) {
+                    @Suppress("UNCHECKED_CAST")
+                    ApiResult.successOf(Unit as R)
                 } else {
-                    // Http success response with body
-                    body()?.let { body -> return ApiResult.successOf(body) }
-
-                    // if we defined Unit as success type it means we expected no response body
-                    // e.g. in case of 204 No Content
-                    return if (successType == Unit::class.java) {
-                        @Suppress("UNCHECKED_CAST")
-                        ApiResult.successOf(Unit as R)
-                    } else {
-                        ApiResult.Failure.UnknownApiError(
-                            IllegalStateException(
-                                "Response code is ${code()} but body is null.\n" +
-                                        "If you expect response body to be null then define your API method as returning Unit:\n" +
-                                        "@POST fun postSomething(): ApiResult<Unit>"
-                            )
+                    ApiResult.Failure.UnknownApiError(
+                        IllegalStateException(
+                            "Response code is ${code()} but body is null.\n" +
+                                    "If you expect response body to be null then define your API method as returning Unit:\n" +
+                                    "@POST fun postSomething(): ApiResult<Unit>"
                         )
-                    }
+                    )
                 }
-            }
-
-            override fun onFailure(call: Call<R?>, throwable: Throwable) {
-                val error = if (throwable is IOException) {
-                    ApiResult.Failure.NetworkError(throwable)
-                } else {
-                    ApiResult.Failure.UnknownApiError(throwable)
-                }
-                callback.onResponse(this@ApiResultCall, Response.success(error))
             }
         }
+
+        override fun onFailure(call: Call<R?>, throwable: Throwable) {
+            val error = if (throwable is IOException) {
+                ApiResult.Failure.NetworkError(throwable)
+            } else {
+                ApiResult.Failure.UnknownApiError(throwable)
+            }
+            callback.onResponse(this@ApiResultCall, Response.success(error))
+        }
+    }
     )
 
     override fun timeout(): Timeout = delegate.timeout()

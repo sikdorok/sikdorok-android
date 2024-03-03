@@ -11,7 +11,6 @@ class ModifyContract {
         val icon: String = "",
         val tag: String = "",
         val isMainPost: Boolean = false,
-        val memo: String = "",
         val imageUrl: String? = null,
         val imageRefresh: Boolean? = null
     )
@@ -32,8 +31,6 @@ class ModifyContract {
         data class OnClickDay(val code: String) : Event()
 
         data class OnClickIcon(val code: String) : Event()
-
-        data class EditText(val text: String) : Event()
 
         data class OnClickMainPost(val isChecked: Boolean) : Event()
 
@@ -76,7 +73,7 @@ class ModifyContract {
 
         object OnFinish : SideEffect()
 
-        object RequestPermission : SideEffect()
+        object SuccessLoadData : SideEffect()
 
         object ShowPostDialog : SideEffect()
 
@@ -95,5 +92,7 @@ class ModifyContract {
         data class ShowTimePicker(val time: String) : SideEffect()
 
         data class Fail(val errorMsg: String) : SideEffect()
+
+        data class ShowSnackBar(val text : String) : SideEffect()
     }
 }

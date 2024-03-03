@@ -75,7 +75,7 @@ class SignInViewModel @Inject constructor(
                             _effect.emit(SignInContract.SideEffect.ShowSnackBar(result?.message.orEmpty()))
                         }
                     }.onFailure {
-                        _effect.emit(SignInContract.SideEffect.ShowSnackBar("오류가 발생했습니다. 다시 시도해 주세요"))
+                        _effect.emit(SignInContract.SideEffect.ShowSnackBar(it.message))
                     }
                 }
             }

@@ -51,6 +51,9 @@ class SettingsViewModel @Inject constructor(
                 SettingsContract.Event.OnClickLogout -> {
                     _effect.emit(SettingsContract.SideEffect.Logout)
                 }
+                SettingsContract.Event.OnClickPlayStore -> {
+                    _effect.emit(SettingsContract.SideEffect.PlayStore)
+                }
             }
         }
     }
@@ -81,6 +84,12 @@ class SettingsViewModel @Inject constructor(
                 _effect.emit(SettingsContract.SideEffect.NaviToSplash)
 
             }
+        }
+    }
+
+    fun onClickToPlayStore(){
+        if(state.value.isNeedUpdate) {
+            event(SettingsContract.Event.OnClickPlayStore)
         }
     }
 

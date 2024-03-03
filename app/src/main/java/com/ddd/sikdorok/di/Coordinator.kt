@@ -10,6 +10,7 @@ import com.ddd.sikdorok.navigator.HomeNavigatorImpl
 import com.ddd.sikdorok.navigator.LoginNavigatorImpl
 import com.ddd.sikdorok.navigator.ManagementNavigatorImpl
 import com.ddd.sikdorok.navigator.ModifyNavigatorImpl
+import com.ddd.sikdorok.navigator.ProfileNavigatorImpl
 import com.ddd.sikdorok.navigator.ResetPasswordNavigatorImpl
 import com.ddd.sikdorok.navigator.SendPasswordNavigatorImpl
 import com.ddd.sikdorok.navigator.SettingsNavigatorImpl
@@ -20,6 +21,7 @@ import com.ddd.sikdorok.navigator.delete_account.DeleteAccountNavigator
 import com.ddd.sikdorok.navigator.login.LoginNavigator
 import com.ddd.sikdorok.navigator.management.ManagementNavigator
 import com.ddd.sikdorok.navigator.modify.ModifyNavigator
+import com.ddd.sikdorok.navigator.profile.ProfileNavigator
 import com.ddd.sikdorok.navigator.settings.SettingsNavigator
 import com.ddd.sikdorok.navigator.signin.SignInNavigator
 import com.ddd.sikdorok.send_password.SendPasswordNavigator
@@ -86,4 +88,8 @@ internal abstract class CoordinatorModule {
     @ActivityScoped
     @Binds
     abstract fun bindsResetPasswordNavigator(navigator: ResetPasswordNavigatorImpl): ResetPasswordNavigator
+
+    @ActivityScoped
+    @Binds
+    abstract fun bindsProfileNavigator(navigator: ProfileNavigatorImpl): ProfileNavigator
 }

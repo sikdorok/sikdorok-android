@@ -7,6 +7,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ddd.sikdorok.core_design.R
 import com.ddd.sikdorok.core_ui.base.BackFrameActivity
+import com.ddd.sikdorok.core_ui.util.KeyboardUtil
 import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.extensions.textChanges
 import com.ddd.sikdorok.find_password.databinding.ActivityFindPasswordBinding
@@ -37,6 +38,8 @@ class FindPasswordActivity :
 
         binding.tvSubmit.setOnClickListener {
             showLoading()
+            KeyboardUtil.downKeyboard(this, binding.editEmail)
+            
             viewModel.event(FindPasswordContract.Event.Submit(binding.editEmail.text.toString()))
         }
 

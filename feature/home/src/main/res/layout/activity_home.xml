@@ -194,8 +194,8 @@
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/meal_previous"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:layout_marginEnd="4dp"
                             android:onClick="@{() -> vm.changeMealTime(false)}"
                             android:src="@drawable/selector_home_arrow_left"
@@ -230,8 +230,8 @@
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/meal_next"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
                             android:layout_marginEnd="14dp"
                             android:onClick="@{() -> vm.changeMealTime(true)}"
                             android:src="@drawable/selector_home_arrow_right"
@@ -254,6 +254,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="14dp"
             android:layout_marginBottom="14dp"
+            bind:visibility="@{vm.state.canPostOnToday}"
             android:onClick="@{() -> vm. onClickCreateFeed()}"
             android:src="@drawable/ic_home_post"
             app:layout_constraintBottom_toBottomOf="parent"

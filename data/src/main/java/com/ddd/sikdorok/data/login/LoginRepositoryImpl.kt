@@ -4,11 +4,11 @@ import com.ddd.sikdorok.data.SikdorokPreference
 import com.ddd.sikdorok.data.login.data.LoginRemoteDataSource
 import com.ddd.sikdorok.domain.repository.LoginRepository
 import com.ddd.sikdorok.shared.base.ApiResult
-import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.key.Keys
+import com.ddd.sikdorok.shared.login.CheckUserRes
 import com.ddd.sikdorok.shared.login.LoginRes
+import com.ddd.sikdorok.shared.login.RefreshTokenRes
 import com.ddd.sikdorok.shared.login.Request
-import com.ddd.sikdorok.shared.login.Response
 import com.ddd.sikdorok.shared.login.TokenType
 import com.ddd.sikdorok.shared.sign.SignUp
 import dagger.Binds
@@ -24,7 +24,7 @@ internal class LoginRepositoryImpl @Inject constructor(
     private val sikdorokPreference: SikdorokPreference
 ) : LoginRepository {
 
-    override suspend fun onCheckSikdorokEmail(email: String): ApiResult<Boolean> {
+    override suspend fun onCheckSikdorokEmail(email: String): ApiResult<CheckUserRes> {
         return loginRemoteDataSource.onCheckSikdorokEmail(email)
     }
 
@@ -40,21 +40,23 @@ internal class LoginRepositoryImpl @Inject constructor(
         return loginRemoteDataSource.onSignUpUser(body)
     }
 
-    override fun onPostSaveToken(type: TokenType, token: String): Result<Unit> {
-        return runCatching {
-            when (type) {
-                TokenType.ACCESS_TOKEN -> {
-                    sikdorokPreference.savePref(Keys.ACCESS_TOKEN, token)
-                }
-                TokenType.REFRESH_TOKEN -> {
-                    sikdorokPreference.savePref(Keys.REFRESH_TOKEN, token)
-                }
+    override fun onPostSaveToken(type: TokenType, token: String) {
+        when (type) {
+            TokenType.ACCESS_TOKEN -> {
+                sikdorokPreference.savePref(Keys.ACCESS_TOKEN, token.orEmpty())
+            }
+            TokenType.REFRESH_TOKEN -> {
+                sikdorokPreference.savePref(Keys.REFRESH_TOKEN, token.orEmpty())
             }
         }
     }
 
     override fun onGetSavedToken(key: String): String {
         return sikdorokPreference.getString(key)
+    }
+
+    override suspend fun postRefreshToken(refreshToken: String): RefreshTokenRes {
+        return loginRemoteDataSource.postRefreshToken(refreshToken)
     }
 }
 

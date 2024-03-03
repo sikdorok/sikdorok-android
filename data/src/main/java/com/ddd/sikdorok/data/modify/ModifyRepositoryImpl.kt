@@ -3,6 +3,7 @@ package com.ddd.sikdorok.data.modify
 import com.ddd.sikdorok.data.modify.data.ModifyRemoteDataSource
 import com.ddd.sikdorok.domain.repository.ModifyRepository
 import com.ddd.sikdorok.shared.base.ApiResult
+import com.ddd.sikdorok.shared.base.BaseResponse
 import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.modify.CreateFeedRes
 import com.ddd.sikdorok.shared.modify.FeedRequest
@@ -30,7 +31,7 @@ internal class ModifyRepositoryImpl @Inject constructor(
         return modifyRemoteDataSource.updateFeed(file, body)
     }
 
-    override suspend fun deleteFeed(feedId: String): ApiResult<Unit> {
+    override suspend fun deleteFeed(feedId: String): ApiResult<BaseResponse> {
         return modifyRemoteDataSource.deleteFeed(feedId)
     }
 }

@@ -40,4 +40,11 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.junit.ext
     androidTestImplementation libs.espresso
+
+    implementation libs.glide
+    implementation libs.jodatime
+    implementation libs.jodaconvert
+    implementation libs.fragment.ktx
+    implementation libs.viewmodel.ktx
+    implementation libs.hilt.android
 }

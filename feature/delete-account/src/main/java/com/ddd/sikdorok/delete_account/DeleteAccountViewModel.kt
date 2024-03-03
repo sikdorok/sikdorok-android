@@ -54,7 +54,7 @@ class DeleteAccountViewModel @Inject constructor(
             }
             .onFailure {
                 hideLoading()
-                _effect.emit(DeleteAccountContract.Effect.ShowSnackBar("오류가 발생했습니다. 다시 시도해 주세요"))
+                _effect.emit(DeleteAccountContract.Effect.ShowSnackBar(it.message))
             }
     }
 

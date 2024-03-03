@@ -16,6 +16,8 @@ class SettingsContract {
         object OnClickAccountDelete : Event()
 
         object OnClickLogout : Event()
+
+        object OnClickPlayStore : Event()
     }
 
     sealed class SideEffect {
@@ -26,6 +28,8 @@ class SettingsContract {
         object NaviToDeleteAccount : SideEffect()
 
         object Logout : SideEffect()
+
+        object PlayStore : SideEffect()
 
         object NaviToSplash : SideEffect()
 

@@ -74,6 +74,7 @@ dependencies {
 
     implementation libs.timber
     implementation libs.jodatime
+    implementation libs.jodaconvert
 
     testImplementation libs.junit
 

@@ -1,6 +1,7 @@
 package com.ddd.sikdorok.core_api.service
 
 import com.ddd.sikdorok.shared.base.ApiResult
+import com.ddd.sikdorok.shared.base.BaseResponse
 import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.modify.CreateFeedRes
 import com.ddd.sikdorok.shared.modify.FeedRequest
@@ -44,10 +45,11 @@ interface ModifyService {
         ): ApiResult<CreateFeedRes>
     }
 
+
     interface Delete {
         @DELETE("/feed/{feedId}")
         suspend fun deleteFeed(
             @Path("feedId") feedId: String
-        ): ApiResult<Unit>
+        ): ApiResult<BaseResponse>
     }
 }

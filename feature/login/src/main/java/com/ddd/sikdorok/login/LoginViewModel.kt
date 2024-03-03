@@ -52,53 +52,45 @@ class LoginViewModel @Inject constructor(
                 is LoginContract.Event.CheckKakaoUser -> {
                     postOnCheckUserUseCase(event.code)
                         .onSuccess { result ->
-                        if (result?.data?.isRegistered == true) {
-                            val accessToken = result.data?.login?.accessToken
-                            val refreshToken = result.data?.login?.refreshToken
+                            if (result?.data?.isRegistered == true) {
+                                val accessToken = result.data.login.accessToken
+                                val refreshToken = result.data.login.refreshToken
 
-                            if (accessToken.isNullOrEmpty().not()) {
-                                postSaveTokenUseCase.invoke(
-                                    TokenType.REFRESH_TOKEN,
-                                    refreshToken.orEmpty()
-                                )
-                                    .mapCatching {
-                                        postSaveTokenUseCase.invoke(
-                                            TokenType.ACCESS_TOKEN,
-                                            accessToken.orEmpty()
+                                if (!accessToken.isNullOrEmpty() && !refreshToken.isNullOrEmpty()) {
+                                    postSaveTokenUseCase(TokenType.ACCESS_TOKEN, accessToken)
+                                    postSaveTokenUseCase(TokenType.REFRESH_TOKEN, refreshToken)
+
+                                    _effect.emit(LoginContract.SideEffect.NaviToHome)
+
+                                } else {
+                                    _effect.emit(
+                                        LoginContract.SideEffect.NaviToSignUp(
+                                            result.data.login.email,
+                                            result.data.login.oauthId?.toLong(),
+                                            result.data.login.oauthType
                                         )
-                                    }.fold(
-                                        onSuccess = {
-                                            _effect.emit(LoginContract.SideEffect.NaviToHome)
-                                        },
-                                        onFailure = {
-                                            it.printStackTrace()
-                                        }
                                     )
+                                }
                             } else {
                                 _effect.emit(
                                     LoginContract.SideEffect.NaviToSignUp(
-                                        result.data?.login?.email,
-                                        result.data?.login?.oauthId?.toLong(),
-                                        result.data?.login?.oauthType
+                                        result?.data?.login?.email,
+                                        result?.data?.login?.oauthId?.toLong(),
+                                        result?.data?.login?.oauthType
                                     )
                                 )
                             }
-                        } else {
-                            _effect.emit(
-                                LoginContract.SideEffect.NaviToSignUp(
-                                    result?.data?.login?.email,
-                                    result?.data?.login?.oauthId?.toLong(),
-                                    result?.data?.login?.oauthType
-                                )
-                            )
                         }
-                    }
-                        .onFailure {
+                        .onFailure { error ->
                             _state.update {
                                 it.copy(
                                     showLoading = false
                                 )
                             }
+
+                            _effect.emit(
+                                LoginContract.SideEffect.ShowSnackBar(error.message)
+                            )
                         }
                 }
             }

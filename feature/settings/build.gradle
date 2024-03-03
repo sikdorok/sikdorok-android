@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":navigator:core"))
     implementation(project(":navigator:delete-account"))
     implementation(project(":navigator:splash"))
+    implementation(project(":navigator:profile"))
 
     implementation libs.bundles.android
     implementation libs.material

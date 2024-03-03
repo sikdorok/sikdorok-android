@@ -51,7 +51,6 @@ fun AppCompatImageView.bindImageRes(srcUrl: String?) {
     }
 }
 
-
 @BindingAdapter("bind:meal_icon")
 fun AppCompatImageView.bindMealIcon(icon: String?) {
     if (!icon.isNullOrEmpty()) {

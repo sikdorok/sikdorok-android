@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# All the resources are retrieved via reflection, so we need to make sure we keep them
+#-keep class net.danlew.android.joda.R$raw { *; }
+-keep class org.joda.** { *; }

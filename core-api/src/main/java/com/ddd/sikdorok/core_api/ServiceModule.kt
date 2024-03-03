@@ -3,6 +3,7 @@ package com.ddd.sikdorok.core_api
 import com.ddd.sikdorok.core_api.annotation.AccessManagerRetrofit
 import com.ddd.sikdorok.core_api.annotation.NoAuthRetrofit
 import com.ddd.sikdorok.core_api.annotation.NormalRetrofit
+import com.ddd.sikdorok.core_api.service.AppInfoService
 import com.ddd.sikdorok.core_api.service.HomeService
 import com.ddd.sikdorok.core_api.service.ModifyService
 import com.ddd.sikdorok.core_api.service.SettingsService
@@ -43,6 +44,11 @@ internal object ServiceModule {
         @NoAuthRetrofit retrofit: Retrofit
     ) = retrofit.create<UserService.SignUp>()
 
+    @Provides
+    @Singleton
+    fun providesSDRRefreshToken(
+        @NoAuthRetrofit retrofit: Retrofit
+    ) = retrofit.create<UserService.RefreshToken>()
 
     @Provides
     @Singleton
@@ -103,4 +109,16 @@ internal object ServiceModule {
     fun providesSDRSettingsService(
         @NormalRetrofit retrofit: Retrofit
     ) = retrofit.create<SettingsService>()
+
+    @Provides
+    @Singleton
+    fun providesSDRUserSettingsService(
+        @NormalRetrofit retrofit: Retrofit
+    ) = retrofit.create<UserService.Settings>()
+
+    @Provides
+    @Singleton
+    fun providesSDRAppInfoServiceService(
+        @NoAuthRetrofit retrofit: Retrofit
+    ) = retrofit.create<AppInfoService>()
 }

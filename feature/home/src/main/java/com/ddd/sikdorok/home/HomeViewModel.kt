@@ -132,7 +132,7 @@ class HomeViewModel @Inject constructor(
                                 it.copy(
                                     nowTag = response.initTag ?: Tag.MORNING.code,
                                     feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
-                                    nowTagList = response.tags.distinct().sorted()
+                                    nowTagList = response.tags.distinct()
                                 )
                             }
                             checkTagCanChange(
@@ -177,7 +177,7 @@ class HomeViewModel @Inject constructor(
                             it.copy(
                                 nowTag = nextTag,
                                 feedList = response.dailyFeeds.ifEmpty { HomeDailyFeed.emptyListItem },
-                                nowTagList = response.tags.distinct().sorted()
+                                nowTagList = response.tags.distinct()
                             )
                         }
 

@@ -22,7 +22,10 @@ interface HomeContract :
         val nowTagList: List<String> = emptyList(),
         val tagCanGoPrevious: Boolean? = null,
         val tagCanGoNext: Boolean? = null,
-    )
+    ) {
+        val canPostOnToday : Boolean
+            get() = nowTime.isBeforeNow
+    }
 
     sealed interface Event {
         data class DeepLink(val link: String) : Event

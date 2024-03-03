@@ -90,6 +90,16 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                         startActivity(homeNavigator.start(this))
                         finish()
                     }
+                    is LoginContract.SideEffect.ShowSnackBar -> {
+                        hideLoading()
+                        showSnackBar(
+                            view = binding.root,
+                            message = effect.message,
+                            backgroundColor = R.color.input_error,
+                            textColor = R.color.white,
+                            duration = Snackbar.LENGTH_LONG
+                        )
+                    }
                 }
             }
             .launchIn(lifecycleScope)

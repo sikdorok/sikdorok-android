@@ -122,6 +122,7 @@
                     android:layout_marginEnd="18dp"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:onClick="@{() -> vm.onClickLogout()}"
+                    android:padding="8dp"
                     android:text="@string/settings_logout"
                     android:textAppearance="@style/Typography.Body1.Regular"
                     android:textColor="@color/red"
@@ -302,7 +303,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> vm.onClickToPlayStore()}">
 
                 <TextView
                     android:id="@+id/tv_version"
@@ -325,8 +327,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    bind:is_need_update="@{vm.state.needUpdate}"
-                    tools:text="@string/settings_app_versions" />
+                    bind:is_need_update="@{vm.state.needUpdate}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

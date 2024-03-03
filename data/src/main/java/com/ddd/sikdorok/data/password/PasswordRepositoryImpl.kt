@@ -4,6 +4,7 @@ import com.ddd.sikdorok.data.password.data.PasswordRemoteDataSource
 import com.ddd.sikdorok.domain.repository.PasswordRepository
 import com.ddd.sikdorok.shared.base.ApiResult
 import com.ddd.sikdorok.shared.base.SikdorokResponse
+import com.ddd.sikdorok.shared.login.CheckUserRes
 import com.ddd.sikdorok.shared.password.Reset
 import com.ddd.sikdorok.shared.password.Verify
 import dagger.Binds
@@ -17,15 +18,15 @@ internal class PasswordRepositoryImpl @Inject constructor(
     private val passwordRemoteDataSource: PasswordRemoteDataSource
 ) : PasswordRepository {
 
-    override suspend fun findPassword(email: String): ApiResult<Boolean> {
+    override suspend fun findPassword(email: String): ApiResult<CheckUserRes> {
         return passwordRemoteDataSource.findPassword(email)
     }
 
-    override suspend fun verifyPassword(body: Verify.Request): ApiResult<Boolean> {
+    override suspend fun verifyPassword(body: Verify.Request): ApiResult<CheckUserRes> {
         return passwordRemoteDataSource.verifyPassword(body)
     }
 
-    override suspend fun resetPassword(body: Reset.Request): ApiResult<Boolean> {
+    override suspend fun resetPassword(body: Reset.Request): ApiResult<CheckUserRes> {
         return passwordRemoteDataSource.resetPassword(body)
     }
 }
