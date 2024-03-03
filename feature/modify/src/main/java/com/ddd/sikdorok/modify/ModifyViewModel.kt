@@ -42,15 +42,17 @@ class ModifyViewModel @Inject constructor(
     override val state: StateFlow<ModifyContract.State>
         get() = _state.asStateFlow()
 
-    var savedImageToken: ArrayList<String> = arrayListOf()
+    private var savedImageToken: ArrayList<String> = arrayListOf()
 
-    val postId: String by lazy {
+    private val postId: String by lazy {
         savedStateHandle.get<String>(KEY_POST_ID) ?: ""
     }
 
-    val postDate: String by lazy {
+    private val postDate: String by lazy {
         savedStateHandle.get<String>(KEY_POST_DATE).orEmpty()
     }
+
+    var memo: String = ""
 
     override fun event(event: ModifyContract.Event) {
         viewModelScope.launch {
@@ -87,8 +89,6 @@ class ModifyViewModel @Inject constructor(
                         }
                     }
                 }
-
-
                 is ModifyContract.Event.OnUpdateImage -> {
                     _state.update {
                         it.copy(
@@ -106,9 +106,6 @@ class ModifyViewModel @Inject constructor(
                 }
                 is ModifyContract.Event.OnClickIcon -> {
                     _state.update { it.copy(icon = event.code) }
-                }
-                is ModifyContract.Event.EditText -> {
-                    _state.update { it.copy(memo = event.text) }
                 }
                 is ModifyContract.Event.OnClickDay -> {
                     _state.update { it.copy(tag = event.code) }
@@ -132,7 +129,7 @@ class ModifyViewModel @Inject constructor(
                         ).onSuccess {
                             _effect.emit(ModifyContract.SideEffect.OnFinishCreate)
                         }.onFailure {
-                            _effect.emit(ModifyContract.SideEffect.Fail("오류가 발생했습니다. 다시 시도해 주세요"))
+                            _effect.emit(ModifyContract.SideEffect.Fail(it.message))
                         }
                     } else {
                         modifyFeedUseCase.invoke(
@@ -144,16 +141,14 @@ class ModifyViewModel @Inject constructor(
                                 memo = event.memo,
                                 icon = Icon.findIcon(state.value.icon),
                                 isMain = event.isMainFeed,
-                                deletePhotoTokens = if (event.file?.isEmpty() == true || event.file == null) {
-                                    savedImageToken
-                                } else {
-                                    emptyList()
-                                }
+                                deletePhotoTokens = savedImageToken.takeIf {
+                                    (state.value.imageRefresh == true) || (event.file?.isNotEmpty() == true)
+                                } ?: emptyList()
                             )
                         ).onSuccess {
                             _effect.emit(ModifyContract.SideEffect.OnFinishModify)
                         }.onFailure {
-                            _effect.emit(ModifyContract.SideEffect.Fail("오류가 발생했습니다. 다시 시도해 주세요"))
+                            _effect.emit(ModifyContract.SideEffect.Fail(it.message))
                         }
                     }
                 }
@@ -166,7 +161,7 @@ class ModifyViewModel @Inject constructor(
                         .onSuccess {
                             _effect.emit(ModifyContract.SideEffect.OnFinishDelete)
                         }.onFailure {
-                            _effect.emit(ModifyContract.SideEffect.Fail("오류가 발생했습니다. 다시 시도해 주세요"))
+                            _effect.emit(ModifyContract.SideEffect.Fail(it.message))
                         }
                 }
                 is ModifyContract.Event.OnFinishTimePicker -> {
@@ -200,26 +195,31 @@ class ModifyViewModel @Inject constructor(
     fun getFeedInfo() {
         if (postId.isNotEmpty()) {
             viewModelScope.launch {
-                readFeedUseCase(postId).onSuccess {
-                    it?.data?.let { response ->
-                        savedImageToken.addAll(
-                            response.feedInfo.photosInfoList?.map { it.token.orEmpty() }
-                                ?: arrayListOf())
+                readFeedUseCase(postId)
+                    .onSuccess {
+                        it?.data?.let { response ->
+                            savedImageToken.addAll(
+                                response.feedInfo.photosInfoList?.map { it.token.orEmpty() }
+                                    ?: arrayListOf())
 
-                        _state.update {
-                            it.copy(
-                                imageUrl = response.feedInfo.photosInfoList?.firstOrNull()?.uploadFullPath,
-                                icon = response.feedInfo.icon,
-                                tag = response.feedInfo.tag,
-                                memo = response.feedInfo.memo ?: "",
-                                isMainPost = response.feedInfo.isMain,
-                                time = response.feedInfo.time,
-                                id = response.feedInfo.feedId,
-                                imageRefresh = false
-                            )
+                            memo = response.feedInfo.memo.orEmpty()
+
+                            _state.update {
+                                it.copy(
+                                    imageUrl = response.feedInfo.photosInfoList?.firstOrNull()?.uploadFullPath,
+                                    icon = response.feedInfo.icon,
+                                    tag = response.feedInfo.tag,
+                                    isMainPost = response.feedInfo.isMain,
+                                    time = response.feedInfo.time,
+                                    id = response.feedInfo.feedId,
+                                    imageRefresh = false
+                                )
+                            }
+                            _effect.emit(ModifyContract.SideEffect.SuccessLoadData)
                         }
+                    }.onFailure {
+                        _effect.emit(ModifyContract.SideEffect.ShowSnackBar(it.message))
                     }
-                }
             }
         } else {
             viewModelScope.launch {

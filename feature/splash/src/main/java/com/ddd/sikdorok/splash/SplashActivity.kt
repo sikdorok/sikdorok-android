@@ -1,5 +1,6 @@
 package com.ddd.sikdorok.splash
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.addCallback
 import androidx.activity.viewModels
@@ -7,6 +8,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ddd.sikdorok.core_ui.base.BaseActivity
+import com.ddd.sikdorok.core_ui.util.makeAlertDialog
+import com.ddd.sikdorok.extensions.getPackageInfoCompat
 import com.ddd.sikdorok.home.HomeNavigator
 import com.ddd.sikdorok.navigator.login.LoginNavigator
 import com.ddd.sikdorok.splash.databinding.ActivitySplashBinding
@@ -52,8 +55,10 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
         }
 
         lifecycleScope.launch {
-            delay(3000) // 우선 임시로 작업, 추후 변경
-            viewModel.event(SplashContract.Event.LoginCheck)
+            delay(2000) // 우선 임시로 작업, 추후 변경
+            viewModel.getAppVersionInfo(
+                packageManager.getPackageInfoCompat(packageName).versionName
+            )
         }
     }
 
@@ -70,6 +75,21 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
                         startActivity(signInNavigator.start(this))
                         finish()
                     }
+                    SplashContract.Effect.NeedUpdate -> {
+                        makeAlertDialog(
+                            title = "정상적인 앱 이용을 위한 업데이트가 필요합니다",
+                            confirmText = "확인",
+                            cancelText = "취소",
+                            onConfirm = {
+                                val intent = Intent(Intent.ACTION_VIEW)
+                                intent.setData(Uri.parse("market://details?id=$packageName"))
+                                startActivity(intent)
+                            },
+                            onCancel = {
+                                finishAffinity()
+                            }
+                        )
+                    }
                 }
             }
             .launchIn(lifecycleScope)
@@ -82,7 +102,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>(ActivitySplashBinding
             .addOnSuccessListener(this) { pendingDynamicLinkData: PendingDynamicLinkData? ->
                 try {
                     val deepLink: String
-                    if (pendingDynamicLinkData != null) {
+                    if (pendingDynamicLinkData != null && !viewModel.isNeedForceUpdate) {
                         deepLink = pendingDynamicLinkData.link.toString()
                         viewModel.event(SplashContract.Event.DeepLink(deepLink))
                     }

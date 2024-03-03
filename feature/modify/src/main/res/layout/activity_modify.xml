@@ -60,6 +60,7 @@
                     android:id="@+id/tv_save"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="center"
                     android:text="@string/modify_save"
                     android:textAppearance="@style/Typography.H4.Regular"
@@ -71,6 +72,7 @@
                 android:layout_width="48dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="10dp"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:onClick="@{()-> vm.onClickMore()}"
                 android:padding="13dp"
                 android:src="@drawable/ic_more"
@@ -219,8 +221,8 @@
                 android:layout_width="320dp"
                 android:layout_height="320dp"
                 android:layout_marginTop="30dp"
-                app:cardElevation="0dp"
                 app:cardCornerRadius="8dp"
+                app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radio_tag"
@@ -248,7 +250,9 @@
                 app:layout_constraintBottom_toBottomOf="@+id/container_image"
                 app:layout_constraintEnd_toEndOf="@+id/container_image"
                 app:layout_constraintStart_toStartOf="@+id/container_image"
-                app:layout_constraintTop_toTopOf="@+id/container_image" />
+                app:layout_constraintTop_toTopOf="@+id/container_image"
+                tools:ignore="UseAppTint"
+                tools:tint="#66FFFFFF" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_camera"
@@ -384,9 +388,9 @@
 
             <ImageView
                 android:id="@+id/iv_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:padding="5dp"
                 android:src="@drawable/ic_info"
                 app:layout_constraintBottom_toBottomOf="@+id/check_main_post"
                 app:layout_constraintEnd_toEndOf="parent"

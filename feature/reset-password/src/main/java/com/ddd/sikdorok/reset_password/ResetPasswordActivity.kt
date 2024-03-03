@@ -73,7 +73,7 @@ class ResetPasswordActivity :
                     }
                     is ResetPasswordContract.SideEffect.NaviToSuccess -> {
                         hideLoading()
-                        signInNavigator.start(context = this, isFromReset = true)
+                        startActivity(signInNavigator.start(context = this, isFromReset = true))
                     }
                     ResetPasswordContract.SideEffect.InValidatePassword -> {
                         hideLoading()

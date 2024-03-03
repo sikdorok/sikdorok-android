@@ -46,6 +46,7 @@ dependencies {
 
     implementation libs.glide
     implementation libs.jodatime
+    implementation libs.jodaconvert
     implementation libs.fragment.ktx
     implementation libs.viewmodel.ktx
     implementation libs.hilt.android

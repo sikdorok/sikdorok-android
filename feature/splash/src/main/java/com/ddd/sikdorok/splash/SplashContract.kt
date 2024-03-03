@@ -12,11 +12,11 @@ interface SplashContract :
     sealed interface Event {
         object LoginCheck : Event
         data class DeepLink(val deeplink: String) : Event
-
     }
 
     sealed interface Effect {
         object NaviToSignIn : Effect
+        object NeedUpdate : Effect
         data class GoToMain(val deeplink: String? = null) : Effect
     }
 }

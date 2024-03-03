@@ -53,7 +53,7 @@ class FindPasswordViewModel @Inject constructor(
                         .onSuccess { result ->
                             _effect.emit(FindPasswordContract.SideEffect.NaviToSuccess(event.email))
                         }.onFailure { error ->
-                            _effect.emit(FindPasswordContract.SideEffect.ShowSnackBar("이메일 형식이 올바르지 않습니다. 다시 시도해 주세요"))
+                            _effect.emit(FindPasswordContract.SideEffect.ShowSnackBar(error.message))
                         }
                 }
             }

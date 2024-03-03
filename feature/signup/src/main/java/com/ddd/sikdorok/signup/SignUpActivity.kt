@@ -6,10 +6,10 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.ddd.sikdorok.extensions.textChanges
-import com.ddd.sikdorok.signup.databinding.ActivitySignUpBinding
 import com.ddd.sikdorok.core_ui.base.BackFrameActivity
 import com.ddd.sikdorok.extensions.showSnackBar
+import com.ddd.sikdorok.extensions.textChanges
+import com.ddd.sikdorok.signup.databinding.ActivitySignUpBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.debounce
@@ -21,36 +21,40 @@ import com.ddd.sikdorok.core_design.R as coreDesignR
 @AndroidEntryPoint
 class SignUpActivity : BackFrameActivity<ActivitySignUpBinding>(ActivitySignUpBinding::inflate) {
 
-    private val email by lazy { intent.extras?.getString(PAYLOAD) }
+    private val email: String? by lazy {
+        intent.extras?.getString(PAYLOAD)
+    }
 
-    private val oauthId : Long? by lazy {
+    private val oauthId: Long? by lazy {
         intent.extras?.getLong(KEY_OAUTH_ID)
     }
-    private val oauthType : String? by lazy {
+    private val oauthType: String? by lazy {
         intent.extras?.getString(KEY_OAUTH_TYPE)
     }
 
     override val viewModel: SignUpViewModel by viewModels()
+
     override val backFrame: FrameLayout by lazy { binding.frameClose }
 
-
     override fun initLayout() {
-        if(email.orEmpty().isNotEmpty()) {
-            binding.editEmail.isEnabled = oauthId != null
+        if (!email.isNullOrEmpty()) {
+            binding.editEmail.isEnabled = false
             binding.editEmail.setText(email)
         }
 
         binding.tvSubmit.setOnClickListener {
             showLoading()
 
-            viewModel.event(SignUpContract.Event.SignUp(
-                oauthType = oauthType,
-                oauthId = oauthId,
-                nickname = binding.editName.text.toString(),
-                email = binding.editEmail.text.toString(),
-                password = binding.editPassword.text.toString(),
-                passwordCheck = binding.editPasswordCheck.text.toString()
-            ))
+            viewModel.event(
+                SignUpContract.Event.SignUp(
+                    oauthType = oauthType,
+                    oauthId = oauthId,
+                    nickname = binding.editName.text.toString(),
+                    email = binding.editEmail.text.toString(),
+                    password = binding.editPassword.text.toString(),
+                    passwordCheck = binding.editPasswordCheck.text.toString()
+                )
+            )
         }
     }
 
@@ -90,12 +94,15 @@ class SignUpActivity : BackFrameActivity<ActivitySignUpBinding>(ActivitySignUpBi
         viewModel.effect
             .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
             .onEach { sideEffect ->
-                when(sideEffect) {
+                when (sideEffect) {
                     is SignUpContract.SideEffect.ValidateEmail -> {
                         binding.inputEmail.error = null
                     }
-                    is SignUpContract.SideEffect.InValidateEmail -> {
+                    SignUpContract.SideEffect.InValidateEmailFormat -> {
                         binding.inputEmail.error = getString(R.string.email_error)
+                    }
+                    SignUpContract.SideEffect.AlreadyRegisteredEmail -> {
+                        binding.inputEmail.error = getString(R.string.email_error_registered)
                     }
                     is SignUpContract.SideEffect.ValidateName -> {
                         binding.inputName.error = null

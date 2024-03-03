@@ -1,9 +1,7 @@
 package com.ddd.sikdorok.core_api.service
 
 import com.ddd.sikdorok.shared.base.ApiResult
-import com.ddd.sikdorok.shared.home.HomeFeed
 import com.ddd.sikdorok.shared.home.HomeFeedRes
-import com.ddd.sikdorok.shared.home.ListFeed
 import com.ddd.sikdorok.shared.home.ListFeedRes
 import com.ddd.sikdorok.shared.home.WeekFeedRes
 import retrofit2.http.GET

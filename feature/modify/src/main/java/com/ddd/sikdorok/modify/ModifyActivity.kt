@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
@@ -22,14 +21,12 @@ import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.ddd.sikdorok.core_ui.base.BackFrameActivity
 import com.ddd.sikdorok.core_ui.util.makeAlertDialog
 import com.ddd.sikdorok.extensions.compressBitmap
 import com.ddd.sikdorok.extensions.convertImageBitmapToByteArray
+import com.ddd.sikdorok.extensions.repeatCallDefaultOnStarted
 import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.extensions.uriToBitmap
 import com.ddd.sikdorok.modify.databinding.ActivityModifyBinding
@@ -46,29 +43,32 @@ import com.skydoves.balloon.Balloon
 import com.skydoves.balloon.BalloonAnimation
 import com.skydoves.balloon.BalloonSizeSpec
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.delay
 import org.joda.time.DateTime
-import org.joda.time.LocalTime
 import org.joda.time.format.DateTimeFormat
 
 // TODO : 데바로 변경 언제해...
 @AndroidEntryPoint
 class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBinding::inflate) {
 
-    private val cameraLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            val bitmap = result.data?.extras?.getParcelable<Bitmap>("data")
-                ?: return@registerForActivityResult
-            val data =
-                Bitmap.createScaledBitmap(bitmap, binding.ivMain.width, binding.ivMain.height, true)
-                    .copy(Bitmap.Config.ARGB_8888, true)
+    private val takePictureLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { result ->
+            result?.let {
+                val data =
+                    Bitmap.createScaledBitmap(
+                        result,
+                        binding.ivMain.width,
+                        binding.ivMain.height,
+                        true
+                    )
+                        .copy(Bitmap.Config.ARGB_8888, true)
 
-            viewModel.event(
-                ModifyContract.Event.OnUpdateImage(
-                    compressBitmap(Bitmap.CompressFormat.JPEG, data, 100) ?: Uri.EMPTY
+                viewModel.event(
+                    ModifyContract.Event.OnUpdateImage(
+                        compressBitmap(Bitmap.CompressFormat.JPEG, data, 100) ?: Uri.EMPTY
+                    )
                 )
-            )
+            }
         }
 
     private val pickMultipleMedia = registerForActivityResult(
@@ -129,14 +129,6 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             }
         }
 
-        // TODO : 이거 어떻게 해보기
-//        binding.editInput.textChanges()
-//            .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-//            .onEach { text ->
-//                viewModel.event(ModifyContract.Event.EditText(text.toString()))
-//            }
-//            .launchIn(lifecycleScope)
-
         showLoading()
         viewModel.getFeedInfo()
     }
@@ -162,9 +154,8 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
     }
 
     override fun setupCollect() {
-        viewModel.state
-            .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-            .onEach { state ->
+        repeatCallDefaultOnStarted {
+            viewModel.state.collect { state ->
                 hideLoading()
 
                 try {
@@ -178,23 +169,20 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
 
                 when {
                     state.imageRefresh == true -> {
-                        Glide.with(this)
+                        Glide.with(this@ModifyActivity)
                             .clear(binding.ivMain)
                     }
                     !state.imageUrl.isNullOrEmpty() -> {
-                        Glide.with(this)
+                        Glide.with(this@ModifyActivity)
                             .load(state.imageUrl)
                             .into(binding.ivMain)
                     }
                     (state.image != Uri.EMPTY) && state.image != null -> {
-                        Glide.with(this)
+                        Glide.with(this@ModifyActivity)
                             .load(state.image)
-                            .centerCrop()
                             .into(binding.ivMain)
                     }
                 }
-
-                binding.editInput.setText(state.memo)
 
                 // 기본 이미지 규칙 -
                 binding.ivDefaultAdd.isVisible =
@@ -204,11 +192,10 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                 getViewIdByIcon(state.tag)?.let { binding.radioTag.check(it) }
                 getViewIdByTag(state.icon)?.let { binding.radioMealType.check(it) }
             }
-            .launchIn(lifecycleScope)
+        }
 
-        viewModel.effect
-            .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
-            .onEach { sideEffect ->
+        repeatCallDefaultOnStarted {
+            viewModel.effect.collect { sideEffect ->
                 when (sideEffect) {
                     ModifyContract.SideEffect.OnFinishCreate -> {
                         hideLoading()
@@ -229,7 +216,33 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                         finish()
                     }
                     ModifyContract.SideEffect.ShowPostDialog -> {
-                        PostDialog.show(supportFragmentManager, "")
+                        PostDialog.newInstance()
+                            .apply {
+                                onConfirmCamera = {
+                                    viewModel.event(
+                                        ModifyContract.Event.OnClickPostItem(
+                                            ModifyContract.Event.OnClickPostItem.Type.CAMERA,
+                                            checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                                        )
+                                    )
+                                }
+                                onConfirmPhoto = {
+                                    viewModel.event(
+                                        ModifyContract.Event.OnClickPostItem(
+                                            ModifyContract.Event.OnClickPostItem.Type.ALBUM,
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                checkSelfPermission(Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED
+                                            } else {
+                                                checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                                            }
+                                        )
+                                    )
+                                }
+                                onConfirmDefault = {
+                                    viewModel.event(ModifyContract.Event.OnClickImageForDefault)
+                                }
+                            }
+                            .show(supportFragmentManager, "")
                     }
                     ModifyContract.SideEffect.RequestCamera -> {
                         requestPermissions(
@@ -252,11 +265,12 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                         )
                     }
                     ModifyContract.SideEffect.NaviToCamera -> {
-                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        cameraLauncher.launch(intent)
+                        takePictureLauncher.launch(null)
                     }
                     ModifyContract.SideEffect.NaviToAlbum -> {
-                        pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                        pickMultipleMedia.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
                     }
                     is ModifyContract.SideEffect.ShowDatePicker -> {
                         val date = DateTime.parse(
@@ -293,10 +307,24 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                             duration = Snackbar.LENGTH_LONG
                         )
                     }
-                    else -> Unit
+                    is ModifyContract.SideEffect.ShowSnackBar -> {
+                        hideLoading()
+
+                        showSnackBar(
+                            view = binding.root,
+                            message = sideEffect.text,
+                            backgroundColor = com.ddd.sikdorok.core_design.R.color.text_color,
+                            textColor = com.ddd.sikdorok.core_design.R.color.white,
+                            duration = Snackbar.LENGTH_LONG
+                        )
+                    }
+                    ModifyContract.SideEffect.SuccessLoadData -> {
+                        hideLoading()
+                        binding.editInput.setText(viewModel.memo)
+                    }
                 }
             }
-            .launchIn(lifecycleScope)
+        }
 
         pickerDialogResult()
     }
@@ -308,7 +336,8 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         ) { _, bundle ->
             val data = bundle.getSerializable(Keys.MODIFY_DATE_RESULT) as PickerData.Date
 
-            val time = DateTime.parse("${data.year}-${data.month}-${data.day}").toString("yyyy-MM-dd HH:mm:ss")
+            val time = DateTime.parse("${data.year}-${data.month}-${data.day}")
+                .toString("yyyy-MM-dd HH:mm:ss")
 
             viewModel.event(ModifyContract.Event.OnFinishDatePicker(time))
         }
@@ -322,9 +351,10 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             val timeData = viewModel.state.value.time
             val time = DateTime.parse(timeData, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
 
-            val newTime = DateTime.parse("${time.year}-${time.monthOfYear}-${time.dayOfMonth} ${data.hours}:${data.minute}:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss"))
-
-//            val time2 = LocalTime.parse("${data.hours}:${data.minute}").toString(TIME_PATTERNS)
+            val newTime = DateTime.parse(
+                "${time.year}-${time.monthOfYear}-${time.dayOfMonth} ${data.hours}:${data.minute}:00",
+                DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
+            )
 
             viewModel.event(ModifyContract.Event.OnFinishTimePicker(newTime.toString("yyyy-MM-dd HH:mm:ss")))
         }
@@ -434,22 +464,16 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                     }
                 )
             }
-            R.id.menu_item_share -> {
-                viewModel.onClickShare()
-            }
+//            R.id.menu_item_share -> {
+//                viewModel.onClickShare()
+//            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun savePost() {
         val bitmap = uriToBitmap(this, viewModel.state.value.image)
-
-        val bitmap2: Bitmap = BitmapFactory.decodeResource(
-            resources,
-            com.ddd.sikdorok.core_design.R.drawable.img_modify_default
-        )
         val byteArray = convertImageBitmapToByteArray(bitmap)
-        val defaultImageBitmap = convertImageBitmapToByteArray(bitmap2)
 
         viewModel.event(
             ModifyContract.Event.OnSavedFeed(

@@ -38,7 +38,8 @@ class SignUpContract {
     }
 
     sealed class SideEffect {
-        object InValidateEmail : SideEffect()
+        object InValidateEmailFormat : SideEffect()
+        object AlreadyRegisteredEmail : SideEffect()
         object ValidateEmail : SideEffect()
 
         object InValidateName : SideEffect()

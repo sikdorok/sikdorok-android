@@ -59,14 +59,14 @@ class SignUpViewModel @Inject constructor(
                     if (event.email.matches(emailRegex)) {
                         val isAlreadyUser = onPostEmailCheckUseCase(event.email).getOrNull()
 
-                        if (isAlreadyUser == false || isAlreadyUser == null) {
+                        if (isAlreadyUser?.data == false || isAlreadyUser == null) {
                             _effect.emit(SignUpContract.SideEffect.ValidateEmail)
                         } else {
-                            _effect.emit(SignUpContract.SideEffect.InValidateEmail)
+                            _effect.emit(SignUpContract.SideEffect.AlreadyRegisteredEmail)
                         }
                         _state.update { _state.value.copy(email = event.email) }
                     } else {
-                        _effect.emit(SignUpContract.SideEffect.InValidateEmail)
+                        _effect.emit(SignUpContract.SideEffect.InValidateEmailFormat)
                         _state.update { _state.value.copy(email = "") }
                     }
                 }
@@ -115,7 +115,7 @@ class SignUpViewModel @Inject constructor(
                                 password = event.password,
                                 passwordCheck = event.passwordCheck
                             )
-                        ).onSuccess {result ->
+                        ).onSuccess { result ->
                             val accessToken = result?.data?.login?.accessToken
                             val refreshToken = result?.data?.login?.refreshToken
 
@@ -124,19 +124,11 @@ class SignUpViewModel @Inject constructor(
                                     TokenType.REFRESH_TOKEN,
                                     refreshToken.orEmpty()
                                 )
-                                    .mapCatching {
-                                        onPostSaveTokenUseCase.invoke(
-                                            TokenType.ACCESS_TOKEN,
-                                            accessToken.orEmpty()
-                                        )
-                                    }.fold(
-                                        onSuccess = {
-                                            _effect.emit(SignUpContract.SideEffect.NaviToHome)
-                                        },
-                                        onFailure = {
-                                            it.printStackTrace()
-                                        }
-                                    )
+                                onPostSaveTokenUseCase.invoke(
+                                    TokenType.ACCESS_TOKEN,
+                                    accessToken.orEmpty()
+                                )
+                                _effect.emit(SignUpContract.SideEffect.NaviToHome)
                             } else {
                                 _effect.emit(SignUpContract.SideEffect.SnowSnackBar(result?.message.orEmpty()))
                             }

@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 9,
-      "versionName": "0.0.9",
-      "outputFile": "sikdorok-debug-0.0.9.apk"
+      "versionCode": 11,
+      "versionName": "0.0.11",
+      "outputFile": "sikdorok-debug-0.0.11.apk"
     }
   ],
   "elementType": "File"

@@ -20,6 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class com.kakao.sdk.**.model.* { <fields>; }
+-keep class com.kakao.sdk.** { *; }
 -keep class * extends com.google.gson.TypeAdapter
 
 # https://github.com/square/okhttp/pull/6792

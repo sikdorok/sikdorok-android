@@ -1,5 +1,7 @@
 package com.ddd.sikdorok.shared.base
 
+import com.google.gson.annotations.SerializedName
+
 @Suppress("SpellCheckingInspection")
 data class SikdorokResponse<out T>(
     val code: Int,
@@ -7,11 +9,28 @@ data class SikdorokResponse<out T>(
     val data: T?
 )
 
+data class SikdorokError(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    override val message: String,
+    @SerializedName("field")
+    val field: String
+) : Throwable()
+
+
 sealed class ApiResult<out T> {
     data class Success<T>(val data: T) : ApiResult<T>()
 
     sealed class Failure() : ApiResult<Nothing>() {
-        data class HttpError(val code: Int, val message: String, val body: String) : Failure()
+        data class HttpError(
+            @SerializedName("code")
+            val code: Int,
+            @SerializedName("message")
+            val message: String,
+            @SerializedName("field")
+            val body: String
+        ) : Failure()
 
         data class NetworkError(val throwable: Throwable) : Failure()
 
@@ -39,9 +58,9 @@ sealed class ApiResult<out T> {
             else -> null
         }
 
-    fun failureOrThrow(): Failure {
+    fun failureOrThrow(): Failure.HttpError {
         throwOnSuccess()
-        return this as Failure
+        return this as Failure.HttpError
     }
 
     fun exceptionOrNull(): Throwable? =
@@ -63,7 +82,7 @@ internal fun ApiResult<*>.throwOnSuccess() {
     if (this is ApiResult.Success) throw IllegalStateException("Cannot be called under Success conditions.")
 }
 
-inline fun <T> ApiResult<T>.onFailure(action: (error: ApiResult.Failure) -> Unit): ApiResult<T> {
+inline fun <T> ApiResult<T>.onFailure(action: (error: ApiResult.Failure.HttpError) -> Unit): ApiResult<T> {
     if (isFailure()) action(failureOrThrow())
     return this
 }
@@ -72,3 +91,12 @@ inline fun <T> ApiResult<T>.onSuccess(action: (value: T?) -> Unit): ApiResult<T>
     if (isSuccess()) action(getOrNull())
     return this
 }
+
+data class BaseResponse(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("data")
+    val data: Int? = null
+)

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt.plugin)
     alias(libs.plugins.gms.plugin)
+    alias(libs.plugins.firebase.crashlytics.plugin) apply false
 }
 
 android {
@@ -38,6 +39,10 @@ android {
             resValue "string", "kakao_native_key", "kakao37987d37deae711f16a7ded700cd6a81"
             resValue "string", "native_key", "37987d37deae711f16a7ded700cd6a81"
         }
+    }
+
+    lintOptions {
+        disable "Instantiatable"
     }
 
     applicationVariants.configureEach { variant ->
@@ -88,6 +93,7 @@ dependencies {
     implementation(project(":navigator:login"))
     implementation(project(":navigator:settings"))
     implementation(project(":navigator:modify"))
+    implementation(project(":navigator:profile"))
 
     implementation(project(":core-design"))
     implementation(project(":core-api"))

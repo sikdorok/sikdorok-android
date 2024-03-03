@@ -3,6 +3,7 @@ package com.ddd.sikdorok.data.withdraw
 import com.ddd.sikdorok.data.withdraw.data.UserWithdrawRemoteDataSource
 import com.ddd.sikdorok.domain.repository.UserWithDrawRepository
 import com.ddd.sikdorok.shared.base.ApiResult
+import com.ddd.sikdorok.shared.base.BaseResponse
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ internal class UserWithDrawRepositoryImpl @Inject constructor(
     private val userWithdrawRemoteDataSource: UserWithdrawRemoteDataSource
 ) : UserWithDrawRepository {
 
-    override suspend fun withdrawUser(): ApiResult<Unit> {
+    override suspend fun withdrawUser(): ApiResult<BaseResponse> {
         return userWithdrawRemoteDataSource.withdrawUser()
     }
 

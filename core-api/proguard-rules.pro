@@ -42,3 +42,5 @@
 -keepclassmembers class com.ddd.sikdorok.shared.* {
   <init>();
 }
+
+-keep class com.ddd.sikdorok.shared.** { *; }

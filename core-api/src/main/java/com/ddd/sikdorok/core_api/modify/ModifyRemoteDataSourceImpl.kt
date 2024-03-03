@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import com.ddd.sikdorok.core_api.service.ModifyService
 import com.ddd.sikdorok.data.modify.data.ModifyRemoteDataSource
 import com.ddd.sikdorok.shared.base.ApiResult
+import com.ddd.sikdorok.shared.base.BaseResponse
 import com.ddd.sikdorok.shared.modify.CreateFeedRes
 import com.ddd.sikdorok.shared.modify.FeedRequest
 import com.ddd.sikdorok.shared.modify.FeedRes
@@ -45,7 +46,7 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun deleteFeed(feedId: String): ApiResult<Unit> {
+    override suspend fun deleteFeed(feedId: String): ApiResult<BaseResponse> {
         return deleteService.deleteFeed(feedId)
     }
 

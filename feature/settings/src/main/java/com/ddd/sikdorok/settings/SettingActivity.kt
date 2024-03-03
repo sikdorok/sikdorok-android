@@ -2,7 +2,9 @@ package com.ddd.sikdorok.settings
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.FrameLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
@@ -12,6 +14,7 @@ import com.ddd.sikdorok.core_ui.util.makeAlertDialog
 import com.ddd.sikdorok.extensions.getPackageInfoCompat
 import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.navigator.delete_account.DeleteAccountNavigator
+import com.ddd.sikdorok.navigator.profile.ProfileNavigator
 import com.ddd.sikdorok.settings.databinding.ActivitySettingBinding
 import com.ddd.sikdorok.splash.SplashNavigator
 import com.google.android.material.snackbar.Snackbar
@@ -28,6 +31,23 @@ class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettin
     override val backFrame: FrameLayout by lazy {
         binding.frameBack
     }
+
+    private val profileLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == 100) { // 100 - OK
+                showSnackBar(
+                    view = binding.root,
+                    message = "프로필 정보가 변경되었습니다",
+                    backgroundColor = com.ddd.sikdorok.core_design.R.color.text_color,
+                    textColor = com.ddd.sikdorok.core_design.R.color.white,
+                    duration = Snackbar.LENGTH_SHORT
+                )
+                getUserDeviceInfo()
+            }
+        }
+
+    @Inject
+    lateinit var profileNavigator: ProfileNavigator
 
     @Inject
     lateinit var splashNavigator: SplashNavigator
@@ -56,7 +76,7 @@ class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettin
             packageManager.getPackageInfoCompat(packageName).versionName
         )
 
-        viewModel.getUserDeviceInfo(packageManager.getPackageInfoCompat(packageName).versionName)
+        getUserDeviceInfo()
     }
 
     override fun setupCollect() {
@@ -64,7 +84,9 @@ class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettin
             .flowWithLifecycle(lifecycle, Lifecycle.State.CREATED)
             .onEach { sideEffect ->
                 when (sideEffect) {
-                    SettingsContract.SideEffect.NaviToProfileManage -> Unit
+                    SettingsContract.SideEffect.NaviToProfileManage -> {
+                        goToProfileManage()
+                    }
                     SettingsContract.SideEffect.NaviToPolicy -> {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
@@ -72,6 +94,15 @@ class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettin
                         )
 
                         startActivity(intent)
+                    }
+                    SettingsContract.SideEffect.PlayStore -> {
+                        runCatching {
+                            val intent = Intent(Intent.ACTION_VIEW)
+                            intent.setData(Uri.parse("market://details?id=$packageName"))
+                            startActivity(intent)
+                        }.onFailure {
+                            Log.d("이동 오류", "플레이스토어 이동 오류")
+                        }
                     }
                     SettingsContract.SideEffect.NaviToDeleteAccount -> {
                         startActivity(deleteAccountNavigator.start(this))
@@ -101,5 +132,13 @@ class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettin
                 }
             }
             .launchIn(lifecycleScope)
+    }
+
+    private fun getUserDeviceInfo() {
+        viewModel.getUserDeviceInfo(packageManager.getPackageInfoCompat(packageName).versionName)
+    }
+
+    private fun goToProfileManage() {
+        profileLauncher.launch(profileNavigator.start(this))
     }
 }

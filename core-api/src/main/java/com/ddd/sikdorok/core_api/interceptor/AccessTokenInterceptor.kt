@@ -38,7 +38,7 @@ internal class AccessTokenInterceptor @Inject constructor(
 
                 response.close()
 
-                sikdorokPreference.savePref(Keys.ACCESS_TOKEN, newAccessToken)
+                sikdorokPreference.savePref(Keys.ACCESS_TOKEN, newAccessToken.orEmpty())
                 builder.removeHeader("Authorization")
                 builder.addHeader("Authorization", "Bearer $newAccessToken")
 

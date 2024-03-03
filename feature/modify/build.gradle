@@ -52,6 +52,7 @@ dependencies {
     implementation libs.glide
 
     implementation libs.jodatime
+    implementation libs.jodaconvert
 
     testImplementation libs.junit
     androidTestImplementation libs.junit.ext
