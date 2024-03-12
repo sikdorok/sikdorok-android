@@ -57,13 +57,18 @@ class SignUpViewModel @Inject constructor(
             when (event) {
                 is SignUpContract.Event.EmailCheck -> {
                     if (event.email.matches(emailRegex)) {
-                        val isAlreadyUser = onPostEmailCheckUseCase(event.email).getOrNull()
 
-                        if (isAlreadyUser?.data == false || isAlreadyUser == null) {
-                            _effect.emit(SignUpContract.SideEffect.ValidateEmail)
-                        } else {
-                            _effect.emit(SignUpContract.SideEffect.AlreadyRegisteredEmail)
-                        }
+                        onPostEmailCheckUseCase(event.email)
+                            .onSuccess {
+                                if (it?.data == false || it == null) {
+                                    _effect.emit(SignUpContract.SideEffect.ValidateEmail)
+                                } else {
+                                    _effect.emit(SignUpContract.SideEffect.AlreadyRegisteredEmail)
+                                }
+                            }
+                            .onFailure {
+
+                            }
                         _state.update { _state.value.copy(email = event.email) }
                     } else {
                         _effect.emit(SignUpContract.SideEffect.InValidateEmailFormat)

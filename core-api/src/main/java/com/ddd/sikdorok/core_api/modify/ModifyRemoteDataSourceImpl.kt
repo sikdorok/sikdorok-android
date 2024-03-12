@@ -30,7 +30,7 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun createFeed(file: ByteArray?, body: FeedRequest): ApiResult<CreateFeedRes> {
         return createService.createFeed(
-            file = createMultipartBody(convertByteArrayToPngFile(file)).takeIf { file != null && file.isNotEmpty() },
+            file = createMultipartBody(convertByteArrayToImageFile(file)).takeIf { file != null && file.isNotEmpty() },
             feedBody = body
         )
     }
@@ -41,7 +41,7 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun updateFeed(file: ByteArray?, body: FeedRequest): ApiResult<CreateFeedRes> {
         return updateService.updateFeed(
-            file = createMultipartBody(convertByteArrayToPngFile(file)).takeIf { file != null && file.isNotEmpty() },
+            file = createMultipartBody(convertByteArrayToImageFile(file)).takeIf { file != null && file.isNotEmpty() },
             feedBody = body
         )
     }
@@ -50,18 +50,18 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
         return deleteService.deleteFeed(feedId)
     }
 
-    private fun convertByteArrayToPngFile(byteArray: ByteArray?): File? {
+    private fun convertByteArrayToImageFile(byteArray: ByteArray?): File? {
         if (byteArray == null || byteArray.isEmpty()) {
             return null
         } else {
-            val imageFile = File.createTempFile("IMG_", ".png")
+            val imageFile = File.createTempFile("IMG_", ".jpeg")
 
             try {
                 FileOutputStream(imageFile).use { stream ->
                     val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
                     bitmap.compress(
-                        Bitmap.CompressFormat.PNG,
-                        100,
+                        Bitmap.CompressFormat.JPEG,
+                        80,
                         stream
                     )
                 }
@@ -73,13 +73,11 @@ internal class ModifyRemoteDataSourceImpl @Inject constructor(
     }
 
     private fun createMultipartBody(file: File?): MultipartBody.Part? {
-
         val MEDIA_TYPE_IMAGE = "image/png"
-
         return file?.asRequestBody(MEDIA_TYPE_IMAGE.toMediaType())?.let {
             MultipartBody.Part.createFormData(
                 "file",
-                "profile.png",
+                "profile.jpeg",
                 it
             )
         }

@@ -21,6 +21,7 @@ import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.ddd.sikdorok.core_ui.base.BackFrameActivity
 import com.ddd.sikdorok.core_ui.util.makeAlertDialog
@@ -44,6 +45,7 @@ import com.skydoves.balloon.BalloonAnimation
 import com.skydoves.balloon.BalloonSizeSpec
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 
@@ -108,7 +110,10 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
         }
         binding.tvSave.setOnClickListener {
             showLoading()
-            savePost()
+            lifecycleScope.launch {
+                delay(100)
+                savePost()
+            }
         }
         binding.ivInfo.setOnClickListener {
             showTooltip()
