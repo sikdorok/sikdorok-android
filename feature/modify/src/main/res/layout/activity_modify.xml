@@ -46,39 +46,34 @@
                     android:src="@drawable/ic_arrow_left" />
             </FrameLayout>
 
-
-            <FrameLayout
-                android:layout_width="48dp"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_save"
+                android:layout_width="55dp"
                 android:layout_height="0dp"
-                android:layout_marginEnd="10dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="@string/modify_save"
+                android:textAppearance="@style/Typography.H4.Regular"
+                android:textColor="@color/gray80"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
-                app:layout_constraintEnd_toEndOf="@+id/view"
+                app:layout_constraintEnd_toStartOf="@id/tv_delete"
                 app:layout_constraintTop_toTopOf="@+id/view"
-                bind:visibility="@{vm.state.id.empty}">
+                app:layout_goneMarginEnd="10dp" />
 
-                <TextView
-                    android:id="@+id/tv_save"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:foreground="?android:attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:text="@string/modify_save"
-                    android:textAppearance="@style/Typography.H4.Regular"
-                    android:textColor="@color/gray80" />
-            </FrameLayout>
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/more"
-                android:layout_width="48dp"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_delete"
+                android:layout_width="55dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="10dp"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:onClick="@{()-> vm.onClickMore()}"
-                android:padding="13dp"
-                android:src="@drawable/ic_more"
+                android:gravity="center"
+                android:text="삭제"
+                android:textAppearance="@style/Typography.H4.Regular"
+                android:textColor="@color/red"
                 app:layout_constraintBottom_toBottomOf="@+id/view"
                 app:layout_constraintEnd_toEndOf="@+id/view"
                 app:layout_constraintTop_toTopOf="@+id/view"
+                app:layout_goneMarginStart="10dp"
                 bind:visibility="@{!vm.state.id.empty}" />
 
             <RelativeLayout

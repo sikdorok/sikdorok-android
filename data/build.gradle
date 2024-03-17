@@ -44,6 +44,10 @@ dependencies {
     implementation libs.hilt.android
     kapt libs.hilt.compiler
 
+    implementation(platform(libs.firebase.bom))
+    implementation libs.firebase.analysis
+    implementation libs.firebase.crashlytics
+
     debugImplementation libs.flipper.network
 
     testImplementation 'junit:junit:4.13.2'

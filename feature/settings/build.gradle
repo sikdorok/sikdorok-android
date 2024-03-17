@@ -62,4 +62,8 @@ dependencies {
     androidTestImplementation libs.junit.ext
     androidTestImplementation libs.espresso
 
+    implementation(platform(libs.firebase.bom))
+    implementation libs.firebase.analysis
+    implementation libs.firebase.crashlytics
+
 }

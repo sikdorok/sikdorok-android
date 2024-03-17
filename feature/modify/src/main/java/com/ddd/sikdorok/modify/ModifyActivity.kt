@@ -27,6 +27,8 @@ import com.ddd.sikdorok.core_ui.base.BackFrameActivity
 import com.ddd.sikdorok.core_ui.util.makeAlertDialog
 import com.ddd.sikdorok.extensions.compressBitmap
 import com.ddd.sikdorok.extensions.convertImageBitmapToByteArray
+import com.ddd.sikdorok.extensions.getOrientationOfImage
+import com.ddd.sikdorok.extensions.getRotatedBitmap
 import com.ddd.sikdorok.extensions.repeatCallDefaultOnStarted
 import com.ddd.sikdorok.extensions.showSnackBar
 import com.ddd.sikdorok.extensions.uriToBitmap
@@ -76,13 +78,30 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
     private val pickMultipleMedia = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
-
         if (uri != null) {
-            viewModel.event(
-                ModifyContract.Event.OnUpdateImage(
-                    uri
+            val degree = getOrientationOfImage(this, uri).toFloat()
+            if (degree == 0F) {
+                viewModel.event(
+                    ModifyContract.Event.OnUpdateImage(
+                        uri
+                    )
                 )
-            )
+            } else {
+                viewModel.event(
+                    ModifyContract.Event.OnUpdateImage(
+                        compressBitmap(
+                            Bitmap.CompressFormat.JPEG,
+                            getRotatedBitmap(
+                                uriToBitmap(this, uri),
+                                degree
+                            ),
+                            100
+                        ) ?: Uri.EMPTY
+                    )
+                )
+
+
+            }
         }
     }
 
@@ -114,6 +133,17 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                 delay(100)
                 savePost()
             }
+        }
+        binding.tvDelete.setOnClickListener {
+            makeAlertDialog(
+                title = "저장하신 도시락 기록을 삭제하시겠어요?",
+                confirmText = "확인",
+                cancelText = "취소",
+                onConfirm = {
+                    showLoading()
+                    viewModel.onClickDelete()
+                }
+            )
         }
         binding.ivInfo.setOnClickListener {
             showTooltip()
@@ -298,8 +328,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
 
                     }
                     ModifyContract.SideEffect.OpenMenu -> {
-                        registerForContextMenu(binding.more)
-                        binding.more.showContextMenu()
+                        // TODO : 이거 지우기
                     }
                     is ModifyContract.SideEffect.Fail -> {
                         hideLoading()
@@ -384,7 +413,9 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             album -> {
                 val result = grantResults.first()
                 if (result == PackageManager.PERMISSION_GRANTED) {
-                    pickMultipleMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    pickMultipleMedia.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
                 }
             }
         }
