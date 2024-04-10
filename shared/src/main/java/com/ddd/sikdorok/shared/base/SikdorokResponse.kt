@@ -2,23 +2,6 @@ package com.ddd.sikdorok.shared.base
 
 import com.google.gson.annotations.SerializedName
 
-@Suppress("SpellCheckingInspection")
-data class SikdorokResponse<out T>(
-    val code: Int,
-    val message: String,
-    val data: T?
-)
-
-data class SikdorokError(
-    @SerializedName("code")
-    val code: Int,
-    @SerializedName("message")
-    override val message: String,
-    @SerializedName("field")
-    val field: String
-) : Throwable()
-
-
 sealed class ApiResult<out T> {
     data class Success<T>(val data: T) : ApiResult<T>()
 
@@ -60,7 +43,11 @@ sealed class ApiResult<out T> {
 
     fun failureOrThrow(): Failure.HttpError {
         throwOnSuccess()
-        return this as Failure.HttpError
+        return this as? Failure.HttpError ?: Failure.HttpError(
+            code = 400,
+            message = "오류가 발생했습니다. 다시 시도해 주세요.",
+            body = "오류가 발생했습니다. 다시 시도해 주세요."
+        )
     }
 
     fun exceptionOrNull(): Throwable? =

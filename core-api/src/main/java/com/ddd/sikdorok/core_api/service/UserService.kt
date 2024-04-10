@@ -2,26 +2,22 @@ package com.ddd.sikdorok.core_api.service
 
 import com.ddd.sikdorok.shared.base.ApiResult
 import com.ddd.sikdorok.shared.base.BaseResponse
-import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.login.CheckUserRes
 import com.ddd.sikdorok.shared.login.LoginRes
 import com.ddd.sikdorok.shared.login.RefreshTokenRes
 import com.ddd.sikdorok.shared.login.Request
-import com.ddd.sikdorok.shared.login.Response
 import com.ddd.sikdorok.shared.login.UserProfileReq
 import com.ddd.sikdorok.shared.login.UserProfileRes
 import com.ddd.sikdorok.shared.password.Password
 import com.ddd.sikdorok.shared.password.Reset
 import com.ddd.sikdorok.shared.password.Verify
-import com.ddd.sikdorok.shared.sign.SignUp
-import com.ddd.sikdorok.shared.sign.SignUp as SikdorokSignUp
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import retrofit2.http.Query
+import com.ddd.sikdorok.shared.sign.SignUp as SikdorokSignUp
 
 interface UserService {
     interface SikdorokLogin {
@@ -74,9 +70,9 @@ interface UserService {
 
     interface Settings {
         @GET("/users/profile")
-        suspend fun getUserProfile() : ApiResult<UserProfileRes>
+        suspend fun getUserProfile(): ApiResult<UserProfileRes>
 
         @PUT("/users/profile")
-        suspend fun putUserProfile(@Body body : UserProfileReq) : ApiResult<BaseResponse>
+        suspend fun putUserProfile(@Body body: UserProfileReq): ApiResult<BaseResponse>
     }
 }

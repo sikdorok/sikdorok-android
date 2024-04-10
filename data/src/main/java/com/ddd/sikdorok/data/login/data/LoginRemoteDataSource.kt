@@ -1,13 +1,10 @@
 package com.ddd.sikdorok.data.login.data
 
 import com.ddd.sikdorok.shared.base.ApiResult
-import com.ddd.sikdorok.shared.base.BaseResponse
-import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.login.CheckUserRes
 import com.ddd.sikdorok.shared.login.LoginRes
 import com.ddd.sikdorok.shared.login.RefreshTokenRes
 import com.ddd.sikdorok.shared.login.Request
-import com.ddd.sikdorok.shared.login.Response
 import com.ddd.sikdorok.shared.sign.SignUp
 
 @Suppress("SpellCheckingInspection")
@@ -20,5 +17,5 @@ interface LoginRemoteDataSource {
 
     suspend fun onSignUpUser(body: SignUp.Request): ApiResult<LoginRes>
 
-    suspend fun postRefreshToken(refreshToken : String) : RefreshTokenRes
+    suspend fun postRefreshToken(refreshToken: String): RefreshTokenRes
 }

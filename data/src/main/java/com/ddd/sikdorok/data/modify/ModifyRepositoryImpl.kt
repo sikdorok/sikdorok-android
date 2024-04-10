@@ -4,11 +4,9 @@ import com.ddd.sikdorok.data.modify.data.ModifyRemoteDataSource
 import com.ddd.sikdorok.domain.repository.ModifyRepository
 import com.ddd.sikdorok.shared.base.ApiResult
 import com.ddd.sikdorok.shared.base.BaseResponse
-import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.modify.CreateFeedRes
 import com.ddd.sikdorok.shared.modify.FeedRequest
 import com.ddd.sikdorok.shared.modify.FeedRes
-import com.ddd.sikdorok.shared.modify.FeedResponse
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

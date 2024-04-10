@@ -3,7 +3,6 @@ package com.ddd.sikdorok.data.password
 import com.ddd.sikdorok.data.password.data.PasswordRemoteDataSource
 import com.ddd.sikdorok.domain.repository.PasswordRepository
 import com.ddd.sikdorok.shared.base.ApiResult
-import com.ddd.sikdorok.shared.base.SikdorokResponse
 import com.ddd.sikdorok.shared.login.CheckUserRes
 import com.ddd.sikdorok.shared.password.Reset
 import com.ddd.sikdorok.shared.password.Verify
