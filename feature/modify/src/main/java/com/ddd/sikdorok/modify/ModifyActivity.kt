@@ -1,13 +1,12 @@
 package com.ddd.sikdorok.modify
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
+import android.os.Environment
 import android.view.ContextMenu
 import android.view.Gravity
 import android.view.MenuItem
@@ -19,6 +18,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -50,28 +50,40 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
+import java.io.File
 
 // TODO : 데바로 변경 언제해...
 @AndroidEntryPoint
 class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBinding::inflate) {
 
-    private val takePictureLauncher =
-        registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { result ->
-            result?.let {
-                val data =
-                    Bitmap.createScaledBitmap(
-                        result,
-                        binding.ivMain.width,
-                        binding.ivMain.height,
-                        true
-                    )
-                        .copy(Bitmap.Config.ARGB_8888, true)
+    private var photoImageUri: Uri? = null
 
-                viewModel.event(
-                    ModifyContract.Event.OnUpdateImage(
-                        compressBitmap(Bitmap.CompressFormat.JPEG, data, 100) ?: Uri.EMPTY
+    private var photoFile: File? = null
+
+    private val takePictureLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess == true && photoImageUri != null) {
+                val degree = getOrientationOfImage(this, photoImageUri).toFloat()
+                if (degree == 0F) {
+                    viewModel.event(
+                        ModifyContract.Event.OnUpdateImage(
+                            photoImageUri ?: Uri.EMPTY
+                        )
                     )
-                )
+                } else {
+                    viewModel.event(
+                        ModifyContract.Event.OnUpdateImage(
+                            compressBitmap(
+                                Bitmap.CompressFormat.JPEG,
+                                getRotatedBitmap(
+                                    uriToBitmap(this, photoImageUri),
+                                    degree
+                                ),
+                                100
+                            ) ?: Uri.EMPTY
+                        )
+                    )
+                }
             }
         }
 
@@ -99,8 +111,6 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                         ) ?: Uri.EMPTY
                     )
                 )
-
-
             }
         }
     }
@@ -300,7 +310,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                         )
                     }
                     ModifyContract.SideEffect.NaviToCamera -> {
-                        takePictureLauncher.launch(null)
+                        takePhoto()
                     }
                     ModifyContract.SideEffect.NaviToAlbum -> {
                         pickMultipleMedia.launch(
@@ -405,8 +415,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
             camera -> {
                 val result = grantResults.first()
                 if (result == PackageManager.PERMISSION_GRANTED) {
-                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    startActivity(intent)
+                    takePhoto()
                 }
             }
 
@@ -419,6 +428,29 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                 }
             }
         }
+    }
+
+    private fun createImageFile(): File? {
+        // 임시 파일 생성 로직
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${System.currentTimeMillis()}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        )
+    }
+
+    private fun takePhoto() {
+        // 사진을 저장할 파일 생성
+        photoFile = createImageFile() ?: return
+
+        photoImageUri = FileProvider.getUriForFile(
+            this,
+            this@ModifyActivity.packageName + ".fileprovider",
+            photoFile!!
+        )
+
+        takePictureLauncher.launch(photoImageUri)
     }
 
     @IdRes
