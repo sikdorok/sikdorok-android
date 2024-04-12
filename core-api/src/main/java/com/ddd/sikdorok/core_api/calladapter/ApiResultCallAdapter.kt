@@ -33,9 +33,15 @@ private class ApiResultCall<R>(
         private fun Response<R>.toApiResult(): ApiResult<R> {
             // Http error response (4xx - 5xx)
             if (!isSuccessful) {
-                return Gson().fromJson(
-                    errorBody()?.string(),
-                    ApiResult.Failure.HttpError::class.java
+                return kotlin.runCatching {
+                    Gson().fromJson(
+                        errorBody()?.string(),
+                        ApiResult.Failure.HttpError::class.java
+                    )
+                }.getOrNull() ?: ApiResult.Failure.HttpError(
+                    code = code(),
+                    message = message(),
+                    body = message()
                 )
             } else {
                 // Http success response with body
