@@ -21,11 +21,13 @@ fun Context.showSnackBar(
     message: String,
     @ColorRes backgroundColor: Int,
     @ColorRes textColor: Int,
-    duration: Int
+    duration: Int = Snackbar.LENGTH_SHORT
 ) {
-    Snackbar.make(view, message, duration)
+    val time = if (duration == Snackbar.LENGTH_SHORT) 1000 else 2000
+    Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE)
         .setBackgroundTint(ContextCompat.getColor(this, backgroundColor))
         .setTextColor(ContextCompat.getColor(this, textColor))
+        .setDuration(time)
         .show()
 }
 

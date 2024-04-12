@@ -80,7 +80,7 @@ class SettingProfileActivity :
                             message = sideEffect.message,
                             backgroundColor = coreDesignR.color.input_error,
                             textColor = coreDesignR.color.white,
-                            duration = Snackbar.LENGTH_LONG
+                            duration = Snackbar.LENGTH_SHORT
                         )
                     }
                 }

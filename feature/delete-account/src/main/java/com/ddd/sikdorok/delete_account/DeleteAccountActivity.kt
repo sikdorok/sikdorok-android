@@ -73,7 +73,7 @@ class DeleteAccountActivity :
                             message = effect.text,
                             backgroundColor = R.color.text_color,
                             textColor = R.color.white,
-                            duration = Snackbar.LENGTH_LONG
+                            duration = Snackbar.LENGTH_SHORT
                         )
                     }
                 }

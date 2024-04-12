@@ -126,7 +126,7 @@ class SettingActivity : BackFrameActivity<ActivitySettingBinding>(ActivitySettin
                             message = sideEffect.errorMsg,
                             backgroundColor = com.ddd.sikdorok.core_design.R.color.text_color,
                             textColor = com.ddd.sikdorok.core_design.R.color.white,
-                            duration = Snackbar.LENGTH_LONG
+                            duration = Snackbar.LENGTH_SHORT
                         )
                     }
                 }

@@ -93,7 +93,7 @@ class ResetPasswordActivity :
                             message = sideEffect.message,
                             backgroundColor = R.color.input_error,
                             textColor = R.color.white,
-                            duration = Snackbar.LENGTH_LONG
+                            duration = Snackbar.LENGTH_SHORT
                         )
                     }
                 }

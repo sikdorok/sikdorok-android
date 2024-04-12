@@ -152,7 +152,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(ActivityHomeBinding::infl
             message = text,
             backgroundColor = R.color.email_login_background,
             textColor = R.color.white,
-            duration = Snackbar.LENGTH_LONG
+            duration = Snackbar.LENGTH_SHORT
         )
     }
 

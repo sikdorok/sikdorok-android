@@ -44,7 +44,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                 message = "계정 삭제가 완료되었습니다",
                 backgroundColor = R.color.text_color,
                 textColor = R.color.white,
-                duration = Snackbar.LENGTH_LONG
+                duration = Snackbar.LENGTH_SHORT
             )
         }
     }
@@ -97,7 +97,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
                             message = effect.message,
                             backgroundColor = R.color.input_error,
                             textColor = R.color.white,
-                            duration = Snackbar.LENGTH_LONG
+                            duration = Snackbar.LENGTH_SHORT
                         )
                     }
                 }

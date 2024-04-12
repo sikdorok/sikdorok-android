@@ -348,7 +348,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                             message = sideEffect.errorMsg,
                             backgroundColor = com.ddd.sikdorok.core_design.R.color.text_color,
                             textColor = com.ddd.sikdorok.core_design.R.color.white,
-                            duration = Snackbar.LENGTH_LONG
+                            duration = Snackbar.LENGTH_SHORT
                         )
                     }
                     is ModifyContract.SideEffect.ShowSnackBar -> {
@@ -359,7 +359,7 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
                             message = sideEffect.text,
                             backgroundColor = com.ddd.sikdorok.core_design.R.color.text_color,
                             textColor = com.ddd.sikdorok.core_design.R.color.white,
-                            duration = Snackbar.LENGTH_LONG
+                            duration = Snackbar.LENGTH_SHORT
                         )
                     }
                     ModifyContract.SideEffect.SuccessLoadData -> {
@@ -442,15 +442,17 @@ class ModifyActivity : BackFrameActivity<ActivityModifyBinding>(ActivityModifyBi
 
     private fun takePhoto() {
         // 사진을 저장할 파일 생성
-        photoFile = createImageFile() ?: return
+        createImageFile()?.let {
+            photoFile = it
 
-        photoImageUri = FileProvider.getUriForFile(
-            this,
-            this@ModifyActivity.packageName + ".fileprovider",
-            photoFile!!
-        )
+            photoImageUri = FileProvider.getUriForFile(
+                this,
+                this@ModifyActivity.packageName + ".fileprovider",
+                it
+            )
 
-        takePictureLauncher.launch(photoImageUri)
+            takePictureLauncher.launch(photoImageUri)
+        }
     }
 
     @IdRes

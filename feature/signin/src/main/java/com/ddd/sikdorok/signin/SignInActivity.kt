@@ -41,7 +41,7 @@ class SignInActivity : BackFrameActivity<ActivitySignInBinding>(ActivitySignInBi
                     message = "회원가입이 완료되었습니다.",
                     backgroundColor = coreDesignR.color.text_color,
                     textColor = coreDesignR.color.white,
-                    duration = Snackbar.LENGTH_LONG
+                    duration = Snackbar.LENGTH_SHORT
                 )
             }
         }
@@ -57,7 +57,7 @@ class SignInActivity : BackFrameActivity<ActivitySignInBinding>(ActivitySignInBi
                 message = "비밀번호 재설정이 완료되었습니다",
                 backgroundColor = coreDesignR.color.text_color,
                 textColor = coreDesignR.color.white,
-                duration = Snackbar.LENGTH_LONG
+                duration = Snackbar.LENGTH_SHORT
             )
         }
 
@@ -118,7 +118,7 @@ class SignInActivity : BackFrameActivity<ActivitySignInBinding>(ActivitySignInBi
                             message = it.message,
                             backgroundColor = coreDesignR.color.input_error,
                             textColor = coreDesignR.color.white,
-                            duration = Snackbar.LENGTH_LONG
+                            duration = Snackbar.LENGTH_SHORT
                         )
                     }
                 }
